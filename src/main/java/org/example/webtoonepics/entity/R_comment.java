@@ -6,9 +6,10 @@ import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
 @Entity
 @Getter
+@Table(name = "r_comment")
 public class R_comment extends Basetime {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "r_comment_id")
     private Long id;
 
