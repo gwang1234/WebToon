@@ -5,13 +5,14 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class LikeWebtoon {
+@Table(name = "likewebtoon")
+public class Likewebtoon {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id")
     private Long id;
 
-    private int like;
+    private int likes;
 
     @ManyToOne
     @JoinColumn(name = "user_info", nullable = false)

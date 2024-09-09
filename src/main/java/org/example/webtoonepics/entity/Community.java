@@ -6,9 +6,10 @@ import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
 @Entity
 @Getter
+@Table(name = "community")
 public class Community extends Basetime {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_id")
     private Long id;
 
@@ -22,7 +23,7 @@ public class Community extends Basetime {
     private String content;
 
     private int view;
-    private int like;
+    private int likes;
 
     @ManyToOne
     @JoinColumn(name = "user_info", nullable = false)

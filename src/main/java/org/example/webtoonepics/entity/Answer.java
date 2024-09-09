@@ -5,9 +5,10 @@ import lombok.Getter;
 
 @Entity
 @Getter
+@Table(name = "answer")
 public class Answer {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
     private Long id;
 
