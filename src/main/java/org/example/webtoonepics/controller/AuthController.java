@@ -1,18 +1,7 @@
 package org.example.webtoonepics.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.example.webtoonepics.dto.KakaoUserInfoResponseDto;
-import org.example.webtoonepics.service.KakaoLoginService;
-import org.example.webtoonepics.service.KakaoOAuth2UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/oauth2")
 @RestController
@@ -38,19 +27,19 @@ public class AuthController {
         // User 로그인, 또는 회원가입 로직 추가?
         
     }*/
-    
-    @GetMapping("/oauth2/loginInfo")
-    public String getLoginInfo(@AuthenticationPrincipal OAuth2User oAuth2User, Model model) {
-        if (oAuth2User != null) {
-            model.addAttribute("name", oAuth2User.getAttribute("name"));
-            model.addAttribute("email", oAuth2User.getAttribute("email"));
-            model.addAttribute("id", oAuth2User.getAttribute("id"));
-        }
-        return "loginInfo";
-    }
-    
-    @GetMapping("/loginFailure")
-    public String loginFailure() {
-        return "로그인 실패!";
-    }
+//
+//    @GetMapping("/oauth2/loginInfo")
+//    public String getLoginInfo(@AuthenticationPrincipal OAuth2User oAuth2User, Model model) {
+//        if (oAuth2User != null) {
+//            model.addAttribute("name", oAuth2User.getAttribute("name"));
+//            model.addAttribute("email", oAuth2User.getAttribute("email"));
+//            model.addAttribute("id", oAuth2User.getAttribute("id"));
+//        }
+//        return "loginInfo";
+//    }
+//
+//    @GetMapping("/loginFailure")
+//    public String loginFailure() {
+//        return "로그인 실패!";
+//    }
 }
