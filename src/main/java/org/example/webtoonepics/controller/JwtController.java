@@ -1,4 +1,4 @@
-package org.example.webtoonepics.contoller;
+package org.example.webtoonepics.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.dto.JwtDto;
