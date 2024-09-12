@@ -40,7 +40,7 @@ public class JwtController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("no auth");
     }
 
-    // jwt 토큰 인증
+    // jwt 토큰 인증 - 테스트용
     @GetMapping("/jwt-token")
     public @ResponseBody String token() {
         return "abcd";
