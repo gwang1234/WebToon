@@ -46,6 +46,29 @@ public class JwtController {
         return "abcd";
     }
 
+    // 리프레시 토큰
+    @PostMapping("/jwt-refresh")
+    public ResponseEntity<?> refreshAccessToken(@RequestParam("refreshToken") String refreshToken) {
+
+        if (refreshToken == null || !jwtUtil.validateRefreshToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
+        }
+
+        // Refresh 토큰에서 사용자 정보 추출
+        String email = jwtUtil.getEmailFromRefreshToken(refreshToken);
+        String role = jwtService.findRoleByEmail(email);
+
+        // 새로운 Access 토큰 생성
+        String newAccessToken = jwtUtil.createJwt(email, role, 60 * 60 * 1000L);
+        String newRefreshToken = jwtUtil.generateRefreshToken(email);
+
+        // 클라이언트로 새로운 Access 토큰 반환
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + newAccessToken)
+                .header("Refresh-Token", newRefreshToken)
+                .body("Access Token Updated");
+    }
+
     // 회원가입 - 이메일 인증
     @PostMapping("/auth-email")
     public ResponseEntity<Boolean> emailAuth(@RequestParam("email")String email) {
@@ -65,5 +88,6 @@ public class JwtController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(true);
     }
+
 
 }

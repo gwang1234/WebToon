@@ -19,7 +19,7 @@ public class C_comment extends Basetime {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_info", nullable = false)
     private Community community;
 

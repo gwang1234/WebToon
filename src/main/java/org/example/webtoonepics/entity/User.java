@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
+import java.io.Serializable;
+
 @Entity
 @Getter @Setter
 @Table(name = "user")
-public class User extends Basetime {
+public class User extends Basetime implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

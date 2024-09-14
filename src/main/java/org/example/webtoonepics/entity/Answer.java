@@ -18,7 +18,7 @@ public class Answer {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_info", nullable = false)
     private Question question;
 }

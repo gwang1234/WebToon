@@ -25,7 +25,7 @@ public class Community extends Basetime {
     private int view;
     private int likes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_info", nullable = false)
     private User user;
 }
