@@ -1,15 +1,12 @@
 package org.example.webtoonepics.service;
 
+import java.util.Objects;
 import org.example.webtoonepics.dto.JwtDto;
 import org.example.webtoonepics.entity.Role;
 import org.example.webtoonepics.entity.User;
 import org.example.webtoonepics.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Service
 public class JwtService {
@@ -37,18 +34,21 @@ public class JwtService {
             return false;
         }
 
-        User user = new User();
+//        user.setEmail(email);
+//        user.setPassword(bCryptPasswordEncoder.encode(passwd));
+//        user.setUserName(username);
 
-        user.setEmail(email);
-        user.setPassword(bCryptPasswordEncoder.encode(passwd));
-        user.setUserName(username);
-        if (Objects.equals(email, "qoi11@naver.com")) {
-            user.setRole(Role.ROLE_BOSS);
-        } else {
-            user.setRole(Role.ROLE_USER);
-        }
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+        Role role = Objects.equals(email, "qoi11@naver.com") ? Role.ROLE_BOSS : Role.ROLE_USER;
+
+//        user.setCreatedAt(LocalDateTime.now());
+//        user.setUpdatedAt(LocalDateTime.now());
+
+        User user = User.builder()
+                .email(email)
+                .password(bCryptPasswordEncoder.encode(passwd))
+                .userName(username)
+                .role(role)
+                .build();
 
         userRepository.save(user);
 

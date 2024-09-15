@@ -1,8 +1,11 @@
 package org.example.webtoonepics.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.jwt.JWTFilter;
 import org.example.webtoonepics.jwt.JWTUtil;
+import org.example.webtoonepics.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,19 +19,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Collections;
-
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtil = jwtUtil;
-    }
+//    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+//        this.authenticationConfiguration = authenticationConfiguration;
+//        this.jwtUtil = jwtUtil;
+//    }
 
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -46,7 +49,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**", "/jwt-auth")
+                                .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**",
+                                        "/jwt-auth")
                                 .permitAll()
                                 .requestMatchers("/jwt-token").hasRole("USER")
                                 .anyRequest().authenticated()
@@ -58,6 +62,8 @@ public class SecurityConfig {
                 // 소셜 로그인(OAuth2) 관련 설정
                 .oauth2Login(oauth2Login ->
                         oauth2Login
+                                .userInfoEndpoint(
+                                        userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
                                 .defaultSuccessUrl("/loginInfo", true)
                                 .failureUrl("/loginFail")
                 )
@@ -69,19 +75,23 @@ public class SecurityConfig {
                 )
 
                 // CORS 설정
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));  // CORS 설정 수정
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-                        return configuration;
-                    }
-                }))
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(
+                        new CorsConfigurationSource() {
+                            @Override
+                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                                CorsConfiguration configuration = new CorsConfiguration();
+                                configuration.setAllowedOrigins(
+                                        Collections.singletonList(
+                                                "http://localhost:3000"));  // CORS 설정 수정
+                                configuration.setAllowedMethods(Collections.singletonList("*"));
+                                configuration.setAllowCredentials(true);
+                                configuration.setAllowedHeaders(Collections.singletonList("*"));
+                                configuration.setMaxAge(3600L);
+                                configuration.setExposedHeaders(
+                                        Collections.singletonList("Authorization"));
+                                return configuration;
+                            }
+                        }))
 
                 .csrf(csrf -> csrf.disable())  // JWT를 사용하므로 CSRF는 비활성화
                 .formLogin(formLogin -> formLogin.disable())  // formLogin 비활성화

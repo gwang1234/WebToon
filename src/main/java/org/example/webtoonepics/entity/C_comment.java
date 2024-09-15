@@ -9,18 +9,19 @@ import org.example.webtoonepics.entity.BaseEntity.Basetime;
 @Table(name = "c_comment")
 public class C_comment extends Basetime {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "c_comment_id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "community_info", nullable = false)
+    private Community community;
 
     @Column(nullable = false)
     private String writer;
 
     @Column(nullable = false)
     private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "community_info", nullable = false)
-    private Community community;
 
 }
