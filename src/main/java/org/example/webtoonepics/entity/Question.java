@@ -17,7 +17,6 @@ public class Question {
     @JoinColumn(name = "user_info", nullable = false)
     private User user;
 
-
     @Column(nullable = false)
     private String writer;
 

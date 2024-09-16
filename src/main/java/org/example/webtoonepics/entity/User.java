@@ -14,12 +14,13 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "user")
-public class User {
+public class User extends Basetime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +44,7 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

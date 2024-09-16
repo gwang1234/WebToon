@@ -33,5 +33,4 @@ public class Review {
     @Column(nullable = false)
     private short star;
 
-
 }
