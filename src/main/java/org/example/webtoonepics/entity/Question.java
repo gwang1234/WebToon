@@ -5,12 +5,17 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "quetion")
+@Table(name = "question")
 public class Question {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_info", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private String writer;
@@ -20,9 +25,5 @@ public class Question {
 
     @Column(nullable = false)
     private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "user_info", nullable = false)
-    private User user;
 
 }

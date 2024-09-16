@@ -9,12 +9,14 @@ import org.example.webtoonepics.entity.BaseEntity.Basetime;
 @Table(name = "community")
 public class Community extends Basetime {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String writer;
+    @ManyToOne
+    @JoinColumn(name = "user_info", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -22,10 +24,9 @@ public class Community extends Basetime {
     @Column(nullable = false)
     private String content;
 
-    private int view;
-    private int likes;
+    @Column
+    private int view = 0;
 
-    @ManyToOne
-    @JoinColumn(name = "user_info", nullable = false)
-    private User user;
+    @Column
+    private int like = 0;
 }

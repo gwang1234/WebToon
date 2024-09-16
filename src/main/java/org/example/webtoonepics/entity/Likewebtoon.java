@@ -8,18 +8,16 @@ import lombok.Getter;
 @Table(name = "likewebtoon")
 public class Likewebtoon {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
-    private Long id;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "webtoon_info", nullable = false)
+    private Webtoon webtoonInfo;
 
-    private int likes;
-
+    @Id
     @ManyToOne
     @JoinColumn(name = "user_info", nullable = false)
-    private User user;
+    private User userInfo;
 
-    @ManyToOne
-    @JoinColumn(name = "review_info", nullable = false)
-    private Review review;
-
+    @Column
+    private int like = 0;
 }

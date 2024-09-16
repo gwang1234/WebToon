@@ -8,9 +8,14 @@ import lombok.Getter;
 @Table(name = "answer")
 public class Answer {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "question_info", nullable = false)
+    private Question question;
 
     @Column(nullable = false)
     private String writer;
@@ -18,7 +23,4 @@ public class Answer {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "question_info", nullable = false)
-    private Question question;
 }
