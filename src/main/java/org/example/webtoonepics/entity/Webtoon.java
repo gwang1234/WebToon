@@ -9,10 +9,12 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "webtoon")
 public class Webtoon extends Basetime {

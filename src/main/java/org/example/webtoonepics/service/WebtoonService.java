@@ -65,12 +65,10 @@ public class WebtoonService {
 
                     if (existingWebtoon != null) {
                         // 기존 웹툰이 있으면 업데이트
-                        existingWebtoon = Webtoon.builder()
-                                .title(webtoon.getTitle())
-                                .author(webtoon.getAuthor())
-                                .description(webtoon.getDescription())
-                                .provider(webtoon.getProvider())
-                                .build();
+                        existingWebtoon.setTitle(webtoon.getTitle());
+                        existingWebtoon.setAuthor(webtoon.getAuthor());
+                        existingWebtoon.setDescription(webtoon.getDescription());
+                        existingWebtoon.setProvider(webtoon.getProvider());
                         latestWebtoon = webtoonRepository.save(existingWebtoon);
                     } else {
                         // 없으면 새로 저장
