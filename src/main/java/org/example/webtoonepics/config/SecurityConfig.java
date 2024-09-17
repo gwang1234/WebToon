@@ -28,11 +28,6 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
 
-//    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
-//        this.authenticationConfiguration = authenticationConfiguration;
-//        this.jwtUtil = jwtUtil;
-//    }
-
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -50,7 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**",
-                                        "/jwt-auth")
+                                        "/jwt-auth", "/api/**")
                                 .permitAll()
                                 .requestMatchers("/jwt-token").hasRole("USER")
                                 .anyRequest().authenticated()
