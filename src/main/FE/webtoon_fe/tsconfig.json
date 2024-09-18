@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"], // 최신 ECMAScript 기능 및 DOM의 타입 정의를 포함
+    "allowJs": true, // JavaScript 파일을 TypeScript 프로젝트에서 사용 가능
+    "skipLibCheck": true, // 라이브러리 파일의 타입 검사를 건너뜀
+    "strict": true, // 엄격한 타입 검사 활성화
+    "noEmit": true, // 컴파일된 파일을 출력하지 않음 (Next.js 사용 시)
+    "esModuleInterop": true, // CommonJS 모듈과 ES6 모듈 간의 호환성
+    "module": "esnext", // 최신 ECMAScript 모듈 시스템 사용
+    "moduleResolution": "bundler", // 번들러 환경에서 모듈을 해석
+    "resolveJsonModule": true, // JSON 모듈을 TypeScript에서 사용할 수 있도록 허용
+    "isolatedModules": true, // 모듈별로 독립적인 타입 검사를 수행
+    "jsx": "preserve", // JSX 문법을 보존 (Next.js와 같은 프레임워크에서 사용)
+    "incremental": true, // 증분 컴파일을 허용 (속도 개선)
+    "plugins": [
+      {
+        "name": "next" // Next.js의 타입을 지원하기 위한 플러그인
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"] // `@` 별칭을 `./src/`로 매핑
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
