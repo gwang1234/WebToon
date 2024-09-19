@@ -11,7 +11,7 @@ public class Webtoon extends Basetime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id")
+    @Column(name = "webtoon_id")
     private Long id;
 
     @Column(nullable = false)

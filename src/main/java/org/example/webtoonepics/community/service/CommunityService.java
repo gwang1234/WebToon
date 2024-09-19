@@ -37,7 +37,7 @@ public class CommunityService {
     }
 
     public Boolean writeCommu(CommunityWriteDto writeDto, String email) {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElse(null);
         Community community = Community.toEntity(writeDto, user);
         Community save = communityRepository.save(community);
 

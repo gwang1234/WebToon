@@ -20,6 +20,6 @@ public class Likewebtoon {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_info", nullable = false)
-    private Webtoon webtoon;
+    @JoinColumn(name = "webtoon_info", nullable = false)
+    private Webtoon webtoonInfo;
 }

@@ -30,7 +30,7 @@ public class CommunityDto {
         this.content = community.getContent();
         this.view = community.getView();
         this.likes = community.getLikes();
-        this.createdAt = datetimeFormat(community.getCreatedAt());
+        this.createdAt = datetimeFormat(community.getCreated_at());
     }
 
     public String datetimeFormat(LocalDateTime createdAt) {

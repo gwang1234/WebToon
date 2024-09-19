@@ -1,5 +1,6 @@
 package org.example.webtoonepics.service;
 
+import java.util.Optional;
 import org.example.webtoonepics.dto.CustomUserDetails;
 import org.example.webtoonepics.entity.User;
 import org.example.webtoonepics.repository.UserRepository;
@@ -20,8 +21,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User userData = userRepository.findByEmail(email);
-        if(userData != null){
+        User userData = userRepository.findByEmail(email).orElse(null);
+        if (userData != null) {
             return new CustomUserDetails(userData);
         }
 
