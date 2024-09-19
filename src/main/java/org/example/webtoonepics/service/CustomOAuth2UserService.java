@@ -37,7 +37,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // 기존 회원 여부
         Optional<User> existingUser = userRepository.findByEmail(email);
 
-        if (existingUser.isPresent()) {
+        if (existingUser.isEmpty()) {
             // 신규 회원이면 저장
             User user = User.builder()
                     .email(email)
@@ -47,9 +47,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     .build();
 
             // 사용자 저장 로직 추가
+            System.out.println(user);
             userRepository.save(user);
         }
-
+        System.out.println(existingUser.get());
         return new CustomOAuth2User(oAuth2User, registrationId);
     }
 

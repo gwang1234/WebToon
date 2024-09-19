@@ -65,20 +65,20 @@ public class SecurityConfig {
                                 .logoutSuccessUrl("/login") // 로그아웃 성공 후 리다이렉트 경로
                                 .invalidateHttpSession(true) // 세션 무효화
                 );
-        http
-                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration configuration = new CorsConfiguration();
-//                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-                        return configuration;
-                    }
-                })));
+//        http
+//                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+//                    @Override
+//                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//                        CorsConfiguration configuration = new CorsConfiguration();
+////                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+//                        configuration.setAllowedMethods(Collections.singletonList("*"));
+//                        configuration.setAllowCredentials(true);
+//                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                        configuration.setMaxAge(3600L);
+//                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+//                        return configuration;
+//                    }
+//                })));
         http
                 .csrf((auth) -> auth.disable());
         http
@@ -87,6 +87,8 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
         http
                 .addFilterBefore(new JWTFilter(jwtUtil, redisTemplate), LoginFilter.class);
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
         // 필터 추가 loginFilter()는 인자를 받음
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
