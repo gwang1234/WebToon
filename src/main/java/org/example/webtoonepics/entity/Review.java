@@ -6,26 +6,21 @@ import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
 @Entity
 @Getter
-@Table(name = "community")
-public class Community extends Basetime {
+@Table(name = "review")
+public class Review extends Basetime {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "community_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "r_comment_id")
     private Long id;
 
     @Column(nullable = false)
     private String writer;
-
-    @Column(nullable = false)
-    private String title;
-
     @Column(nullable = false)
     private String content;
-
-    private int view;
-    private int likes;
+    private short star;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_info", nullable = false)
-    private User user;
+    @JoinColumn(name = "review_info", nullable = false)
+    private Webtoon webtoon;
 }

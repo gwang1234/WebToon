@@ -27,10 +27,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RedisTemplate<String, Object> redisTemplate) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RedisTemplate<String, String> redisTemplate) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.redisTemplate = redisTemplate;
@@ -49,10 +49,11 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests // 사용자가 보내는 요청에 인증 절차 수행 필요
-                                .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**","/jwt-login","/jwt-auth")
-                                .permitAll() // 인증이 필요 없는 경로
-                                .requestMatchers("/jwt-token").hasRole("USER")
-                                .anyRequest().authenticated() // 모든 요청은 인증 필요
+//                                .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**","/jwt-login","/jwt-auth")
+//                                .permitAll() // 인증이 필요 없는 경로
+//                                .requestMatchers("/jwt-token").hasRole("USER")
+//                                .anyRequest().authenticated() // 모든 요청은 인증 필요
+                                .anyRequest().permitAll()
                 )
                 .oauth2Login(auth2Login ->
                         auth2Login // OAuth2를 통한 로그인 사용

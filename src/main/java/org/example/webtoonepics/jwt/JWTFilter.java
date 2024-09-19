@@ -17,10 +17,10 @@ import java.io.IOException;
 
 public class JWTFilter extends OncePerRequestFilter {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final JWTUtil jwtUtil;
 
-    public JWTFilter(JWTUtil jwtUtil, RedisTemplate<String, Object> redisTemplate) {
+    public JWTFilter(JWTUtil jwtUtil, RedisTemplate<String, String> redisTemplate) {
         this.jwtUtil = jwtUtil;
         this.redisTemplate = redisTemplate;
     }

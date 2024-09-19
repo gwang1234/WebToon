@@ -1,12 +1,14 @@
-package org.example.webtoonepics.entity;
+package org.example.webtoonepics.question.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.example.webtoonepics.entity.BaseEntity.Basetime;
+import org.example.webtoonepics.entity.User;
 
 @Entity
 @Getter
 @Table(name = "quetion")
-public class Question {
+public class Question extends Basetime {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id")

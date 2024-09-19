@@ -1,7 +1,8 @@
-package org.example.webtoonepics.entity;
+package org.example.webtoonepics.community.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.example.webtoonepics.community.entity.Community;
 import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
 @Entity

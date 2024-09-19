@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class JWTUtil {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private SecretKey secretKey; //JWT 토큰 객체 키를 저장할 시크릿 키
 
-    public JWTUtil(@Value("${spring.jwt.secret}") String secret, RedisTemplate<String, Object> redisTemplate) {
+    public JWTUtil(@Value("${spring.jwt.secret}") String secret, RedisTemplate<String, String> redisTemplate) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8)  , Jwts.SIG.HS256.key().build().getAlgorithm()
         );
         this.redisTemplate = redisTemplate;
