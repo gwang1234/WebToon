@@ -9,15 +9,17 @@ import lombok.Getter;
 public class Likewebtoon {
 
     @Id
-    @ManyToOne
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "like_id")
+    private Long id;
+
+    private int likes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_info", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "webtoon_info", nullable = false)
     private Webtoon webtoonInfo;
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "user_info", nullable = false)
-    private User userInfo;
-
-    @Column
-    private int like = 0;
 }

@@ -1,11 +1,12 @@
 package org.example.webtoonepics.service;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class CustomOAuth2User implements OAuth2User {
+public class CustomOAuth2User implements OAuth2User,Serializable {
 
     private final OAuth2User oAuth2User;
     private final String registrationId;

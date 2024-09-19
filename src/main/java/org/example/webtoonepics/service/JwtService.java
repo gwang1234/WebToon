@@ -70,4 +70,8 @@ public class JwtService {
         }
         return false;
     }
+
+    public String findRoleByEmail(String email) {
+        return String.valueOf(Objects.requireNonNull(userRepository.findByEmail(email).orElse(null)).getRole());
+    }
 }

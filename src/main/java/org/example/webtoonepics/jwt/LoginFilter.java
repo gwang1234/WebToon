@@ -55,7 +55,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+        String email = customUserDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -64,9 +64,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
 
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
+        String token = jwtUtil.createJwt(email, role, 60 * 60 * 1000L); // 1시간 유효시간
+        String refreshToken = jwtUtil.generateRefreshToken(email);
 
         response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Refresh-Token", refreshToken);
     }
 
     @Override

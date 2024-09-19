@@ -14,13 +14,16 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.webtoonepics.entity.BaseEntity.Basetime;
 
+import java.io.Serializable;
+
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @Table(name = "user")
-public class User extends Basetime {
+public class User extends Basetime implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +33,7 @@ public class User extends Basetime {
     @Column(nullable = false, length = 40, unique = true)
     private String email;  // 로그인 ID로 사용
 
-    @Column(length = 40)
+    @Column(length = 60)
     private String password;  // 소셜 로그인 시 비워두기
 
     @Column(name = "user_name", nullable = false, length = 20)
@@ -39,26 +42,26 @@ public class User extends Basetime {
     @Column(nullable = false, length = 10)
     private String provider;  // 회원 가입 구분
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+//    @Column(name = "created_at", nullable = false)
+//    private LocalDateTime createdAt;
+//
+//    @Column(name = "updated_at")
+//    private LocalDateTime updatedAt;
 
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+//    @PrePersist
+//    public void prePersist() {
+//        this.createdAt = LocalDateTime.now();
+//    }
+//
+//    @PreUpdate
+//    public void preUpdate() {
+//        this.updatedAt = LocalDateTime.now();
+//    }
 
     @Builder
     public User(String email, String password, String userName, String provider, Role role) {

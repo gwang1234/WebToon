@@ -47,9 +47,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     .build();
 
             // 사용자 저장 로직 추가
+            System.out.println(user);
             userRepository.save(user);
         }
-
+        System.out.println(existingUser.get());
         return new CustomOAuth2User(oAuth2User, registrationId);
     }
 
