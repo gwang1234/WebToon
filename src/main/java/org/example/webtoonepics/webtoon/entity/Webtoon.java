@@ -1,4 +1,4 @@
-package org.example.webtoonepics.entity;
+package org.example.webtoonepics.webtoon.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

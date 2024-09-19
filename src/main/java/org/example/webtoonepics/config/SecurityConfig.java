@@ -1,5 +1,5 @@
 package org.example.webtoonepics.config;
-import jakarta.servlet.http.HttpServletRequest;
+
 import org.example.webtoonepics.jwt.JWTFilter;
 import org.example.webtoonepics.jwt.JWTUtil;
 import org.example.webtoonepics.jwt.LoginFilter;
@@ -12,17 +12,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import java.util.Collections;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.SecurityFilterChain;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -30,19 +23,29 @@ public class SecurityConfig {
     private final RedisTemplate<String, String> redisTemplate;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RedisTemplate<String, String> redisTemplate) {
+
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,
+            RedisTemplate<String, String> redisTemplate) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.redisTemplate = redisTemplate;
     }
+
+    @Bean
+    public HttpSessionOAuth2AuthorizationRequestRepository httpSessionOAuth2AuthorizationRequestRepository() {
+        return new HttpSessionOAuth2AuthorizationRequestRepository();
+    }
+
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -57,7 +60,10 @@ public class SecurityConfig {
                 )
                 .oauth2Login(auth2Login ->
                         auth2Login // OAuth2를 통한 로그인 사용
-                                .defaultSuccessUrl("/loginInfo", true) // 로그인 성공 시 redirect
+                                .authorizationEndpoint(endpointConfig ->
+                                        endpointConfig.authorizationRequestRepository(
+                                                httpSessionOAuth2AuthorizationRequestRepository()))
+                                .defaultSuccessUrl("/api/OAuth2/loginInfo", true) // 로그인 성공 시 redirect
                                 .failureUrl("/loginFail") // 로그인 실패 시 리다이렉트 경로
                 )
                 .logout(logout ->
@@ -91,7 +97,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
         // 필터 추가 loginFilter()는 인자를 받음
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+                        UsernamePasswordAuthenticationFilter.class);
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));

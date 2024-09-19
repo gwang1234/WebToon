@@ -3,8 +3,8 @@ package org.example.webtoonepics.service;
 import java.util.Objects;
 import org.example.webtoonepics.dto.JwtDto;
 import org.example.webtoonepics.entity.Role;
-import org.example.webtoonepics.entity.User;
-import org.example.webtoonepics.repository.UserRepository;
+import org.example.webtoonepics.user.entity.User;
+import org.example.webtoonepics.user.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

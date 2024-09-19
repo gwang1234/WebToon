@@ -1,11 +1,11 @@
-package org.example.webtoonepics.repository;
+package org.example.webtoonepics.user.repository;
+
+import static org.example.webtoonepics.user.entity.QUser.user;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
-import static org.example.webtoonepics.entity.QUser.user;
 
 public class UserRepositoryImpl implements UserRepositoryCustom {
 

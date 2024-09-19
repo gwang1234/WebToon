@@ -1,8 +1,8 @@
-package org.example.webtoonepics.controller;
+package org.example.webtoonepics.webtoon.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.webtoonepics.entity.Webtoon;
-import org.example.webtoonepics.service.WebtoonService;
+import org.example.webtoonepics.webtoon.entity.Webtoon;
+import org.example.webtoonepics.webtoon.service.WebtoonService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;

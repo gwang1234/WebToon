@@ -1,7 +1,7 @@
-package org.example.webtoonepics.repository;
+package org.example.webtoonepics.user.repository;
 
 import java.util.Optional;
-import org.example.webtoonepics.entity.User;
+import org.example.webtoonepics.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {

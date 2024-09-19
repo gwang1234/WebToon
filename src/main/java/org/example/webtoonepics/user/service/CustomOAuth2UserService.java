@@ -1,12 +1,12 @@
-package org.example.webtoonepics.service;
+package org.example.webtoonepics.user.service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.entity.Role;
-import org.example.webtoonepics.entity.User;
-import org.example.webtoonepics.repository.UserRepository;
+import org.example.webtoonepics.user.repository.UserRepository;
+import org.example.webtoonepics.user.entity.User;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

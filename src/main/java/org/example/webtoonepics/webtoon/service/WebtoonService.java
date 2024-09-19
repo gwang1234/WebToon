@@ -1,13 +1,13 @@
-package org.example.webtoonepics.service;
+package org.example.webtoonepics.webtoon.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.webtoonepics.dto.WebtoonDTO;
-import org.example.webtoonepics.dto.WebtoonDTO.ItemList;
-import org.example.webtoonepics.entity.Webtoon;
-import org.example.webtoonepics.repository.WebtoonRepository;
+import org.example.webtoonepics.webtoon.dto.WebtoonDTO;
+import org.example.webtoonepics.webtoon.dto.WebtoonDTO.ItemList;
+import org.example.webtoonepics.webtoon.entity.Webtoon;
+import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
