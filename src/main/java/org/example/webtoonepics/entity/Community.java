@@ -25,7 +25,7 @@ public class Community extends Basetime {
     private String content;
 
     @Column
-    private int view = 0;
+    private int views = 0;
 
     @Column
     private int like = 0;
