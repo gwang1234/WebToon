@@ -8,7 +8,7 @@ import org.example.webtoonepics.webtoon.entity.Webtoon;
 
 @Data
 @NoArgsConstructor
-public class WebtoonDTO {
+public class WebtoonRequest {
 
     @JsonProperty("result")
     private Result result;

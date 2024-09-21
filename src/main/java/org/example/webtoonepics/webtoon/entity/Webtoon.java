@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,5 +46,12 @@ public class Webtoon extends Basetime {
         this.provider = provider;
         this.author = author;
         this.description = description;
+    }
+
+    public void updateWith(Webtoon newWebtoon) {
+        this.title = newWebtoon.getTitle();
+        this.author = newWebtoon.getAuthor();
+        this.description = newWebtoon.getDescription();
+        this.provider = newWebtoon.getProvider();
     }
 }
