@@ -29,6 +29,10 @@ public class WebtoonService {
         return webtoonRepository.findAll();
     }
 
+    public Webtoon findById(Long id) {
+        return webtoonRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Webtoon not found. => " + id));
+    }
+
 
     // 외부 API에서 웹툰 목록을 가져오고 DB에 저장
     @Transactional
