@@ -42,26 +42,9 @@ public class User extends Basetime implements Serializable {
     @Column(nullable = false, length = 10)
     private String provider;  // 회원 가입 구분
 
-//    @Column(name = "created_at", nullable = false)
-//    private LocalDateTime createdAt;
-//
-//    @Column(name = "updated_at")
-//    private LocalDateTime updatedAt;
-
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-
-//    @PrePersist
-//    public void prePersist() {
-//        this.createdAt = LocalDateTime.now();
-//    }
-//
-//    @PreUpdate
-//    public void preUpdate() {
-//        this.updatedAt = LocalDateTime.now();
-//    }
 
     @Builder
     public User(String email, String password, String userName, String provider, Role role) {
@@ -71,4 +54,5 @@ public class User extends Basetime implements Serializable {
         this.provider = provider != null ? provider : "local";
         this.role = role;
     }
+
 }
