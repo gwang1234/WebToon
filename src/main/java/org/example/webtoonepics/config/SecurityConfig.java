@@ -63,7 +63,7 @@ public class SecurityConfig {
                                 .authorizationEndpoint(endpointConfig ->
                                         endpointConfig.authorizationRequestRepository(
                                                 httpSessionOAuth2AuthorizationRequestRepository()))
-                                .defaultSuccessUrl("/api/OAuth2/loginInfo", true) // 로그인 성공 시 redirect
+                                .defaultSuccessUrl("/OAuth2/loginInfo", true) // 로그인 성공 시 redirect
                                 .failureUrl("/loginFail") // 로그인 실패 시 리다이렉트 경로
                 )
                 .logout(logout ->

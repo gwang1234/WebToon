@@ -11,6 +11,7 @@ import org.example.webtoonepics.webtoon.entity.Webtoon;
 @AllArgsConstructor
 public class ReviewRequest {
 
+    private Long webtoonId;
     private String writer;
     private String content;
     private short star;

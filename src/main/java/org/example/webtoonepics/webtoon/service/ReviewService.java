@@ -19,9 +19,10 @@ public class ReviewService {
     private final WebtoonRepository webtoonRepository;
     private final ReviewRepository reviewRepository;
 
-    public Review save(Long id, ReviewRequest reviewRequest) {
-        Webtoon webtoon = webtoonRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Webtoon not found" + id));
+    public Review save(ReviewRequest reviewRequest) {
+        // 웹툰을 ID로 조회
+        Webtoon webtoon = webtoonRepository.findById(reviewRequest.getWebtoonId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Webtoon ID"));
 
         return reviewRepository.save(reviewRequest.toEntity(webtoon));
     }

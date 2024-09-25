@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +40,9 @@ public class Webtoon extends Basetime {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @OneToMany(mappedBy = "webtoonInfo")
+    private List<Review> reviews;
 
     @Builder
     public Webtoon(String title, String provider, String author, String description) {

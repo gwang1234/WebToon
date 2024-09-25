@@ -3,7 +3,9 @@ package org.example.webtoonepics.user.repository;
 import java.util.Optional;
 import org.example.webtoonepics.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 
     Boolean existsByEmail(String email);
