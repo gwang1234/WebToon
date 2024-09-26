@@ -1,6 +1,7 @@
 package org.example.webtoonepics.community.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "community")
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Community extends Basetime {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_id")
     private Long id;
 
@@ -29,34 +29,39 @@ public class Community extends Basetime {
     private String content;
 
     private int view;
-    private int likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_info", nullable = false)
     private User user;
 
-    public Community(Long id, String title, String content, int i, int i1, User user, LocalDateTime now,
-            LocalDateTime now1) {
+    public Community(Long id, String title, String content, int i, User user, LocalDateTime now, LocalDateTime now1) {
         super(now, now1);
         this.id = id;
         this.title = title;
         this.content = content;
         this.view = i;
-        this.likes = i1;
         this.user = user;
     }
 
     public static Community toEntity(CommunityWriteDto writeDto, User user) {
         return new Community(
-                null,
+                writeDto.getId(),
                 writeDto.getTitle(),
                 writeDto.getContent(),
-                0,
                 0,
                 user,
                 LocalDateTime.now(),
                 LocalDateTime.now()
-        );
+                );
     }
 
+    public void fetch(CommunityWriteDto updateDto) {
+        if (updateDto.getContent() != null) {
+            this.content = updateDto.getContent();
+        }
+        if (updateDto.getTitle() != null) {
+            this.title = updateDto.getTitle();
+        }
+        this.setUpdated_at(LocalDateTime.now());
+    }
 }

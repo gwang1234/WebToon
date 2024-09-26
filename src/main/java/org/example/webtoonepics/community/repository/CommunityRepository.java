@@ -5,10 +5,12 @@ import org.example.webtoonepics.community.dto.CommunityDetailDto;
 import org.example.webtoonepics.community.entity.Community;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 public interface CommunityRepository extends JpaRepository<Community, Long>, CommunityCustom {
 
@@ -27,9 +29,14 @@ public interface CommunityRepository extends JpaRepository<Community, Long>, Com
     @Query("SELECT b FROM Community b WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%")
     Page<Community> findByTitleOrContentContaining(@Param("keyword") String keyword, Pageable pageable);
 
-//    @Query("select new org.example.webtoonepics.community.dto.CommunityDetailDto(c, u.userName) from Community c left join fetch c.user u where c.id = :id")
-//    CommunityDetailDto findCommuDetail(@Param("id") Long id);
+    // user email 가져오기
+    @Query("select u.email from Community c inner join c.user u where c.id = :id")
+    Optional<String> findEmail(@Param("id") Long id);
 
+    // 조회수 업데이트
+    @Modifying(clearAutomatically = true)
+    @Query("update Community m set m.view = m.view + 1 where m.id = :id")
+    void viewUpdate(@Param("id") Long id);
 
 
 }

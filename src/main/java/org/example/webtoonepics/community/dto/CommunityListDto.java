@@ -7,21 +7,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
-public class CommunityDto {
+public class CommunityListDto {
 
     private Long id;
     private String title;
     private String content;
     private int view;
-    private int likes;
     private String createdAt;
 
-    public CommunityDto(Community community) {
+    public CommunityListDto(Community community) {
         this.id = community.getId();
         this.title = community.getTitle();
         this.content = community.getContent();
         this.view = community.getView();
-        this.likes = community.getLikes();
         this.createdAt = datetimeFormat(community.getCreated_at());
     }
 
@@ -29,4 +27,5 @@ public class CommunityDto {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM.dd");
         return createdAt.format(dateTimeFormatter);
     }
+
 }

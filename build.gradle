@@ -24,6 +24,10 @@ repositories {
 }
 
 dependencies {
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+//    implementation 'org.springframework:spring-context-support'
+
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.session:spring-session-data-redis'

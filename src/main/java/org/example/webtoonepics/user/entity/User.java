@@ -52,4 +52,5 @@ public class User extends Basetime implements Serializable {
         this.provider = provider != null ? provider : "local";
         this.role = role;
     }
+
 }
