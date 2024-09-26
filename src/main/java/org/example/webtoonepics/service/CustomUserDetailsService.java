@@ -1,9 +1,8 @@
 package org.example.webtoonepics.service;
 
-import java.util.Optional;
 import org.example.webtoonepics.dto.CustomUserDetails;
-import org.example.webtoonepics.entity.User;
-import org.example.webtoonepics.repository.UserRepository;
+import org.example.webtoonepics.user.entity.User;
+import org.example.webtoonepics.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

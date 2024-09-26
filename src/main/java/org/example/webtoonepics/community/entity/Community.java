@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.community.dto.CommunityWriteDto;
 import org.example.webtoonepics.entity.BaseEntity.Basetime;
-import org.example.webtoonepics.entity.User;
+import org.example.webtoonepics.user.entity.User;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Community extends Basetime {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_id")
     private Long id;
 
@@ -34,7 +35,8 @@ public class Community extends Basetime {
     @JoinColumn(name = "user_info", nullable = false)
     private User user;
 
-    public Community(Long id, String title, String content, int i, int i1, User user, LocalDateTime now, LocalDateTime now1) {
+    public Community(Long id, String title, String content, int i, int i1, User user, LocalDateTime now,
+            LocalDateTime now1) {
         super(now, now1);
         this.id = id;
         this.title = title;
@@ -54,7 +56,7 @@ public class Community extends Basetime {
                 user,
                 LocalDateTime.now(),
                 LocalDateTime.now()
-                );
+        );
     }
 
 }

@@ -6,14 +6,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.example.webtoonepics.community.dto.CommunityDetailDto;
-import org.example.webtoonepics.community.entity.Community;
-import org.example.webtoonepics.community.entity.QCommunity;
-import org.example.webtoonepics.entity.QUser;
 
 import java.util.List;
 
 import static org.example.webtoonepics.community.entity.QCommunity.community;
-import static org.example.webtoonepics.entity.QUser.user;
+import static org.example.webtoonepics.user.entity.QUser.user;
 
 public class CommunityCustomImpl implements CommunityCustom {
 

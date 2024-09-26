@@ -25,6 +25,5 @@ public class Basetime {
     private LocalDateTime created_at;
 
     @LastModifiedDate
-//    @Column(name = "updated_at")
     private LocalDateTime updated_at;
 }

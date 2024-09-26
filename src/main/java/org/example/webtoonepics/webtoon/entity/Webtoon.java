@@ -1,11 +1,13 @@
-package org.example.webtoonepics.entity;
+package org.example.webtoonepics.webtoon.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,8 +38,11 @@ public class Webtoon extends Basetime {
     @Column(nullable = false, length = 20)
     private String author;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @OneToMany(mappedBy = "webtoonInfo")
+    private List<Review> reviews;
 
     @Builder
     public Webtoon(String title, String provider, String author, String description) {
@@ -45,5 +50,12 @@ public class Webtoon extends Basetime {
         this.provider = provider;
         this.author = author;
         this.description = description;
+    }
+
+    public void updateWith(Webtoon newWebtoon) {
+        this.title = newWebtoon.getTitle();
+        this.author = newWebtoon.getAuthor();
+        this.description = newWebtoon.getDescription();
+        this.provider = newWebtoon.getProvider();
     }
 }
