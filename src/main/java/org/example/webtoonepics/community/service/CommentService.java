@@ -1,6 +1,5 @@
 package org.example.webtoonepics.community.service;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
@@ -8,17 +7,14 @@ import org.example.webtoonepics.community.entity.C_comment;
 import org.example.webtoonepics.community.entity.Community;
 import org.example.webtoonepics.community.repository.CommentRepository;
 import org.example.webtoonepics.community.repository.CommunityRepository;
-import org.example.webtoonepics.entity.User;
-import org.example.webtoonepics.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.webtoonepics.user.entity.User;
+import org.example.webtoonepics.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.nio.file.AccessDeniedException;
 
 @Service
 @RequiredArgsConstructor

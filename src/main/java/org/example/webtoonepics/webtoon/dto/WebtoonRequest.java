@@ -47,6 +47,9 @@ public class WebtoonRequest {
         @JsonProperty("sntncWritrNm")
         private String author;
 
+        @JsonProperty("mainGenreCdNm")
+        private String genre;
+
         @JsonProperty("outline")
         private String description;
 
@@ -55,6 +58,7 @@ public class WebtoonRequest {
                     .title(title)
                     .provider(provider)
                     .author(author)
+                    .genre(genre)
                     .description(description)
                     .build();
         }

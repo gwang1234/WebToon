@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.webtoonepics.entity.User;
+import org.example.webtoonepics.user.entity.User;
 
 @Entity
 @Table(name = "like_community")
@@ -14,7 +14,8 @@ import org.example.webtoonepics.entity.User;
 @AllArgsConstructor
 public class Like_community {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,9 +29,10 @@ public class Like_community {
     private int likes;
 
     public static Like_community toEntity(Community community, User user, int likes) {
-        return new Like_community(null, user, community, likes+1);
+        return new Like_community(null, user, community, likes + 1);
     }
+
     public static Like_community toMinorEntity(Community community, User user, int likes) {
-        return new Like_community(null, user, community, likes-1);
+        return new Like_community(null, user, community, likes - 1);
     }
 }
