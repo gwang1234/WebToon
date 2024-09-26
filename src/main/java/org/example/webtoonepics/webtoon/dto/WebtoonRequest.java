@@ -1,14 +1,14 @@
-package org.example.webtoonepics.dto;
+package org.example.webtoonepics.webtoon.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.webtoonepics.entity.Webtoon;
+import org.example.webtoonepics.webtoon.entity.Webtoon;
 
 @Data
 @NoArgsConstructor
-public class WebtoonDTO {
+public class WebtoonRequest {
 
     @JsonProperty("result")
     private Result result;

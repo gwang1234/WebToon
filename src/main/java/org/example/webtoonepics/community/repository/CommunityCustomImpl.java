@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.querydsl.jpa.JPAExpressions.select;
 import static org.example.webtoonepics.community.entity.QCommunity.community;
+import static org.example.webtoonepics.user.entity.QUser.user;
 import static org.example.webtoonepics.community.entity.QLike_community.like_community;
 import static org.example.webtoonepics.entity.QUser.user;
 

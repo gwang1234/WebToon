@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.entity.BaseEntity.Basetime;
-import org.example.webtoonepics.entity.User;
+import org.example.webtoonepics.user.entity.User;
 
 import java.time.LocalDateTime;
 

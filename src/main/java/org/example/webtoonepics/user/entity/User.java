@@ -1,4 +1,4 @@
-package org.example.webtoonepics.entity;
+package org.example.webtoonepics.user.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,20 +7,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.webtoonepics.entity.BaseEntity.Basetime;
-
-import java.io.Serializable;
+import org.example.webtoonepics.entity.Role;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "user")
 public class User extends Basetime implements Serializable {
@@ -33,7 +31,7 @@ public class User extends Basetime implements Serializable {
     @Column(nullable = false, length = 40, unique = true)
     private String email;  // 로그인 ID로 사용
 
-    @Column(length = 60)
+    @Column(length = 40)
     private String password;  // 소셜 로그인 시 비워두기
 
     @Column(name = "user_name", nullable = false, length = 20)

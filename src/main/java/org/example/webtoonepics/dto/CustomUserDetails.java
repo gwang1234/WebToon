@@ -1,15 +1,15 @@
 package org.example.webtoonepics.dto;
 
 
-import org.example.webtoonepics.entity.User;
+import org.example.webtoonepics.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
+
     private final User userEntity;
 
     public CustomUserDetails(User userEntity) {
