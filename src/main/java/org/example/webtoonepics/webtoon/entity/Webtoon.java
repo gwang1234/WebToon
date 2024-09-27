@@ -59,6 +59,7 @@ public class Webtoon extends Basetime {
     public void updateWith(Webtoon newWebtoon) {
         this.title = newWebtoon.getTitle();
         this.author = newWebtoon.getAuthor();
+        this.genre = newWebtoon.getGenre();
         this.description = newWebtoon.getDescription();
         this.provider = newWebtoon.getProvider();
     }

@@ -1,9 +1,13 @@
 package org.example.webtoonepics.webtoon.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.webtoonepics.entity.BaseEntity.Basetime;
 import org.example.webtoonepics.user.entity.User;
 
 @Entity
@@ -11,7 +15,7 @@ import org.example.webtoonepics.user.entity.User;
 @NoArgsConstructor
 @Table(name = "likewebtoon")
 @IdClass(LikewebtoonId.class)
-public class Likewebtoon extends Basetime {
+public class Likewebtoon {
 
     @Id
     @ManyToOne
@@ -22,7 +26,7 @@ public class Likewebtoon extends Basetime {
     @ManyToOne
     @JoinColumn(name = "user_info", nullable = false)
     private User userInfo;
-    
+
     public Likewebtoon(Webtoon webtoonInfo, User userInfo) {
         this.webtoonInfo = webtoonInfo;
         this.userInfo = userInfo;

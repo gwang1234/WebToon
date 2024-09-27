@@ -68,7 +68,8 @@ public class WebtoonController {
 
     @PostMapping("/webtoons/{id}/like")
     public ResponseEntity<String> likeWebtoon(@PathVariable(name = "id") Long webtoonId, @RequestParam(name = "id") Long userId) {
-        likewebtoonService.likeWebtoon(webtoonId, userId);
-        return ResponseEntity.ok(userId + " : 좋아요가 등록되었습니다.");
+        int result = likewebtoonService.likeWebtoon(webtoonId, userId);
+        String status = result > 0 ? "좋아요를 등록합니다." : "좋아요를 취소합니다.";
+        return ResponseEntity.ok(userId + " : " + status);
     }
 }

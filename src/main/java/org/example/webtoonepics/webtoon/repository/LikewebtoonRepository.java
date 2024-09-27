@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikewebtoonRepository extends JpaRepository<Likewebtoon, Long> {
 
-    Long countByWebtoonInfo_WebtoonIdAndUserInfo_UserId(Long webtoonId, Long userId);
+    Long countByWebtoonInfoAndUserInfo(Webtoon webtoon, User user);
 
     Optional<Likewebtoon> findByWebtoonInfoAndUserInfo(Webtoon webtoon, User user);
 }
