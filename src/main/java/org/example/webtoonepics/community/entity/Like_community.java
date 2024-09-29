@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.webtoonepics.entity.User;
+import org.example.webtoonepics.user.entity.User;
 
 @Entity
 @Table(name = "like_community")

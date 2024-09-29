@@ -41,15 +41,21 @@ public class Webtoon extends Basetime {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "webtoonInfo")
-    private List<Review> reviews;
+    @Column(length = 50)
+    private String genre;
+
+    private String imageurl;
+
+//    @OneToMany(mappedBy = "webtoonInfo")
+//    private List<Review> reviews;
 
     @Builder
-    public Webtoon(String title, String provider, String author, String description) {
+    public Webtoon(String title, String provider, String author, String description, String imageurl) {
         this.title = title;
         this.provider = provider;
         this.author = author;
         this.description = description;
+        this.imageurl = imageurl;
     }
 
     public void updateWith(Webtoon newWebtoon) {

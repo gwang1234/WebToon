@@ -2,12 +2,15 @@ package org.example.webtoonepics.webtoon.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.amazonaws.services.s3.AmazonS3;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webtoonepics.webtoon.dto.WebtoonRequest;
 import org.example.webtoonepics.webtoon.dto.WebtoonRequest.ItemList;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,12 @@ public class WebtoonService {
 
     @Value("${webtoon.api.key}")
     private String apiKey;
+
+    @Autowired
+    private AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
 
     public List<Webtoon> findAll() {
         return webtoonRepository.findAll();

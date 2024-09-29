@@ -3,7 +3,7 @@ package org.example.webtoonepics.community.repository;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.example.webtoonepics.community.entity.Community;
 import org.example.webtoonepics.community.entity.Like_community;
-import org.example.webtoonepics.entity.User;
+import org.example.webtoonepics.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

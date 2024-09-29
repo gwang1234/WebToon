@@ -11,7 +11,6 @@ import org.example.webtoonepics.community.dto.QCommunityDetailDto;
 import org.example.webtoonepics.community.entity.Community;
 import org.example.webtoonepics.community.entity.QCommunity;
 import org.example.webtoonepics.community.entity.QLike_community;
-import org.example.webtoonepics.entity.QUser;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static org.example.webtoonepics.community.entity.QCommunity.community;
 import static org.example.webtoonepics.user.entity.QUser.user;
 import static org.example.webtoonepics.community.entity.QLike_community.like_community;
-import static org.example.webtoonepics.entity.QUser.user;
+
 
 public class CommunityCustomImpl implements CommunityCustom {
 
