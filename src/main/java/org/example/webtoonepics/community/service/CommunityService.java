@@ -116,48 +116,29 @@ public class CommunityService {
     }
 
     @Transactional
-    public Boolean likeUp(Long id, String email) {
+    public void like(Long id, String email) {
         Community community = communityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다"));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 
-        if (likeCommunityRepository.existsByUserAndCommunity(user, community)){
-            return true;
-        }
+        Like_community likeCommunity = likeCommunityRepository.findByUserAndCommunity(user, community);
 
-        Like_community lastLike  = likeCommunityRepository.findTopByCommunityOrderByIdDesc(community).orElse(null);
-        int likes = (lastLike  != null) ? lastLike .getLikes() : 0;
-        Like_community likeCommunity = Like_community.toEntity(community, user, likes);
-        likeCommunityRepository.save(likeCommunity);
-
-        return false;
-    }
-
-    @Transactional
-    public Boolean likeDown(Long communityId, String email) {
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다"));
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
-
-        if (likeCommunityRepository.existsByUserAndCommunity(user, community)) {
-            Like_community byUser = likeCommunityRepository.findByUserAndCommunity(user, community);
-            Like_community lastLike  = likeCommunityRepository.findTopByCommunityOrderByIdDesc(community).orElse(null);
-            likeCommunityRepository.delete(byUser);
-
-            if (byUser == lastLike) {
-                return false;
-            }
-            Like_community likeCommunity = Like_community.toMinorEntity(community, user, lastLike.getLikes());
+        if (likeCommunity != null){
+            likeCommunity.setLikes(likeCommunity.getLikes() == 1 ? 0 : 1);
             likeCommunityRepository.save(likeCommunity);
-
-            return false;
+        } else {
+            Like_community entity = Like_community.toEntity(community, user);
+            likeCommunityRepository.save(entity);
         }
-        return true;
+
     }
+
+    public int getlikes(Long communityId) {
+        return likeCommunityRepository.likeCount(communityId);
+    }
+
 
     public void deleteCommunity(Community community) {
         List<Like_community> byCommunity = likeCommunityRepository.findByCommunity(community);
@@ -170,5 +151,6 @@ public class CommunityService {
     public Community findById(Long id) {
         return communityRepository.findById(id).orElse(null);
     }
+
 }
 

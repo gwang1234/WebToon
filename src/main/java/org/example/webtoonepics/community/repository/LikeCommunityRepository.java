@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LikeCommunityRepository extends JpaRepository<Like_community, Long> {
-    Boolean existsByUserAndCommunity(User user, Community community);
-
-    Optional<Like_community> findTopByCommunityOrderByIdDesc(Community community);
 
     Like_community findByUserAndCommunity(User user,Community community);
 
     List<Like_community> findByCommunity(Community community);
+
+    @Query("select count(l) from Like_community l where l.likes = 1 and l.community.id = :communityId")
+    int likeCount(@Param("communityId")Long communityId);
 }

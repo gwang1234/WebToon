@@ -118,33 +118,25 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.OK).body("ok");
     }
 
-    // 좋아요 추가
-    @PostMapping("/like-plus/{CommunityId}")
-    public ResponseEntity<?> likeUP(@PathVariable Long CommunityId,
+    // 좋아요
+    @PostMapping("/like-set/{CommunityId}")
+    public ResponseEntity<String> likeSet(@PathVariable Long CommunityId,
                                     @AuthenticationPrincipal CustomUserDetails userDetails)
     {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다");
         }
         String email = userDetails.getUsername();
-        Boolean alreadyLiked = communityService.likeUp(CommunityId, email);
-        if (alreadyLiked) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 좋아요를 눌렀습니다");
-        }
+        System.out.println(email);
+        communityService.like(CommunityId, email);
         return ResponseEntity.status(HttpStatus.OK).body("ok");
     }
 
-    // 좋아요 취소
-    @PostMapping("/like-minus/{CommunityId}")
-    public ResponseEntity<?> likeDown(@PathVariable Long CommunityId,
-                                      @AuthenticationPrincipal CustomUserDetails userDetails)
-    {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다");
-        }
-        String email = userDetails.getUsername();
-        Boolean i = communityService.likeDown(CommunityId, email);
-        return ResponseEntity.status(HttpStatus.OK).body("ok");
+    @GetMapping("/like-get/{CommunityId}")
+    public ResponseEntity<Integer> likeGet(@PathVariable Long CommunityId) {
+        int getlikes = communityService.getlikes(CommunityId);
+        return ResponseEntity.status(HttpStatus.OK).body(getlikes);
     }
+
 
 }
