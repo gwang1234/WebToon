@@ -49,6 +49,9 @@ public class CommunityService {
 
     public Boolean writeCommu(CommunityWriteDto writeDto, String email) {
         User user = userRepository.findByEmail(email).orElse(null);
+        if (writeDto.getTitle() == null) {
+            return false;
+        }
         Community community = Community.toEntity(writeDto, user);
         Community save = communityRepository.save(community);
 
@@ -75,7 +78,7 @@ public class CommunityService {
     // 쿠키에 게시물 ID 추가 (중복 조회 방지)
     private void addArticleIdToCookies(HttpServletResponse response, Long articleId) {
         Cookie cookie = new Cookie("viewed_article_" + articleId, "true");
-        cookie.setMaxAge(24 * 60 * 60); // 1일 유지
+        cookie.setMaxAge(10 * 60); // 10분 유지
         response.addCookie(cookie);
     }
 
@@ -100,8 +103,6 @@ public class CommunityService {
     @Transactional
     public Community updateCommu(Community community, CommunityWriteDto updateDto) {
         if (community.getId() != updateDto.getId()) {
-            System.out.println(community.getId());
-            System.out.println(updateDto.getId());
             return null;
         }
         community.fetch(updateDto);

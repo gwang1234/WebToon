@@ -1,6 +1,7 @@
 package org.example.webtoonepics.community.controller;
 
 import com.nimbusds.oauth2.sdk.Response;
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
 import org.example.webtoonepics.community.service.CommentService;
@@ -24,6 +25,7 @@ public class CommunityCommentController {
     CommentService commentService;
 
     // 댓글 쓰기
+    @Operation(summary = "커뮤니티 댓글 작성", description = "header로 로그인 정보를 받아와서 해당 게시판 댓글 등록")
     @PostMapping("/write/{CommunityId}")
     public ResponseEntity<String> write(@PathVariable Long CommunityId,
                                    @RequestBody C_commentWriteDto writeDto,
@@ -38,6 +40,7 @@ public class CommunityCommentController {
     }
 
     // 댓글 보여주기
+    @Operation(summary = "커뮤니티 댓글 조회", description = "게시판 댓글 조회")
     @GetMapping("/{CommunityId}")
     public Page<C_commentDto> showComment(@PathVariable Long CommunityId,
                                           @RequestParam(value = "page", defaultValue = "0")int page)
@@ -47,6 +50,7 @@ public class CommunityCommentController {
     }
 
     // 댓글 수정
+    @Operation(summary = "커뮤니티 댓글 수정", description = "header로 로그인 정보를 받아와서 해당 게시판 댓글 수정")
     @PatchMapping("/update/{id}")
     public ResponseEntity<String> updateComment(@PathVariable Long id,
                                            @RequestBody C_commentWriteDto writeDto,
@@ -62,6 +66,7 @@ public class CommunityCommentController {
 
 
     // 댓글 삭제
+    @Operation(summary = "커뮤니티 댓글 삭제", description = "header로 로그인 정보를 받아와서 해당 게시판 댓글 삭제")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable Long id,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails)
