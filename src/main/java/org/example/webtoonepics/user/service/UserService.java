@@ -15,8 +15,8 @@ public class UserService {
 
     public User loginUser(UserRequest userRequest) {
         User user = userRepository.findByEmail(userRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("User not found. =>" + userRequest));
-        
+                .orElseThrow(() -> new IllegalArgumentException("User not found. ====>" + userRequest));
+
         if (user.getPassword().equals(userRequest.getPassword())) {
             return user;
         } else {
@@ -28,9 +28,13 @@ public class UserService {
         return userRepository.save(userRequest.toEntity());
     }
 
+    public User readUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found. =>" + id));
+    }
+
     @Transactional
     public User updateUser(Long id, UserRequest userRequest) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found :" + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found. ====>" + id));
         user.update(userRequest.getPassword(), userRequest.getUserName());
         return user;
     }

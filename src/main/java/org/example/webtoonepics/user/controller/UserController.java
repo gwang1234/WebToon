@@ -3,7 +3,6 @@ package org.example.webtoonepics.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.user.dto.UserRequest;
-import org.example.webtoonepics.user.dto.UserResponse;
 import org.example.webtoonepics.user.entity.User;
 import org.example.webtoonepics.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -47,9 +46,8 @@ public class UserController {
 
     @Operation(summary = "회원 조회", description = "회원의 이메일을 통해 정보 조회")
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserResponse> loginUser(@RequestBody UserRequest userRequest) {
-        User user = userService.loginUser(userRequest);
-
-        return ResponseEntity.ok().body(new UserResponse(user));
+    public ResponseEntity<User> loginUser(@PathVariable Long id) {
+        User user = userService.readUser(id);
+        return ResponseEntity.ok().body(user);
     }
 }
