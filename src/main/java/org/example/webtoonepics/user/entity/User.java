@@ -53,4 +53,8 @@ public class User extends Basetime implements Serializable {
         this.role = role;
     }
 
+    public void update(String password, String userName) {
+        this.password = password;
+        this.userName = userName;
+    }
 }

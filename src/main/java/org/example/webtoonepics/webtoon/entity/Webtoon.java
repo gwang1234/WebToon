@@ -44,6 +44,9 @@ public class Webtoon extends Basetime {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "img_url")
+    private String imgUrl;
+
     @OneToMany(mappedBy = "webtoonInfo")
     private List<Review> reviews;
 
