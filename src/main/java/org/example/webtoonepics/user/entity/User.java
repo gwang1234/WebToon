@@ -37,19 +37,19 @@ public class User extends Basetime implements Serializable {
     @Column(name = "user_name", nullable = false, length = 20)
     private String userName;  // 소셜 로그인 시 사용자 이름으로 설정
 
-    @Column(nullable = false, length = 10)
-    private String provider;  // 회원 가입 구분
+    @Column(name = "provider_id", nullable = false, length = 10)
+    private String providerId;  // 회원 가입 구분
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public User(String email, String password, String userName, String provider, Role role) {
+    public User(String email, String password, String userName, String providerId, Role role) {
         this.email = email;
         this.password = password;
         this.userName = userName;
-        this.provider = provider != null ? provider : "local";
+        this.providerId = providerId != null ? providerId : "local";
         this.role = role;
     }
 

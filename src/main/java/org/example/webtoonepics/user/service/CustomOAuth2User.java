@@ -34,8 +34,4 @@ public class CustomOAuth2User implements OAuth2User, Serializable {
     public String getRegistrationId() {
         return registrationId;
     }
-
-    public Map<String, Object> getUserNameAndEmail() {
-        return CustomOAuth2UserService.extractUserInfo(registrationId, getAttributes());
-    }
 }

@@ -2,12 +2,12 @@ package org.example.webtoonepics.user.service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.entity.Role;
-import org.example.webtoonepics.user.repository.UserRepository;
 import org.example.webtoonepics.user.entity.User;
+import org.example.webtoonepics.user.repository.UserRepository;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -29,27 +29,33 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // 클라이언트 등록 ID를 가져옵니다.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
+        // 사용자 식별 ID
+        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
+                .getUserInfoEndpoint().getUserNameAttributeName();
+
+        String providerId = oAuth2User.getAttribute(userNameAttributeName);
+
         // 사용자 정보를 처리하는 로직
         Map<String, Object> userInfo = extractUserInfo(registrationId, oAuth2User.getAttributes());
         String email = (String) userInfo.get("email");
         String userName = (String) userInfo.get("name");
-        System.out.println(email);
 
         // 기존 회원 여부
-        Optional<User> existingUser = userRepository.findByEmail(email);
+        User existingUser = userRepository.findByProviderId(providerId).orElseThrow(() -> new IllegalArgumentException("No user found" + providerId));
 
-        if (existingUser.isEmpty()) {
+        if (existingUser == null) {
             // 신규 회원이면 저장
             User user = User.builder()
                     .email(email)
                     .userName(userName)
-                    .provider(registrationId)
+                    .providerId(providerId)
                     .role(Role.ROLE_USER)
                     .build();
 
             // 사용자 저장 로직 추가
             userRepository.save(user);
         }
+
         return new CustomOAuth2User(oAuth2User, registrationId);
     }
 
@@ -68,5 +74,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
 
         return resultMap;
+    }
+
+    public User findByProviderId(String providerId) {
+        return userRepository.findByProviderId(providerId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with providerId: " + providerId));
     }
 }
