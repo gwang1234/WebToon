@@ -2,6 +2,8 @@ package org.example.webtoonepics.webtoon.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webtoonepics.webtoon.dto.WebtoonRequest;
@@ -83,9 +85,17 @@ public class WebtoonService {
         List<Webtoon> newWebtoons = new ArrayList<>();
         List<Webtoon> updateWebtoons = new ArrayList<>();
 
+        // 기존 웹툰 모두 조회
+        List<Webtoon> existingWebtoons = webtoonRepository.findAll();
+
+        // 기존 웹툰의 제목을 Map으로 변환함
+        Map<String, Webtoon> existingWebtoonMap = existingWebtoons.stream()
+                .collect(Collectors.toMap(Webtoon::getTitle, w -> w));
+
+        // 웹툰을 반복하면서 새 웹툰과 업데이트할 웹툰을 구분
         for (ItemList webtoonItems : allWebtoons) {
             Webtoon newWebtoon = webtoonItems.toEntity();
-            Webtoon existingWebtoon = webtoonRepository.findByTitle(newWebtoon.getTitle());
+            Webtoon existingWebtoon = existingWebtoonMap.get(newWebtoon.getTitle());
 
             if (existingWebtoon != null) {
                 existingWebtoon.updateWith(newWebtoon);
