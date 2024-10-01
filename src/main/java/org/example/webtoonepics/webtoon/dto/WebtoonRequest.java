@@ -50,6 +50,9 @@ public class WebtoonRequest {
         @JsonProperty("mainGenreCdNm")
         private String genre;
 
+        @JsonProperty("imageDownloadUrl")
+        private String imgUrl;
+
         @JsonProperty("outline")
         private String description;
 
@@ -59,6 +62,7 @@ public class WebtoonRequest {
                     .provider(provider)
                     .author(author)
                     .genre(genre)
+                    .imgUrl(imgUrl)
                     .description(description)
                     .build();
         }

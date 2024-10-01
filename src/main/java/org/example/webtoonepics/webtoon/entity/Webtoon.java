@@ -35,7 +35,7 @@ public class Webtoon extends Basetime {
     @Column
     private int views;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 45)
     private String author;
 
     @Column(length = 45)
@@ -51,11 +51,12 @@ public class Webtoon extends Basetime {
     private List<Review> reviews;
 
     @Builder
-    public Webtoon(String title, String provider, String author, String genre, String description) {
+    public Webtoon(String title, String provider, String author, String genre, String imgUrl, String description) {
         this.title = title;
         this.provider = provider;
         this.author = author;
         this.genre = genre;
+        this.imgUrl = imgUrl;
         this.description = description;
     }
 
@@ -63,6 +64,7 @@ public class Webtoon extends Basetime {
         this.title = newWebtoon.getTitle();
         this.author = newWebtoon.getAuthor();
         this.genre = newWebtoon.getGenre();
+        this.imgUrl = newWebtoon.getImgUrl();
         this.description = newWebtoon.getDescription();
         this.provider = newWebtoon.getProvider();
     }

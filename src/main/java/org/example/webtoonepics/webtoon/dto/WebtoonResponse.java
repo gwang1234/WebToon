@@ -14,6 +14,7 @@ public class WebtoonResponse {
     private String provider;
     private int views;
     private String author;
+    private String imgUrl;
     private String description;
 
     public WebtoonResponse(Webtoon webtoon) {
@@ -21,6 +22,7 @@ public class WebtoonResponse {
         this.provider = webtoon.getProvider();
         this.views = webtoon.getViews();
         this.author = webtoon.getAuthor();
+        this.imgUrl = webtoon.getImgUrl();
         this.description = webtoon.getDescription();
     }
 }
