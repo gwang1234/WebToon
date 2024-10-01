@@ -57,7 +57,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                                 authorizeRequests // 사용자가 보내는 요청에 인증 절차 수행 필요
-                                .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**",
+                                .requestMatchers("/", "/login", "/OAuth2/**", "/css/**", "/js/**", "/images/**",
                                         "/jwt-login","/jwt-auth", "jwt-refresh","/api/**")
                                 .permitAll() // 인증이 필요 없는 경로
 //                                .requestMatchers("/api/community/delete/**","/api/community/update/**","/api/community/write",
