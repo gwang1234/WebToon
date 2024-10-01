@@ -2,6 +2,7 @@ package org.example.webtoonepics.user.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.entity.Role;
 import org.example.webtoonepics.user.entity.User;
@@ -33,7 +34,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
-        String providerId = oAuth2User.getAttribute(userNameAttributeName);
+        Object providerIdLong = oAuth2User.getAttribute(userNameAttributeName);
+        String providerId = providerIdLong != null ? providerIdLong.toString() : null;
 
         // 사용자 정보를 처리하는 로직
         Map<String, Object> userInfo = extractUserInfo(registrationId, oAuth2User.getAttributes());
@@ -41,13 +43,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String userName = (String) userInfo.get("name");
 
         // 기존 회원 여부
-        User existingUser = userRepository.findByProviderId(providerId).orElseThrow(() -> new IllegalArgumentException("No user found" + providerId));
+        Optional<User> existingUser = userRepository.findByProviderId(providerId);
 
-        if (existingUser == null) {
+        if (existingUser.isEmpty()) {
             // 신규 회원이면 저장
             User user = User.builder()
                     .email(email)
                     .userName(userName)
+                    .provider(registrationId)
                     .providerId(providerId)
                     .role(Role.ROLE_USER)
                     .build();
@@ -67,6 +70,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             resultMap.put("name", ((Map<String, Object>) attributes.get("properties")).get("nickname"));
             resultMap.put("email", kakaoAccount.get("email"));
         } else if ("google".equals(registrationId)) {
+            resultMap.put("sub", attributes.get("sub"));
             resultMap.put("name", attributes.get("name"));
             resultMap.put("email", attributes.get("email"));
         } else {

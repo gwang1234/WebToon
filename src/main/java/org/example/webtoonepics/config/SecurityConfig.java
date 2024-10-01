@@ -52,8 +52,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                                 authorizeRequests // 사용자가 보내는 요청에 인증 절차 수행 필요
-//                                .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**","/jwt-login","/jwt-auth", "/api/**")
-//                                .permitAll() // 인증이 필요 없는 경로
+                                        .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**", "/jwt-login", "/jwt-auth", "/api/**")
+                                        .permitAll() // 인증이 필요 없는 경로
 //                                .requestMatchers("/jwt-token").hasRole("USER")
 //                                .anyRequest().authenticated() // 모든 요청은 인증 필요
                                         .anyRequest().permitAll()
