@@ -37,8 +37,9 @@ public class CommunityController {
     // 커뮤니티 쓰기
     @Operation(summary = "커뮤니티 글쓰기", description = "header로 로그인 정보를 받아와서 게시판 작성")
     @PostMapping("/write")
-    public ResponseEntity<DefaultRes<String>> write(@RequestBody CommunityWriteDto writeDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
-
+    public ResponseEntity<DefaultRes<String>> write(@RequestBody CommunityWriteDto writeDto,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails)
+    {
         // 사용자 정보가 없을 경우 (로그인하지 않았을 경우)
         if (userDetails == null) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.NO_AUTH), HttpStatus.UNAUTHORIZED);
