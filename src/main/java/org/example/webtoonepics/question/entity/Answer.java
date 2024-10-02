@@ -2,7 +2,7 @@ package org.example.webtoonepics.question.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.example.webtoonepics.BaseEntity.Basetime;
+import org.example.webtoonepics.jwt_login.entity.BaseEntity.Basetime;
 
 @Entity
 @Getter

@@ -1,4 +1,4 @@
-package org.example.webtoonepics.BaseEntity;
+package org.example.webtoonepics.jwt_login.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

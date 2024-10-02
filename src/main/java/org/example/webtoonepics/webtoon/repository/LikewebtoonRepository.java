@@ -18,7 +18,9 @@ public interface LikewebtoonRepository extends JpaRepository<Likewebtoon, Long> 
     Optional<Likewebtoon> findByWebtoonInfoAndUserInfo(Webtoon webtoon, User user);
 
     @Query("select new org.example.webtoonepics.main.dto.MainWebtoonDto(w.title, w.imageurl) " +
-            "from Likewebtoon l join l.webtoonInfo w order by l.likes desc ")
+            "from Likewebtoon l join l.webtoonInfo w " +
+            "group by w.id, w.title, w.imageurl " +
+            "order by count(w.id) desc")
     List<MainWebtoonDto> findTop10(Pageable pageable);
 
 }
