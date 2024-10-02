@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.community.dto.CommunityWriteDto;
-import org.example.webtoonepics.BaseEntity.Basetime;
+import org.example.webtoonepics.jwt_login.entity.BaseEntity.Basetime;
 import org.example.webtoonepics.user.entity.User;
 
 import java.time.LocalDateTime;

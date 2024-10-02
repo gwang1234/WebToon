@@ -3,7 +3,7 @@ package org.example.webtoonepics.question.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.webtoonepics.BaseEntity.Basetime;
+import org.example.webtoonepics.jwt_login.entity.BaseEntity.Basetime;
 import org.example.webtoonepics.user.entity.User;
 
 import java.time.LocalDateTime;
