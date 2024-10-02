@@ -17,7 +17,7 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long> {
 
     List<Webtoon> findByProvider(String provider);
 
-    @Query("select new org.example.webtoonepics.main.dto.MainWebtoonDto(w.title, w.imageurl) " +
+    @Query("select new org.example.webtoonepics.main.dto.MainWebtoonDto(w.title, w.imgUrl) " +
             "from Webtoon w order by w.views desc")
     List<MainWebtoonDto> findTop10Views(Pageable pageable);
 

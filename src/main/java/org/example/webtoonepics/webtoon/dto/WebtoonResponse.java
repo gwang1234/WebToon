@@ -16,7 +16,6 @@ public class WebtoonResponse {
     private String author;
     private String imgUrl;
     private String description;
-    private String imageurl;
 
     public WebtoonResponse(Webtoon webtoon) {
         this.title = webtoon.getTitle();
@@ -25,6 +24,5 @@ public class WebtoonResponse {
         this.author = webtoon.getAuthor();
         this.imgUrl = webtoon.getImgUrl();
         this.description = webtoon.getDescription();
-        this.imageurl = webtoon.getImageurl();
     }
 }

@@ -53,14 +53,13 @@ public class Webtoon extends Basetime {
 
     @Builder
 
-    public Webtoon(String title, String provider, String author, String genre, String imgUrl, String description) {
+    public Webtoon(String title, String provider, String author, String genre, String img_url, String description) {
         this.title = title;
         this.provider = provider;
         this.author = author;
         this.genre = genre;
-        this.imgUrl = imgUrl;
+        this.imgUrl = img_url;
         this.description = description;
-        this.imgUrl = imgUrl;
     }
 
     public void updateWith(Webtoon newWebtoon) {
