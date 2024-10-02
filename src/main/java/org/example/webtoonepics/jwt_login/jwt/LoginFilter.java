@@ -1,11 +1,11 @@
-package org.example.webtoonepics.jwt;
+package org.example.webtoonepics.jwt_login.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.webtoonepics.dto.CustomUserDetails;
-import org.example.webtoonepics.dto.JwtLoginDto;
+import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
+import org.example.webtoonepics.jwt_login.dto.JwtLoginDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

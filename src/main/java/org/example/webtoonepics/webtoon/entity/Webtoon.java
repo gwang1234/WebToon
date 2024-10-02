@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.webtoonepics.entity.BaseEntity.Basetime;
+import org.example.webtoonepics.BaseEntity.Basetime;
 
 @Entity
 @Getter

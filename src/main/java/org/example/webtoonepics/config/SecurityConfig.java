@@ -1,9 +1,9 @@
 package org.example.webtoonepics.config;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.webtoonepics.jwt.JWTFilter;
-import org.example.webtoonepics.jwt.JWTUtil;
-import org.example.webtoonepics.jwt.LoginFilter;
+import org.example.webtoonepics.jwt_login.jwt.JWTFilter;
+import org.example.webtoonepics.jwt_login.jwt.JWTUtil;
+import org.example.webtoonepics.jwt_login.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;

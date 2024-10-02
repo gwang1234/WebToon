@@ -1,10 +1,10 @@
-package org.example.webtoonepics.controller;
+package org.example.webtoonepics.jwt_login.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.example.webtoonepics.dto.JwtDto;
-import org.example.webtoonepics.jwt.JWTUtil;
-import org.example.webtoonepics.service.JwtService;
+import org.example.webtoonepics.jwt_login.dto.JwtDto;
+import org.example.webtoonepics.jwt_login.jwt.JWTUtil;
+import org.example.webtoonepics.jwt_login.service.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,4 +1,4 @@
-package org.example.webtoonepics.exception;
+package org.example.webtoonepics.user.exception;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpServerErrorException;

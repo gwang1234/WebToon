@@ -1,4 +1,4 @@
-package org.example.webtoonepics.dto;
+package org.example.webtoonepics.jwt_login.dto;
 
 import lombok.Getter;
 

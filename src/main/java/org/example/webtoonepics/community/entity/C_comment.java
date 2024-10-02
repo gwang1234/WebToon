@@ -2,12 +2,10 @@ package org.example.webtoonepics.community.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
-import org.example.webtoonepics.community.entity.Community;
-import org.example.webtoonepics.entity.BaseEntity.Basetime;
+import org.example.webtoonepics.BaseEntity.Basetime;
 import org.example.webtoonepics.user.entity.User;
 
 import java.time.LocalDateTime;

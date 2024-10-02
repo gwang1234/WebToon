@@ -1,8 +1,8 @@
-package org.example.webtoonepics.service;
+package org.example.webtoonepics.jwt_login.service;
 
 import java.util.Objects;
-import org.example.webtoonepics.dto.JwtDto;
-import org.example.webtoonepics.entity.Role;
+import org.example.webtoonepics.jwt_login.dto.JwtDto;
+import org.example.webtoonepics.jwt_login.entity.Role;
 import org.example.webtoonepics.user.entity.User;
 import org.example.webtoonepics.user.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

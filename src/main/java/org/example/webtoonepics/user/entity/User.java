@@ -13,8 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.webtoonepics.entity.BaseEntity.Basetime;
-import org.example.webtoonepics.entity.Role;
+import org.example.webtoonepics.BaseEntity.Basetime;
+import org.example.webtoonepics.jwt_login.entity.Role;
 
 @Entity
 @Getter

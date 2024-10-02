@@ -1,4 +1,4 @@
-package org.example.webtoonepics.jwt;
+package org.example.webtoonepics.jwt_login.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.data.redis.core.RedisTemplate;
