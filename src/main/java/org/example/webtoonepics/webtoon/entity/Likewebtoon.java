@@ -1,11 +1,6 @@
 package org.example.webtoonepics.webtoon.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.user.entity.User;
@@ -16,6 +11,10 @@ import org.example.webtoonepics.user.entity.User;
 @Table(name = "likewebtoon")
 @IdClass(LikewebtoonId.class)
 public class Likewebtoon {
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
 
     @Id
     @ManyToOne

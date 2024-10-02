@@ -1,20 +1,28 @@
 package org.example.webtoonepics.community.service;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
+import org.example.webtoonepics.community.dto.base.DefaultRes;
 import org.example.webtoonepics.community.entity.C_comment;
 import org.example.webtoonepics.community.entity.Community;
+import org.example.webtoonepics.community.exception.CustomException;
+import org.example.webtoonepics.community.exception.ResponseMessage;
+import org.example.webtoonepics.community.exception.StatusCode;
 import org.example.webtoonepics.community.repository.CommentRepository;
 import org.example.webtoonepics.community.repository.CommunityRepository;
 import org.example.webtoonepics.user.entity.User;
 import org.example.webtoonepics.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.nio.file.AccessDeniedException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +36,7 @@ public class CommentService {
         User user = userRepository.findByEmail(email).orElse(null);
         Community community = communityRepository.findById(CommunityId).orElse(null);
         if (community == null) {
-            try {
-                throw new IllegalAccessException("게시판 정보가 없습니다.");
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            throw new CustomException(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NO_PAGE));
         }
 
         C_comment comment = C_comment.toEntity(writeDto, user, community);
@@ -42,11 +46,7 @@ public class CommentService {
     public Page<C_commentDto> showComment(Long communityId, PageRequest pageRequest) {
         Community community = communityRepository.findById(communityId).orElse(null);
         if (community == null) {
-            try {
-                throw new IllegalAccessException("게시판 정보가 없습니다.");
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            throw new CustomException(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NO_PAGE));
         }
         return c_commentRepository.findWithCommunityId(communityId, pageRequest);
     }
@@ -55,11 +55,7 @@ public class CommentService {
     public void updateComment(Long id, C_commentWriteDto writeDto, String email) {
         C_comment comment = c_commentRepository.findById(id).orElse(null);
         if (comment == null) {
-            try {
-                throw new IllegalAccessException("게시판 정보가 없습니다.");
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            throw new CustomException(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NO_PAGE));
         }
         if (id != writeDto.getId()) {
             try {

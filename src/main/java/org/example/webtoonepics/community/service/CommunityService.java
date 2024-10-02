@@ -49,6 +49,9 @@ public class CommunityService {
 
     public Boolean writeCommu(CommunityWriteDto writeDto, String email) {
         User user = userRepository.findByEmail(email).orElse(null);
+        if (writeDto.getTitle() == null) {
+            return false;
+        }
         Community community = Community.toEntity(writeDto, user);
         Community save = communityRepository.save(community);
 
@@ -75,7 +78,7 @@ public class CommunityService {
     // 쿠키에 게시물 ID 추가 (중복 조회 방지)
     private void addArticleIdToCookies(HttpServletResponse response, Long articleId) {
         Cookie cookie = new Cookie("viewed_article_" + articleId, "true");
-        cookie.setMaxAge(24 * 60 * 60); // 1일 유지
+        cookie.setMaxAge(10 * 60); // 10분 유지
         response.addCookie(cookie);
     }
 
@@ -100,8 +103,6 @@ public class CommunityService {
     @Transactional
     public Community updateCommu(Community community, CommunityWriteDto updateDto) {
         if (community.getId() != updateDto.getId()) {
-            System.out.println(community.getId());
-            System.out.println(updateDto.getId());
             return null;
         }
         community.fetch(updateDto);
@@ -116,48 +117,29 @@ public class CommunityService {
     }
 
     @Transactional
-    public Boolean likeUp(Long id, String email) {
+    public void like(Long id, String email) {
         Community community = communityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다"));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 
-        if (likeCommunityRepository.existsByUserAndCommunity(user, community)){
-            return true;
-        }
+        Like_community likeCommunity = likeCommunityRepository.findByUserAndCommunity(user, community);
 
-        Like_community lastLike  = likeCommunityRepository.findTopByCommunityOrderByIdDesc(community).orElse(null);
-        int likes = (lastLike  != null) ? lastLike .getLikes() : 0;
-        Like_community likeCommunity = Like_community.toEntity(community, user, likes);
-        likeCommunityRepository.save(likeCommunity);
-
-        return false;
-    }
-
-    @Transactional
-    public Boolean likeDown(Long communityId, String email) {
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다"));
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
-
-        if (likeCommunityRepository.existsByUserAndCommunity(user, community)) {
-            Like_community byUser = likeCommunityRepository.findByUserAndCommunity(user, community);
-            Like_community lastLike  = likeCommunityRepository.findTopByCommunityOrderByIdDesc(community).orElse(null);
-            likeCommunityRepository.delete(byUser);
-
-            if (byUser == lastLike) {
-                return false;
-            }
-            Like_community likeCommunity = Like_community.toMinorEntity(community, user, lastLike.getLikes());
+        if (likeCommunity != null){
+            likeCommunity.setLikes(likeCommunity.getLikes() == 1 ? 0 : 1);
             likeCommunityRepository.save(likeCommunity);
-
-            return false;
+        } else {
+            Like_community entity = Like_community.toEntity(community, user);
+            likeCommunityRepository.save(entity);
         }
-        return true;
+
     }
+
+    public int getlikes(Long communityId) {
+        return likeCommunityRepository.likeCount(communityId);
+    }
+
 
     public void deleteCommunity(Community community) {
         List<Like_community> byCommunity = likeCommunityRepository.findByCommunity(community);
@@ -170,5 +152,6 @@ public class CommunityService {
     public Community findById(Long id) {
         return communityRepository.findById(id).orElse(null);
     }
+
 }
 
