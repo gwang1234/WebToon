@@ -1,11 +1,11 @@
-package org.example.webtoonepics.jwt;
+package org.example.webtoonepics.jwt_login.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.webtoonepics.dto.CustomUserDetails;
-import org.example.webtoonepics.entity.Role;
+import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
+import org.example.webtoonepics.jwt_login.entity.Role;
 import org.example.webtoonepics.user.entity.User;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

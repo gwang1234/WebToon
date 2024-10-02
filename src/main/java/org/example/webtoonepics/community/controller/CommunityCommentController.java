@@ -1,6 +1,5 @@
 package org.example.webtoonepics.community.controller;
 
-import com.nimbusds.oauth2.sdk.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
@@ -8,8 +7,7 @@ import org.example.webtoonepics.community.dto.base.DefaultRes;
 import org.example.webtoonepics.community.exception.ResponseMessage;
 import org.example.webtoonepics.community.exception.StatusCode;
 import org.example.webtoonepics.community.service.CommentService;
-import org.example.webtoonepics.community.service.CommunityService;
-import org.example.webtoonepics.dto.CustomUserDetails;
+import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
