@@ -56,6 +56,9 @@ public class WebtoonRequest {
         @JsonProperty("outline")
         private String description;
 
+        @JsonProperty("imageDownloadUrl")
+        private String imageurl;
+
         public Webtoon toEntity() {
             return Webtoon.builder()
                     .title(title)
@@ -64,6 +67,7 @@ public class WebtoonRequest {
                     .genre(genre)
                     .imgUrl(imgUrl)
                     .description(description)
+                    .imageurl(imageurl)
                     .build();
         }
     }

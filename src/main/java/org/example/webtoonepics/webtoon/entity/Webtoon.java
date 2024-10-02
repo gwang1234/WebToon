@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.webtoonepics.entity.BaseEntity.Basetime;
+import org.example.webtoonepics.BaseEntity.Basetime;
 
 @Entity
 @Getter
@@ -47,10 +47,12 @@ public class Webtoon extends Basetime {
     @Column(name = "img_url")
     private String imgUrl;
 
+
     @OneToMany(mappedBy = "webtoonInfo")
     private List<Review> reviews;
 
     @Builder
+
     public Webtoon(String title, String provider, String author, String genre, String imgUrl, String description) {
         this.title = title;
         this.provider = provider;
@@ -58,6 +60,7 @@ public class Webtoon extends Basetime {
         this.genre = genre;
         this.imgUrl = imgUrl;
         this.description = description;
+        this.imgUrl = imgUrl;
     }
 
     public void updateWith(Webtoon newWebtoon) {

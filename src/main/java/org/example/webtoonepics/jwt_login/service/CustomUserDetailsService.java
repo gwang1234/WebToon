@@ -1,6 +1,6 @@
-package org.example.webtoonepics.service;
+package org.example.webtoonepics.jwt_login.service;
 
-import org.example.webtoonepics.dto.CustomUserDetails;
+import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
 import org.example.webtoonepics.user.entity.User;
 import org.example.webtoonepics.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

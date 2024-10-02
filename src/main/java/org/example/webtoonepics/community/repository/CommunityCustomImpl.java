@@ -1,17 +1,18 @@
 package org.example.webtoonepics.community.repository;
 
-import static org.example.webtoonepics.community.entity.QCommunity.community;
-import static org.example.webtoonepics.community.entity.QLike_community.like_community;
-import static org.example.webtoonepics.user.entity.QUser.user;
-
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.List;
 import org.example.webtoonepics.community.dto.CommunityDetailDto;
 import org.example.webtoonepics.community.dto.QCommunityDetailDto;
+
+import java.util.List;
+
+import static org.example.webtoonepics.community.entity.QCommunity.community;
+import static org.example.webtoonepics.community.entity.QLike_community.like_community;
+import static org.example.webtoonepics.user.entity.QUser.user;
 
 public class CommunityCustomImpl implements CommunityCustom {
 

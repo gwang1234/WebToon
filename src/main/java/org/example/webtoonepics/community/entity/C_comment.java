@@ -5,10 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
-import org.example.webtoonepics.entity.BaseEntity.Basetime;
+import org.example.webtoonepics.BaseEntity.Basetime;
+import org.example.webtoonepics.user.entity.User;
 
 import java.time.LocalDateTime;
-import org.example.webtoonepics.user.entity.User;
 
 @Entity
 @Getter
@@ -16,8 +16,7 @@ import org.example.webtoonepics.user.entity.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class C_comment extends Basetime {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "c_comment_id")
     private Long id;
 

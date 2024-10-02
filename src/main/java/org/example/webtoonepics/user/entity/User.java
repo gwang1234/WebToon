@@ -13,8 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.webtoonepics.entity.BaseEntity.Basetime;
-import org.example.webtoonepics.entity.Role;
+import org.example.webtoonepics.BaseEntity.Basetime;
+import org.example.webtoonepics.jwt_login.entity.Role;
 
 @Entity
 @Getter
@@ -31,7 +31,7 @@ public class User extends Basetime implements Serializable {
     @Column(nullable = false, length = 40, unique = true)
     private String email;  // 로그인 ID로 사용
 
-    @Column(length = 40)
+    @Column(length = 60)
     private String password;  // 소셜 로그인 시 비워두기
 
     @Column(name = "user_name", nullable = false, length = 20)

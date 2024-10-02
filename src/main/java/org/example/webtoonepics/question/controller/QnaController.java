@@ -1,7 +1,6 @@
 package org.example.webtoonepics.question.controller;
 
-import io.lettuce.core.dynamic.annotation.Param;
-import org.example.webtoonepics.dto.CustomUserDetails;
+import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
 import org.example.webtoonepics.question.dto.QuestionDto;
 import org.example.webtoonepics.question.dto.QuestionListDto;
 import org.example.webtoonepics.question.service.QnaService;

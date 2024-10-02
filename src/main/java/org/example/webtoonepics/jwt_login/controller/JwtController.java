@@ -1,22 +1,15 @@
-package org.example.webtoonepics.controller;
+package org.example.webtoonepics.jwt_login.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.example.webtoonepics.dto.JwtDto;
-import org.example.webtoonepics.dto.JwtLoginDto;
-import org.example.webtoonepics.jwt.JWTUtil;
-import org.example.webtoonepics.service.CustomUserDetailsService;
-import org.example.webtoonepics.service.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.webtoonepics.jwt_login.dto.JwtDto;
+import org.example.webtoonepics.jwt_login.jwt.JWTUtil;
+import org.example.webtoonepics.jwt_login.service.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +24,7 @@ public class JwtController {
     private final UserDetailsService userDetailsService;
 
     // 회원가입
+    @Operation(summary = "jwt 회원가입", description = "이메일, 비밀번호, 닉네임을 받고 회원 등록")
     @PostMapping("/jwt-auth")
     public ResponseEntity<String> auth(@RequestBody JwtDto jwtDto) {
         Boolean result = jwtService.auth(jwtDto);
@@ -41,12 +35,14 @@ public class JwtController {
     }
 
     // jwt 토큰 인증 - 테스트용
+    @Operation(summary = "jwt 테스트", description = "프론트는 쓸일이 없다. 서버에서 테스트 용도")
     @GetMapping("/jwt-token")
     public @ResponseBody String token() {
         return "abcd";
     }
 
     // 리프레시 토큰
+    @Operation(summary = "jwt 리프레시 토큰", description = "리프레시, 액세스 토큰 재발급")
     @PostMapping("/jwt-refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestParam("refreshToken") String refreshToken) {
 
@@ -70,6 +66,7 @@ public class JwtController {
     }
 
     // 회원가입 - 이메일 인증
+    @Operation(summary = "jwt 회원가입 이메일 인증", description = "중복된 이메일이 있는지 확인")
     @PostMapping("/auth-email")
     public ResponseEntity<Boolean> emailAuth(@RequestParam("email")String email) {
         Boolean exist = jwtService.existEmail(email);
@@ -80,6 +77,7 @@ public class JwtController {
     }
 
     // 회원가입 - 유저네임 인증
+    @Operation(summary = "jwt 회원가입 유저네임 인증", description = "중복된 유저네임이 있는지 확인")
     @PostMapping("/auth-username")
     public ResponseEntity<Boolean> usernameAuth(@RequestParam("userName")String userName) {
         Boolean exist = jwtService.existUsername(userName);
