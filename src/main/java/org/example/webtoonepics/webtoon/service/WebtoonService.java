@@ -67,7 +67,7 @@ public class WebtoonService {
             log.info("총 웹툰 목록 크기: {}", allWebtoons.size());
 
             // DB에 저장
-            saveOrUpdateWebtoons(allWebtoons);
+            saveOrUpdateWebtoons(allWebtoons, provider);
             return initialResponse;
 
         } catch (WebClientResponseException e) {
@@ -81,12 +81,12 @@ public class WebtoonService {
     }
 
     @Transactional
-    protected void saveOrUpdateWebtoons(List<ItemList> allWebtoons) {
+    protected void saveOrUpdateWebtoons(List<ItemList> allWebtoons, String provider) {
         List<Webtoon> newWebtoons = new ArrayList<>();
         List<Webtoon> updateWebtoons = new ArrayList<>();
 
         // 기존 웹툰 모두 조회
-        List<Webtoon> existingWebtoons = webtoonRepository.findAll();
+        List<Webtoon> existingWebtoons = webtoonRepository.findByProvider(provider);
 
         // 기존 웹툰의 제목을 Map으로 변환함
         Map<String, Webtoon> existingWebtoonMap = existingWebtoons.stream()
