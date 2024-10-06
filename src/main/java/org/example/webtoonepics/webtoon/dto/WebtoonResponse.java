@@ -10,6 +10,7 @@ import org.example.webtoonepics.webtoon.entity.Webtoon;
 @AllArgsConstructor
 public class WebtoonResponse {
 
+    private Long id;
     private String title;
     private String provider;
     private int views;
@@ -18,6 +19,7 @@ public class WebtoonResponse {
     private String description;
 
     public WebtoonResponse(Webtoon webtoon) {
+        this.id = webtoon.getId();
         this.title = webtoon.getTitle();
         this.provider = webtoon.getProvider();
         this.views = webtoon.getViews();

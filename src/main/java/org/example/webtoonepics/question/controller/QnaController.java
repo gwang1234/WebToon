@@ -4,6 +4,7 @@ import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
 import org.example.webtoonepics.question.dto.QuestionDto;
 import org.example.webtoonepics.question.dto.QuestionListDto;
 import org.example.webtoonepics.question.service.QnaService;
+import org.example.webtoonepics.user.service.CustomOAuth2User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,11 +24,17 @@ public class QnaController {
     // 질문 게시판 글쓰기
     @PostMapping("/write")
     public ResponseEntity<String> write(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                        @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                         @RequestBody QuestionDto dto) {
-        if (userDetails == null) {
+        if (userDetails == null && customOAuth2User == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
-        String email = userDetails.getUsername();
+        String email = null;
+        if (userDetails != null) {
+            email = userDetails.getUsername();
+        } else {
+            email = customOAuth2User.getName();
+        }
         qnaService.writeQnA(email, dto);
         return ResponseEntity.status(HttpStatus.OK).body("ok");
     }

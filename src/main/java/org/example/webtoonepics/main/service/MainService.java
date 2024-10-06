@@ -27,4 +27,14 @@ public class MainService {
     public List<MainWebtoonDto> findViewTop10() {
         return webtoonRepository.findTop10Views(topTen);
     }
+
+    public List<MainWebtoonDto> AllLikes(int page) {
+        PageRequest pageRequest = PageRequest.of(page, 25);
+        return likewebtoonRepository.findTop10(pageRequest);
+    }
+
+    public List<MainWebtoonDto> AllViews(int page) {
+        PageRequest pageRequest = PageRequest.of(page, 25);
+        return webtoonRepository.findTop10Views(pageRequest);
+    }
 }

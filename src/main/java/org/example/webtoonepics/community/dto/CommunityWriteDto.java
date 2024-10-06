@@ -8,4 +8,5 @@ public class CommunityWriteDto {
     private Long id;
     private String title;
     private String content;
+    private String provider_id;
 }

@@ -153,5 +153,9 @@ public class CommunityService {
         return communityRepository.findById(id).orElse(null);
     }
 
+    public String findByProviderId(String providerId) {
+        User user = userRepository.findByProviderId(providerId).orElse(null);
+        return user.getEmail();
+    }
 }
 
