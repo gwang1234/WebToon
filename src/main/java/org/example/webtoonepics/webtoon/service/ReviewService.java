@@ -12,6 +12,9 @@ import org.example.webtoonepics.webtoon.entity.Review;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.repository.ReviewRepository;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -39,7 +42,7 @@ public class ReviewService {
 //        User user = userRepository.findById(reviewRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
         return reviewRepository.save(reviewRequest.toEntity(webtoon, user));
     }
-    
+
     // 리뷰 수정
     @Transactional
     public Review update(Long id, ReviewRequest reviewRequest) {
@@ -62,6 +65,13 @@ public class ReviewService {
     public List<Review> findByReviews(Long id) {
         Webtoon webtoon = webtoonRepository.findById(id).orElseThrow(() -> new IllegalStateException("Webtoon not found" + id));
         return reviewRepository.findByWebtoonInfo(webtoon).orElseThrow(() -> new IllegalStateException("Webtoon not found" + id));
+    }
+
+    // 특정 웹툰의 리뷰 20개씩 조회
+    public Page<Review> findByReviews(Long id, int page) {
+        Webtoon webtoon = webtoonRepository.findById(id).orElseThrow(() -> new IllegalStateException("Webtoon not found" + id));
+        Pageable pageable = PageRequest.of(page, 20);
+        return reviewRepository.findByWebtoonInfo(webtoon, pageable);
     }
 
     // 리뷰 삭제 (Delete)

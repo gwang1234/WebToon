@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.webtoonepics.jwt_login.jwt.JWTUtil;
 import org.example.webtoonepics.jwt_login.service.JwtService;
 import org.example.webtoonepics.user.service.CustomOAuth2UserService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +33,11 @@ public class OAuth2Controllor {
         String accessToken = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
         String refreshToken = jwtUtil.generateRefreshToken(username);
 
-        // JWT를 쿠키에 저장
-        response.addHeader(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken + "; HttpOnly; Secure; Path=/; Max-Age=900"); // 15분
-        response.addHeader(HttpHeaders.SET_COOKIE, "refreshToken=" + refreshToken + "; HttpOnly; Secure; Path=/; Max-Age=604800"); // 7일
+        // JWT 헤더 등록
+        response.addHeader("Authorization", "Bearer " + accessToken);
+        response.addHeader("Refresh-Token", refreshToken);
 
-        log.info("accessToken=" + accessToken + "; HttpOnly; Secure; Path=/; Max-Age=900");
-        
+        // 로그인 성공 후 JWT 저장
         response.sendRedirect("/");
     }
 }
