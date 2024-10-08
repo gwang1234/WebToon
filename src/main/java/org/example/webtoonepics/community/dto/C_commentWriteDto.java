@@ -9,4 +9,5 @@ public class C_commentWriteDto {
 
     private Long id;
     private String content;
+    private String provider_id;
 }

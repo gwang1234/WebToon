@@ -13,9 +13,10 @@ import org.example.webtoonepics.webtoon.entity.Webtoon;
 public class ReviewRequest {
 
     private Long webtoonId;
-    private Long userId;
+    private Long userInfo;
     private String content;
     private short star;
+    private String provider_id;
 
     public Review toEntity(Webtoon webtoon, User user) {
         return Review.builder()

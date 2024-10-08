@@ -3,6 +3,8 @@ package org.example.webtoonepics.user.service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.jwt_login.entity.Role;
 import org.example.webtoonepics.user.repository.UserRepository;
@@ -59,6 +61,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             // 사용자 저장 로직 추가
             userRepository.save(user);
         }
+
 
         return new CustomOAuth2User(oAuth2User, registrationId);
     }

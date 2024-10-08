@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.user.entity.User;
+import org.example.webtoonepics.webtoon.dto.ReviewRequest;
 
 @Entity
 @Getter
@@ -53,5 +54,10 @@ public class Review {
     public void update(short star, String content) {
         this.star = star;
         this.content = content;
+    }
+
+    public void fetch(ReviewRequest reviewRequest) {
+        this.star = reviewRequest.getStar();
+        this.content = reviewRequest.getContent();
     }
 }

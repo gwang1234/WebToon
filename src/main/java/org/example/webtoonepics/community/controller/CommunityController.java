@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.webtoonepics.community.dto.CommunityDetailDto;
 import org.example.webtoonepics.community.dto.CommunityListDto;
+import org.example.webtoonepics.community.dto.ProvideDto;
 import org.example.webtoonepics.community.dto.CommunityWriteDto;
 import org.example.webtoonepics.community.dto.base.DefaultRes;
 import org.example.webtoonepics.community.entity.Community;
@@ -12,6 +13,7 @@ import org.example.webtoonepics.community.exception.ResponseMessage;
 import org.example.webtoonepics.community.exception.StatusCode;
 import org.example.webtoonepics.community.service.CommunityService;
 import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
+import org.example.webtoonepics.user.controller.OAuth2Controllor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -26,6 +29,9 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/community")
 public class CommunityController {
+
+    @Autowired
+    OAuth2Controllor oAuth2Controllor;
 
     @Autowired
     public CommunityService communityService;
@@ -36,13 +42,22 @@ public class CommunityController {
     public ResponseEntity<DefaultRes<String>> write(@RequestBody CommunityWriteDto writeDto,
                                                     @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        // 사용자 정보가 없을 경우 (로그인하지 않았을 경우)
-        if (userDetails == null) {
+        if (userDetails == null && (writeDto.getProvider_id() == null || writeDto.getProvider_id().isEmpty())) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.NO_AUTH), HttpStatus.UNAUTHORIZED);
         }
+        if (userDetails != null && (writeDto.getProvider_id() != null && !writeDto.getProvider_id().isEmpty())) {
+            SecurityContextHolder.clearContext();
+            userDetails = null;
+        }
+        try {
+            // 사용자 이메일 가져오기
+            String email;
+            if (userDetails != null) {
+                email = userDetails.getUsername();
+            } else {
+                email = communityService.findByProviderId(writeDto.getProvider_id());
+            }
 
-        String email = userDetails.getUsername();
-        try{
             Boolean target = communityService.writeCommu(writeDto, email);
             if (!target) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NO_WRITE), HttpStatus.BAD_REQUEST);
@@ -53,7 +68,6 @@ public class CommunityController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, "에러 발생: " + errorMessage));
         }
-
     }
 
     // 커뮤니티 목록
@@ -98,17 +112,29 @@ public class CommunityController {
     // 커뮤니티 수정
     @Operation(summary = "커뮤니티 수정", description = "header로 로그인 정보를 받아와서 해당 유저 게시판 수정")
     @PatchMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,
-                                         @AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<DefaultRes<String>> update(@PathVariable Long id,
+                                                     @AuthenticationPrincipal CustomUserDetails userDetails,
                                          @RequestBody CommunityWriteDto updateDto)
     {
-        if (userDetails == null) {
+        if (userDetails == null && (updateDto.getProvider_id() == null || updateDto.getProvider_id().isEmpty())) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.NO_AUTH), HttpStatus.UNAUTHORIZED);
+        }
+        if (userDetails != null && (updateDto.getProvider_id() != null && !updateDto.getProvider_id().isEmpty())) {
+            SecurityContextHolder.clearContext();
+            userDetails = null;
         }
 
         try {
-            String email = communityService.getEmail(id);
-            if (email == null || !Objects.equals(userDetails.getUsername(), email)) {
+            // 사용자 이메일 가져오기
+            String email;
+            if (userDetails != null) {
+                email = userDetails.getUsername();
+            } else {
+                email = communityService.findByProviderId(updateDto.getProvider_id());
+            }
+
+            String email1 = communityService.getEmail(id);
+            if (email == null || !Objects.equals(email1, email)) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.FORBIDDEN, ResponseMessage.DIFF_USER), HttpStatus.FORBIDDEN);
             }
 
@@ -135,19 +161,33 @@ public class CommunityController {
     // 커뮤니티 삭제
     @Operation(summary = "커뮤니티 삭제", description = "header로 로그인 정보를 받아와서 해당 유저 게시판 삭제")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id,
-                                         @AuthenticationPrincipal CustomUserDetails userDetails)
+    public ResponseEntity<DefaultRes<String>> delete(@PathVariable Long id,
+                                                     @RequestBody(required = false) ProvideDto deleteDto,
+                                                     @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        if (userDetails == null) {
+        if (userDetails == null && (deleteDto.getProvider_id() == null || deleteDto.getProvider_id().isEmpty())) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.NO_AUTH), HttpStatus.UNAUTHORIZED);
         }
+        if (userDetails != null && (deleteDto.getProvider_id() != null && !deleteDto.getProvider_id().isEmpty())) {
+            SecurityContextHolder.clearContext();
+            userDetails = null;
+        }
+
         try {
+            // 사용자 이메일 가져오기
+            String useremail;
+            if (userDetails != null) {
+                useremail = userDetails.getUsername();
+            } else {
+                useremail = communityService.findByProviderId(deleteDto.getProvider_id());
+            }
+
             Community community = communityService.getCommunity(id);
             if (community == null) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NO_PAGE), HttpStatus.BAD_REQUEST);
             }
             String email = communityService.getEmail(id);
-            if (email == null || !Objects.equals(userDetails.getUsername(), email)) {
+            if (email == null || !Objects.equals(useremail, email)) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.FORBIDDEN, ResponseMessage.DIFF_USER), HttpStatus.FORBIDDEN);
             }
             communityService.deleteCommunity(community);
@@ -162,15 +202,28 @@ public class CommunityController {
     // 좋아요
     @Operation(summary = "게시판 좋아요 설정", description = "header로 로그인 정보를 받아와서 해당 게시판 좋아요 추가 or 삭제")
     @PostMapping("/like-set/{CommunityId}")
-    public ResponseEntity<?> likeSet(@PathVariable Long CommunityId,
-                                    @AuthenticationPrincipal CustomUserDetails userDetails)
+    public ResponseEntity<DefaultRes<String>> likeSet(@PathVariable Long CommunityId,
+                                                      @RequestBody(required = false) ProvideDto communityWriteDto,
+                                                      @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        if (userDetails == null) {
+        if (userDetails == null && (communityWriteDto.getProvider_id() == null || communityWriteDto.getProvider_id().isEmpty())) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.NO_AUTH), HttpStatus.UNAUTHORIZED);
         }
+        if (userDetails != null && (communityWriteDto.getProvider_id() != null && !communityWriteDto.getProvider_id().isEmpty())) {
+            SecurityContextHolder.clearContext();
+            userDetails = null;
+        }
+
         try {
-            String email = userDetails.getUsername();
-            communityService.like(CommunityId, email);
+            // 사용자 이메일 가져오기
+            String useremail;
+            if (userDetails != null) {
+                useremail = userDetails.getUsername();
+            } else {
+                useremail = communityService.findByProviderId(communityWriteDto.getProvider_id());
+            }
+
+            communityService.like(CommunityId, useremail);
             return new ResponseEntity<>(DefaultRes.res(StatusCode.OK, ResponseMessage.SUCCESS), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SERCH_WRONG + e.getMessage()), HttpStatus.BAD_REQUEST);

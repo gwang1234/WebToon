@@ -3,6 +3,9 @@ package org.example.webtoonepics.webtoon.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.webtoonepics.community.entity.C_comment;
+import org.example.webtoonepics.community.entity.Community;
+import org.example.webtoonepics.community.exception.ResponseMessage;
 import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
 import org.example.webtoonepics.user.entity.User;
 import org.example.webtoonepics.user.repository.UserRepository;
@@ -12,15 +15,18 @@ import org.example.webtoonepics.webtoon.entity.Review;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.repository.ReviewRepository;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Slf4j
@@ -32,16 +38,21 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     // 리뷰 저장
-    public Review save(ReviewRequest reviewRequest) {
+    public Boolean save(ReviewRequest reviewRequest, String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            return false;
+        }
         // 웹툰을 ID로 조회
         Webtoon webtoon = webtoonRepository.findById(reviewRequest.getWebtoonId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Webtoon ID"));
 
-        // 현재 로그인된 유저 정보 가져오기
-        User user = getCurrentUser();
+        Review save = reviewRepository.save(reviewRequest.toEntity(webtoon, user));
 
-//        User user = userRepository.findById(reviewRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
-        return reviewRepository.save(reviewRequest.toEntity(webtoon, user));
+        if (!Hibernate.isInitialized(save)) {
+            return false;
+        }
+        return true;
     }
 
     // 리뷰 수정
@@ -99,5 +110,36 @@ public class ReviewService {
         }
 
         throw new IllegalStateException("User is not authenticated");
+    }
+
+    public String findByProviderId(String providerId) {
+        User user = userRepository.findByProviderId(providerId).orElse(null);
+        return user.getEmail();
+    }
+
+    public String getEmail(Long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        if (review == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "해당 리뷰 게시판이 없습니다.");
+        }
+        return review.getUserInfo().getEmail();
+    }
+
+    public Review getReviewId(Long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        if (review == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "해당 리뷰 게시판이 없습니다.");
+        }
+        return review;
+    }
+
+    @Transactional
+    public Review updateReview(Review review, ReviewRequest reviewRequest) {
+        review.fetch(reviewRequest);
+        return reviewRepository.save(review);
+    }
+
+    public void deleteReview(Review review) {
+        reviewRepository.delete(review);
     }
 }

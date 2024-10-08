@@ -28,7 +28,7 @@ public class User extends Basetime implements Serializable {
     @Column(name = "user_id")
     private Long id;  // 기본 키, 자동 증가
 
-    @Column(nullable = false, length = 40, unique = true)
+    @Column(nullable = false, length = 40)
     private String email;  // 로그인 ID로 사용
 
     @Column(length = 60)
@@ -58,7 +58,11 @@ public class User extends Basetime implements Serializable {
     }
 
     public void update(String password, String userName) {
-        this.password = password;
-        this.userName = userName;
+        if (password != null) {
+            this.password = password;
+        }
+        if (userName != null) {
+            this.userName = userName;
+        }
     }
 }
