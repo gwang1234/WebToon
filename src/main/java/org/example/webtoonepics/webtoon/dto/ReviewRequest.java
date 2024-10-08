@@ -3,6 +3,7 @@ package org.example.webtoonepics.webtoon.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.webtoonepics.user.entity.User;
 import org.example.webtoonepics.webtoon.entity.Review;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 
@@ -12,15 +13,16 @@ import org.example.webtoonepics.webtoon.entity.Webtoon;
 public class ReviewRequest {
 
     private Long webtoonId;
-    private String writer;
+    private Long userInfo;
     private String content;
     private short star;
+    private String provider_id;
 
-    public Review toEntity(Webtoon webtoon) {
+    public Review toEntity(Webtoon webtoon, User user) {
         return Review.builder()
                 .webtoonInfo(webtoon)
                 .star(star)
-                .writer(writer)
+                .userInfo(user)
                 .content(content)
                 .build();
     }

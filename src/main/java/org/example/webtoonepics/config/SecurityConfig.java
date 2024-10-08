@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                                 authorizeRequests // 사용자가 보내는 요청에 인증 절차 수행 필요
                                         .requestMatchers("/", "/login", "/oauth2/**", "/css/**", "/js/**", "/images/**",
-                                                         "/jwt-login", "/jwt-auth", "jwt-refresh", "/api/**")
+                                                "/jwt-login", "/jwt-auth", "jwt-refresh", "/api/**")
                                         .permitAll() // 인증이 필요 없는 경로
 //                                .requestMatchers("/jwt-token").hasRole("USER")
 //                                .anyRequest().authenticated() // 모든 요청은 인증 필요
@@ -66,14 +66,11 @@ public class SecurityConfig {
 
                 )
                 .oauth2Login(auth2Login ->
-                        auth2Login
+                        auth2Login // OAuth2를 통한 로그인 사용
                                 .authorizationEndpoint(endpointConfig ->
                                         endpointConfig.authorizationRequestRepository(
-                                                httpSessionOAuth2AuthorizationRequestRepository()
-                                        )
-                                )
-                                .defaultSuccessUrl("/oauth2/loginInfo", true)
-                                .failureUrl("/loginFail")
+                                                httpSessionOAuth2AuthorizationRequestRepository()))
+                                .defaultSuccessUrl("/oauth2/login", true) // 로그인 성공 시 redirect
                 )
                 .logout(logout ->
                         logout // 로그아웃 설정

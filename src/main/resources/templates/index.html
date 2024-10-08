@@ -2,16 +2,64 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>OAuth 2.0 로그인</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>리뷰 작성</title>
 </head>
 <body>
 
-<div class="container" style="display: flex; justify-content: center; align-items: center; flex-direction: column; margin: 200px auto; ">
-  <a href="/oauth2/google" class="btn btn-sm btn-success active" role="button">Google Login</a><br>
-  <a href="/oauth2/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a><br>
-  <a href="/oauth2/authorization/kakao">
-    <img src="/images/kakao_login_medium_narrow.png" alt="kakao-login">
-  </a>
-</div>
+<h1>리뷰 작성</h1>
+<form id="reviewForm">
+  <label for="webtoonId">웹툰 ID:</label>
+  <input type="number" id="webtoonId" name="webtoonId" value="1"><br><br>
+
+  <label for="content">리뷰 내용:</label>
+  <textarea id="content" name="content"></textarea><br><br>
+
+  <label for="star">별점:</label>
+  <select id="star" name="star">
+    <option value="1">1점</option>
+    <option value="2">2점</option>
+    <option value="3">3점</option>
+    <option value="4">4점</option>
+    <option value="5">5점</option>
+  </select><br><br>
+
+  <input type="button" id="submitBtn" value="작성">
+</form>
+
+<script>
+  console.log(document.cookie);
+
+  document.getElementById('submitBtn').addEventListener('click', function () {
+    const webtoonId = document.getElementById('webtoonId').value;
+    const content = document.getElementById('content').value;
+    const star = document.getElementById('star').value;
+
+    const reviewData = {
+      webtoonId: webtoonId,
+      content: content,
+      star: star
+    };
+
+    fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(reviewData)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('리뷰가 성공적으로 작성되었습니다.');
+      } else {
+        alert('리뷰 작성에 실패했습니다.');
+      }
+    })
+    .catch(error => {
+      console.error('에러 발생:', error);
+    });
+  });
+</script>
+
 </body>
 </html>

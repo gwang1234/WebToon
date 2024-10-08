@@ -52,6 +52,7 @@ public class CommunityService {
         if (writeDto.getTitle() == null) {
             return false;
         }
+
         Community community = Community.toEntity(writeDto, user);
         Community save = communityRepository.save(community);
 

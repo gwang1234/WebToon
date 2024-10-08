@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.webtoonepics.community.dto.CommunityDetailDto;
 import org.example.webtoonepics.community.dto.CommunityListDto;
-import org.example.webtoonepics.community.dto.CommunityProvideDto;
+import org.example.webtoonepics.community.dto.ProvideDto;
 import org.example.webtoonepics.community.dto.CommunityWriteDto;
 import org.example.webtoonepics.community.dto.base.DefaultRes;
 import org.example.webtoonepics.community.entity.Community;
@@ -162,7 +162,7 @@ public class CommunityController {
     @Operation(summary = "커뮤니티 삭제", description = "header로 로그인 정보를 받아와서 해당 유저 게시판 삭제")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<DefaultRes<String>> delete(@PathVariable Long id,
-                                                     @RequestBody(required = false) CommunityProvideDto deleteDto,
+                                                     @RequestBody(required = false) ProvideDto deleteDto,
                                                      @AuthenticationPrincipal CustomUserDetails userDetails)
     {
         if (userDetails == null && (deleteDto.getProvider_id() == null || deleteDto.getProvider_id().isEmpty())) {
@@ -203,7 +203,7 @@ public class CommunityController {
     @Operation(summary = "게시판 좋아요 설정", description = "header로 로그인 정보를 받아와서 해당 게시판 좋아요 추가 or 삭제")
     @PostMapping("/like-set/{CommunityId}")
     public ResponseEntity<DefaultRes<String>> likeSet(@PathVariable Long CommunityId,
-                                                      @RequestBody(required = false) CommunityProvideDto communityWriteDto,
+                                                      @RequestBody(required = false) ProvideDto communityWriteDto,
                                                       @AuthenticationPrincipal CustomUserDetails userDetails)
     {
         if (userDetails == null && (communityWriteDto.getProvider_id() == null || communityWriteDto.getProvider_id().isEmpty())) {

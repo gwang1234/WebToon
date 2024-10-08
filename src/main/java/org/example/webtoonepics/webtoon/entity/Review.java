@@ -13,6 +13,8 @@ import jakarta.validation.constraints.Min;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.webtoonepics.user.entity.User;
+import org.example.webtoonepics.webtoon.dto.ReviewRequest;
 
 @Entity
 @Getter
@@ -34,22 +36,28 @@ public class Review {
     @Column(nullable = false)
     private short star;
 
-    @Column(nullable = false, length = 30)
-    private String writer;
+    @ManyToOne
+    @JoinColumn(name = "user_info", nullable = false)
+    private User userInfo;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Builder
-    public Review(Webtoon webtoonInfo, short star, String writer, String content) {
+    public Review(Webtoon webtoonInfo, short star, User userInfo, String content) {
         this.webtoonInfo = webtoonInfo;
         this.star = star;
-        this.writer = writer;
+        this.userInfo = userInfo;
         this.content = content;
     }
 
     public void update(short star, String content) {
         this.star = star;
         this.content = content;
+    }
+
+    public void fetch(ReviewRequest reviewRequest) {
+        this.star = reviewRequest.getStar();
+        this.content = reviewRequest.getContent();
     }
 }

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CommunityProvideDto {
+public class ProvideDto {
 
     private String provider_id;
 }
