@@ -15,6 +15,7 @@ import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -67,10 +68,10 @@ public class ReviewService {
         return reviewRepository.findByWebtoonInfo(webtoon).orElseThrow(() -> new IllegalStateException("Webtoon not found" + id));
     }
 
-    // 특정 웹툰의 리뷰 20개씩 조회
+    // 특정 웹툰의 리뷰 20개씩 조회(desc)
     public Page<Review> findByReviews(Long id, int page) {
         Webtoon webtoon = webtoonRepository.findById(id).orElseThrow(() -> new IllegalStateException("Webtoon not found" + id));
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC,"id"));
         return reviewRepository.findByWebtoonInfo(webtoon, pageable);
     }
 
