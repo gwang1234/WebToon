@@ -10,21 +10,21 @@ import org.example.webtoonepics.webtoon.entity.Webtoon;
 @AllArgsConstructor
 public class WebtoonResponse {
 
+    private Long id;
     private String title;
     private String provider;
     private int views;
     private String author;
-    private String imgUrl;
+    private String imageUrl;
     private String description;
-    private String imageurl;
 
     public WebtoonResponse(Webtoon webtoon) {
+        this.id = webtoon.getId();
         this.title = webtoon.getTitle();
         this.provider = webtoon.getProvider();
         this.views = webtoon.getViews();
         this.author = webtoon.getAuthor();
-        this.imgUrl = webtoon.getImgUrl();
+        this.imageUrl = webtoon.getImageUrl();
         this.description = webtoon.getDescription();
-        this.imageurl = webtoon.getImageurl();
     }
 }

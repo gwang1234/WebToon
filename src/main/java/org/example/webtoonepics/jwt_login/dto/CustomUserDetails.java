@@ -61,4 +61,12 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Long getId() {
+        return userEntity.getId();
+    }
+
+    public String getProviderId() {
+        return userEntity.getProviderId();
+    }
 }

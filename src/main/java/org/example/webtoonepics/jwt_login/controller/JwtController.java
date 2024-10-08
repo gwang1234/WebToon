@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class JwtController {
 
     private final JwtService jwtService;
@@ -68,7 +69,7 @@ public class JwtController {
     // 회원가입 - 이메일 인증
     @Operation(summary = "jwt 회원가입 이메일 인증", description = "중복된 이메일이 있는지 확인")
     @PostMapping("/auth-email")
-    public ResponseEntity<Boolean> emailAuth(@RequestParam("email")String email) {
+    public ResponseEntity<Boolean> emailAuth(@RequestParam("email") String email) {
         Boolean exist = jwtService.existEmail(email);
         if (exist) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
@@ -79,7 +80,7 @@ public class JwtController {
     // 회원가입 - 유저네임 인증
     @Operation(summary = "jwt 회원가입 유저네임 인증", description = "중복된 유저네임이 있는지 확인")
     @PostMapping("/auth-username")
-    public ResponseEntity<Boolean> usernameAuth(@RequestParam("userName")String userName) {
+    public ResponseEntity<Boolean> usernameAuth(@RequestParam("userName") String userName) {
         Boolean exist = jwtService.existUsername(userName);
         if (exist) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
