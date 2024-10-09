@@ -44,64 +44,60 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
     }
   };
 
-  // 좋아요 API 호출 함수
+  // 좋아요 수 가져오기 (GET 요청)
   const fetchLikeCount = async (webtoonId: number) => {
     try {
-      const userId = sessionStorage.getItem("userId"); // 세션에 저장된 사용자 ID 가져오기
-      if (!userId) {
-        return;
-      }
-
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoonId}/like`,
-        {
-          params: { id: userId }, // 사용자 ID를 쿼리 파라미터로 전달
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoonId}/like`
       );
 
-      setLikeCount(response.data.webtoon_id); // 좋아요 수 업데이트
+      setLikeCount(response.data.likeCount); // 서버에서 반환된 좋아요 수로 상태 업데이트
     } catch (error) {
       console.error("좋아요 수 가져오기 실패:", error);
       alert("좋아요 수를 가져오는 중 오류가 발생했습니다.");
     }
   };
 
+  // 좋아요 반영하기 (POST 요청)
   const like = async () => {
     if (!webtoon) return;
 
     try {
       const token = sessionStorage.getItem("token"); // 세션에 저장된 토큰 가져오기
+      const providerId = sessionStorage.getItem("provider_id") || ""; // 세션에 저장된 provider_id 가져오기
 
       if (!token) {
         alert("로그인이 필요합니다."); // 토큰이 없으면 로그인 필요
         return;
       }
 
-      const userId = sessionStorage.getItem("userId"); // 세션에 저장된 사용자 ID 가져오기
-
-      if (!userId) {
-        alert("로그인이 필요합니다."); // 사용자 ID가 없을 경우 처리
-        return;
-      }
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoon.id}/like`, // 좋아요 API 요청
-        null,
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoon.id}/like`,
+        { like: 1, provider_id: providerId }, // provider_id를 요청 바디에 포함
         {
           headers: {
             Authorization: `Bearer ${token}`, // JWT 토큰을 헤더에 추가
-          },
-          params: {
-            id: userId, // 요청에 사용자 ID를 전달
+            "Content-Type": "application/json", // Content-Type 헤더 추가
           },
         }
       );
 
-      alert(response.data); // 서버의 응답 메시지를 보여줌
-      fetchLikeCount(webtoon.id); // 좋아요 수를 다시 가져옴
+      alert("좋아요가 반영되었습니다.");
+
+      // 좋아요 수 다시 가져오기
+      fetchLikeCount(webtoon.id);
     } catch (error) {
-      console.error("좋아요 처리 중 오류가 발생했습니다:", error);
-      alert("좋아요 처리 중 오류가 발생했습니다.");
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 401) {
+          alert("인증에 실패했습니다. 다시 로그인해 주세요.");
+        } else {
+          console.error("좋아요 처리 중 오류가 발생했습니다:", error);
+          alert("좋아요 처리 중 오류가 발생했습니다.");
+        }
+      } else {
+        console.error("예상치 못한 오류:", error);
+        alert("오류가 발생했습니다.");
+      }
     }
   };
 
@@ -127,7 +123,6 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
           setError("웹툰 정보를 불러오는 중 오류가 발생했습니다.");
         } finally {
           setLoading(false);
-          console.log("확인");
         }
       };
 

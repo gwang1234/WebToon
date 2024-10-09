@@ -4,36 +4,35 @@ import * as styles from "../styles/CommentListStyled"; // 스타일 파일 가�
 
 interface Comment {
   id: number;
-  userName: string; // 댓글 작성자 정보
+  userName: string;
   content: string;
-  provider_id: string | null; // provider_id 추가
-  email: string | null; // 이메일 추가
+  provider_id: string | null;
+  email: string | null;
 }
 
 interface CommentListProps {
-  communityId: string; // 커뮤니티 ID를 props로 받음
+  webtoonId: string;
+  refresh: boolean; // 댓글 목록을 다시 불러오기 위한 트리거
 }
 
-export default function CommentList({ communityId }: CommentListProps) {
-  const [comments, setComments] = useState<Comment[]>([]); // 댓글 목록 상태
-  const [page, setPage] = useState<number>(0); // 페이지 상태
-  const [loading, setLoading] = useState<boolean>(false); // 로딩 상태
-  const [error, setError] = useState<string | null>(null); // 에러 상태
-  const [hasMore, setHasMore] = useState<boolean>(true); // 더 가져올 댓글이 있는지 여부
+export default function CommentList({ webtoonId, refresh }: CommentListProps) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   const fetchComments = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/c-comment/${communityId}?page=${page}`
+        `${process.env.NEXT_PUBLIC_API_URL}/reviews/${webtoonId}?page=${page}`
       );
       const newComments = response.data.content;
-      console.log("새로 불러온 댓글:", newComments); // 불러온 댓글 로그
 
       if (newComments.length === 0) {
-        setHasMore(false); // 더 이상 가져올 댓글이 없는 경우
+        setHasMore(false);
       } else {
-        // 기존 댓글 배열에 새로운 댓글 추가
         setComments((prev) => [...prev, ...newComments]);
       }
     } catch (error) {
@@ -46,11 +45,10 @@ export default function CommentList({ communityId }: CommentListProps) {
 
   useEffect(() => {
     fetchComments();
-  }, [communityId, page]);
+  }, [webtoonId, page, refresh]); // refresh 값이 바뀌면 댓글을 다시 불러옴
 
   const loadMoreComments = () => {
-    console.log("다음 페이지 로드 요청:", page + 1); // 다음 페이지 로드 요청 로그
-    setPage((prev) => prev + 1); // 다음 페이지로 넘어가기
+    setPage((prev) => prev + 1);
   };
 
   return (
