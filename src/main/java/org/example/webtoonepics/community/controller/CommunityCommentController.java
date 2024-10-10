@@ -82,7 +82,7 @@ public class CommunityCommentController {
 
     // 댓글 수정
     @Operation(summary = "커뮤니티 댓글 수정", description = "header로 로그인 정보를 받아와서 해당 게시판 댓글 수정")
-    @PatchMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<DefaultRes<String>> updateComment(@PathVariable Long id,
                                            @RequestBody(required = false) C_commentWriteDto writeDto,
                                            @AuthenticationPrincipal CustomUserDetails userDetails)

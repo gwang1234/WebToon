@@ -29,15 +29,15 @@ public class OAuth2Controllor {
         String username = authentication.getName();
         String role = jwtService.findRoleByProviderId(username);
 
-        // JWT 생성
-        String accessToken = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
-        String refreshToken = jwtUtil.generateRefreshToken(username);
-
-        // JWT 헤더 등록
-        response.addHeader("Authorization", "Bearer " + accessToken);
-        response.addHeader("Refresh-Token", refreshToken);
-
-        // 로그인 성공 후 JWT 저장
-        response.sendRedirect("/");
+//        // JWT 생성
+//        String accessToken = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
+//        String refreshToken = jwtUtil.generateRefreshToken(username);
+//
+//        // JWT 헤더 등록
+//        response.addHeader("Authorization", "Bearer " + accessToken);
+//        response.addHeader("Refresh-Token", refreshToken);
+//
+//        // 로그인 성공 후 JWT 저장
+//        response.sendRedirect("/");
     }
 }

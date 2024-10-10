@@ -31,8 +31,16 @@ public class WebtoonService {
         return webtoonRepository.findAll();
     }
 
+    @Transactional
     public Webtoon findById(Long id) {
-        return webtoonRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Webtoon not found. => " + id));
+        Webtoon webtoon = null;
+        int webtoon1 = webtoonRepository.updateView(id);
+        if (webtoon1 == 1) {
+            webtoon = webtoonRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Webtoon not found. => " + id));
+        } else {
+            throw new IllegalArgumentException("뷰 업데이트 실패");
+        }
+        return webtoon;
     }
 
 
