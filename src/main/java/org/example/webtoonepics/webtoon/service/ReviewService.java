@@ -47,11 +47,7 @@ public class ReviewService {
         Webtoon webtoon = webtoonRepository.findById(reviewRequest.getWebtoonId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Webtoon ID"));
 
-        Review save = reviewRepository.save(reviewRequest.toEntity(webtoon, user));
-
-        if (!Hibernate.isInitialized(save)) {
-            return false;
-        }
+        reviewRepository.save(reviewRequest.toEntity(webtoon, user));
         return true;
     }
 
