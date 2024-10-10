@@ -48,10 +48,12 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
   const fetchLikeCount = async (webtoonId: number) => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoonId}/like`
+        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoonId}/like-webtoon`
       );
 
-      setLikeCount(response.data.likeCount); // 서버에서 반환된 좋아요 수로 상태 업데이트
+      // 서버에서 반환된 좋아요 수를 상태로 업데이트
+      setLikeCount(response.data.likeWebtoonCount);
+      console.log("좋아요 수:", response.data.likeWebtoonCount); // 좋아요 수 콘솔 출력
     } catch (error) {
       console.error("좋아요 수 가져오기 실패:", error);
       alert("좋아요 수를 가져오는 중 오류가 발생했습니다.");

@@ -17,7 +17,6 @@ export const CommentItem = styled.div`
 
 export const CommentUser = styled.span`
   font-weight: bold;
-  display: block;
 `;
 
 export const CommentDate = styled.span`
@@ -42,5 +41,24 @@ export const LoadMoreButton = styled.button`
 
   &:hover {
     background-color: #0056b3;
+  }
+`;
+
+export const StarRating = styled.div`
+  display: flex;
+`;
+
+export const StarIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  background-size: contain;
+
+  &.like-on {
+    background-image: url("/like-on.png"); // 활성화된 별 이미지 경로
+  }
+
+  &.like-off {
+    background-image: url("/like-off.png"); // 비활성화된 별 이미지 경로
   }
 `;

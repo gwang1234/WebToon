@@ -7,18 +7,20 @@ import { useRouter } from "next/navigation";
 
 const HeaderComponent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [email, setEmail] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   // 세션에서 사용자 정보 가져오기 함수
   const fetchUserData = () => {
-    const storedEmail = sessionStorage.getItem("email");
+    const storedUserName = sessionStorage.getItem("userName");
 
-    if (storedEmail) {
-      setEmail(storedEmail);
+    console.log("세션에서 가져온 userName:", storedUserName); // 로그 추가
+
+    if (storedUserName) {
+      setName(storedUserName);
     } else {
-      setEmail(null);
+      setName(null);
     }
     setIsLoading(false);
   };
@@ -29,6 +31,7 @@ const HeaderComponent: React.FC = () => {
 
     // 세션이 업데이트되면 세션 정보를 다시 가져오기
     const handleSessionUpdate = () => {
+      console.log("세션 업데이트 감지됨");
       fetchUserData();
     };
 
@@ -41,11 +44,19 @@ const HeaderComponent: React.FC = () => {
     };
   }, []);
 
+  // name 상태가 변경될 때마다 확인하기 위한 useEffect
+  useEffect(() => {
+    if (name !== null) {
+      console.log("확인: " + name); // name 값이 변경될 때 로그 출력
+    }
+  }, [name]); // name이 변경될 때마다 실행
+
   // 로그아웃 처리
   const handleLogout = () => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("refreshToken");
     sessionStorage.removeItem("email");
+    sessionStorage.removeItem("userName");
     router.push("/login");
     fetchUserData(); // 로그아웃 후 세션 정보 갱신
   };
@@ -63,9 +74,9 @@ const HeaderComponent: React.FC = () => {
             <Image src="/logo.svg" alt="Logo" width={61} height={70} priority />
           </Header.Logo>
 
-          {email ? (
+          {name ? (
             <Header.NavLinks>
-              <span>{email}님 환영합니다!</span>
+              <span>{name}님 환영합니다!</span>
               <Header.NavLink as="button" onClick={handleLogout}>
                 로그아웃
               </Header.NavLink>

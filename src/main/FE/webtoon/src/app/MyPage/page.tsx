@@ -5,6 +5,14 @@ import Image from "next/image";
 import * as styles from "./styles"; // styled-components 스타일 임포트
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+// Webtoon 타입 정의
+type Mypage = {
+  email: string;
+  userName: string;
+};
 
 const Main: React.FC = () => {
   const settings = {
@@ -15,10 +23,46 @@ const Main: React.FC = () => {
     slidesToScroll: 1, // 한 번에 넘길 슬라이드 수
   };
 
+  const [mypage, setMypage] = useState<Mypage | null>(null); // 사용자 정보 저장 상태를 단일 객체로 설정
+  const [loading, setLoading] = useState<boolean>(false); // 로딩 상태 저장
+  const [error, setError] = useState<string | null>(null); // 에러 상태 저장
+
+  useEffect(() => {
+    const fetchMypageData = async () => {
+      setLoading(true); // 로딩 시작
+      try {
+        const token = sessionStorage.getItem("token");
+        const providerId = sessionStorage.getItem("provider_id") || null;
+        const email = sessionStorage.getItem("email") || null;
+
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/users`,
+          {
+            provider_id: providerId,
+            email: email,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setMypage(response.data); // 사용자 정보를 상태로 설정
+      } catch (error) {
+        setError("회원 정보를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false); // 로딩 상태 해제
+      }
+    };
+
+    fetchMypageData(); // API 호출
+  }, []);
+
   return (
     <>
       <Head>
-        <title>웹툰 별점 탑 10</title>
+        <title>마이페이지</title>
       </Head>
 
       <styles.Container>
@@ -27,16 +71,16 @@ const Main: React.FC = () => {
           <styles.NameAndId>
             <styles.Name>
               <styles.NameText>닉네임</styles.NameText>
-              <styles.NameInput />
+              <styles.NameInput value={mypage?.userName || ""} readOnly />
             </styles.Name>
             <styles.Id>
               <styles.IdText>비밀번호</styles.IdText>
-              <styles.IdInput />
+              <styles.IdInput type="password" placeholder="******" />
             </styles.Id>
           </styles.NameAndId>
           <styles.Email>
             <styles.EmailText>이메일</styles.EmailText>
-            <styles.EmailInput />
+            <styles.EmailInput value={mypage?.email || ""} readOnly />
           </styles.Email>
           <styles.CorrectionButton>수정하기</styles.CorrectionButton>
           <styles.Webtoon>관심 작품</styles.Webtoon>
