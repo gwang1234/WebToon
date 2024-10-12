@@ -6,11 +6,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.webtoonepics.community.dto.CommunityListDto;
+import org.example.webtoonepics.community.entity.Community;
 import org.example.webtoonepics.webtoon.dto.WebtoonRequest;
 import org.example.webtoonepics.webtoon.dto.WebtoonRequest.ItemList;
+import org.example.webtoonepics.webtoon.dto.WebtoonResponse;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -139,5 +144,17 @@ public class WebtoonService {
                 .retrieve()
                 .bodyToMono(WebtoonRequest.class)
                 .block();
+    }
+
+    public Page<WebtoonResponse> getList(String searchKeyword, String searchType, PageRequest pageRequest) {
+        Page<Webtoon> webtoons = null;
+        if (searchType.equals("title")) {
+            webtoons = webtoonRepository.findByTitleContaining(searchKeyword, pageRequest);
+        } else if (searchType.equals("description")) {
+            webtoons = webtoonRepository.findByDescriptionContaining(searchKeyword, pageRequest);
+        } else if (searchType.equals("author")) {
+            webtoons = webtoonRepository.findByAuthorContaining(searchKeyword, pageRequest);
+        }
+        return webtoons == null ? Page.empty() : webtoons.map(WebtoonResponse::new);
     }
 }

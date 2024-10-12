@@ -31,7 +31,8 @@ public class UserService {
     }
 
     public User readUser(UserDeleteDto userRequest) {
-        return userRepository.findByEmailAndProviderId(userRequest.getEmail(), userRequest.getProvider_id()).orElseThrow(() -> new IllegalArgumentException("User not found. =>" + userRequest.getEmail()));
+        return userRepository.findByEmailAndProviderId(userRequest.getEmail(), userRequest.getProvider_id())
+                .orElseThrow(() -> new IllegalArgumentException("User not found. =>" + userRequest.getEmail()));
     }
 
     @Transactional

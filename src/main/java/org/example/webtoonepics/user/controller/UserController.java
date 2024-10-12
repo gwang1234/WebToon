@@ -94,7 +94,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원 조회", description = "회원의 아이디를 통해 정보 조회")
-    @GetMapping("/users")
+    @PostMapping("/users")
     public ResponseEntity<?> loginUser(@RequestBody UserDeleteDto userRequest
                                             ,@AuthenticationPrincipal CustomUserDetails userDetails)
     {
