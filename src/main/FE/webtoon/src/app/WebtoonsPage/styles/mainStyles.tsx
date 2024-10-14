@@ -14,28 +14,6 @@ export const ButtonContainer = styled.div`
   margin-left: 25%;
 `;
 
-// export const Button = styled.button<{ isActive: boolean }>`
-//   padding: 0.5% 1%;
-//   font-size: 20px;
-//   background-color: transparent; /* 배경색 제거 */
-//   color: ${(props) =>
-//     props.isActive
-//       ? "#0070f3"
-//       : "#000"}; /* 활성화 상태에 따라 글자 색상 변경 */
-//   border: none;
-//   cursor: pointer;
-//   text-decoration: ${(props) => (props.isActive ? "underline" : "none")};
-//   text-decoration-color: ${(props) =>
-//     props.isActive
-//       ? "#0070f3"
-//       : "transparent"}; /* 활성화된 경우 글자 밑줄 색상 */
-//   text-underline-offset: 4px; /* 밑줄과 텍스트 사이의 간격 조정 */
-
-//   &:hover {
-//     text-decoration-color: #0070f3; /* 호버 시 밑줄 색상 */
-//   }
-// `;
-
 export const Button = styled.button<{ isActive: boolean }>`
   padding: 10px 20px;
   font-size: 16px;
@@ -48,4 +26,59 @@ export const Button = styled.button<{ isActive: boolean }>`
   &:hover {
     background-color: ${(props) => (props.isActive ? "#005bb5" : "#bbb")};
   }
+`;
+
+// 검색 컴포넌트 스타일
+export const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+export const Dropdown = styled.select`
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+export const SearchInput = styled.input`
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+`;
+
+export const SearchButton = styled.button`
+  padding: 10px 20px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #005bb5;
+  }
+`;
+
+export const SearchResultsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+`;
+
+export const WebtoonCard = styled.div`
+  width: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  text-align: center;
+  background-color: white;
+`;
+
+export const WebtoonTitle = styled.h3`
+  font-size: 16px;
+  margin-top: 10px;
 `;

@@ -15,8 +15,6 @@ const HeaderComponent: React.FC = () => {
   const fetchUserData = () => {
     const storedUserName = sessionStorage.getItem("userName");
 
-    console.log("세션에서 가져온 userName:", storedUserName); // 로그 추가
-
     if (storedUserName) {
       setName(storedUserName);
     } else {
@@ -25,17 +23,16 @@ const HeaderComponent: React.FC = () => {
     setIsLoading(false);
   };
 
-  // 첫 렌더링 시 세션 정보 가져오기
+  // 세션 업데이트 감지
   useEffect(() => {
-    fetchUserData(); // 처음 페이지 로드 시 정보 가져오기
+    fetchUserData(); // 페이지 로드 시 세션 확인
+    console.log("커스텀 감지");
 
-    // 세션이 업데이트되면 세션 정보를 다시 가져오기
     const handleSessionUpdate = () => {
-      console.log("세션 업데이트 감지됨");
+      console.log("sessionUpdated 이벤트 감지됨");
       fetchUserData();
     };
 
-    // 커스텀 이벤트 리스너 등록
     window.addEventListener("sessionUpdated", handleSessionUpdate);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
@@ -44,21 +41,15 @@ const HeaderComponent: React.FC = () => {
     };
   }, []);
 
-  // name 상태가 변경될 때마다 확인하기 위한 useEffect
-  useEffect(() => {
-    if (name !== null) {
-      console.log("확인: " + name); // name 값이 변경될 때 로그 출력
-    }
-  }, [name]); // name이 변경될 때마다 실행
-
   // 로그아웃 처리
   const handleLogout = () => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("refreshToken");
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("userName");
+    setName(null); // 로그아웃 후 바로 상태를 업데이트
     router.push("/login");
-    fetchUserData(); // 로그아웃 후 세션 정보 갱신
+    window.dispatchEvent(new Event("sessionUpdated")); // 로그아웃 후에도 이벤트 발생
   };
 
   if (isLoading) {

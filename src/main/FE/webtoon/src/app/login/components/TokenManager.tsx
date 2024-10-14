@@ -25,7 +25,8 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
     fetchUserName();
 
     const event = new Event("sessionUpdated");
-    window.dispatchEvent(event);
+    console.log("sessionUpdated 이벤트 발생됨");
+    window.dispatchEvent(event); // 이벤트 발생
   }, [token, refreshToken]);
 
   const decodeJwt = (token: string) => {

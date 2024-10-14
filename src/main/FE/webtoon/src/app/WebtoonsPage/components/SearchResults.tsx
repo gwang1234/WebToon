@@ -1,51 +1,38 @@
-"use client"; // 클라이언트 컴포넌트로 지정
-
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // useRouter import
+import Image from "next/image"; // Next.js Image 컴포넌트 import
 import * as styles from "../styles/styles"; // styled-components 스타일 임포트
 
-// Webtoon 타입 정의
 type Webtoon = {
   id: number;
   title: string;
-  imageUrl: string;
+  imageUrl: string; // imageUrl -> imageurl로 변경
 };
 
-export default function WebtoonsPage() {
-  const [webtoons, setWebtoons] = useState<Webtoon[]>([]); // 웹툰 전체 목록
-  const [loading, setLoading] = useState<boolean>(false); // 로딩 상태
-  const [error, setError] = useState<string | null>(null); // 오류 상태
+type SearchResultsProps = {
+  results: Webtoon[];
+};
+
+export default function SearchResults({ results }: SearchResultsProps) {
   const [page, setPage] = useState<number>(1); // 현재 페이지 상태
-  const [pageGroup, setPageGroup] = useState<number>(0); // 페이지 그룹 (0은 첫 그룹)
+  const [pageGroup, setPageGroup] = useState<number>(0); // 페이지 그룹 상태
+  const [loading, setLoading] = useState<boolean>(false); // 로딩 상태 추가
   const itemsPerPage = 20; // 페이지당 표시할 웹툰 수
   const buttonsPerGroup = 10; // 한 그룹에 보여줄 페이지 번호 수
-  const totalPages = Math.ceil(webtoons.length / itemsPerPage); // 총 페이지 수 계산
+  const totalPages = Math.ceil(results.length / itemsPerPage); // 총 페이지 수 계산
   const router = useRouter(); // useRouter 사용
 
-  // API 호출을 통해 웹툰 전체 목록 가져오기
+  // 데이터 로딩 중 처리
   useEffect(() => {
-    const fetchWebtoons = async () => {
+    if (results.length === 0) {
       setLoading(true); // 로딩 시작
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/webtoons` // 전체 웹툰 데이터 API 호출
-        );
-        setWebtoons(response.data.content); // 전체 웹툰 데이터를 상태로 설정
-      } catch (error) {
-        console.error("웹툰 목록을 가져오는 중 오류가 발생했습니다:", error);
-        setError("웹툰 목록을 불러오는 중 오류가 발생했습니다.");
-      } finally {
-        setLoading(false); // 로딩 상태 해제
-      }
-    };
-
-    fetchWebtoons(); // API 호출
-  }, []);
+    } else {
+      setLoading(false); // 로딩 완료
+    }
+  }, [results]);
 
   // 현재 페이지의 웹툰 목록을 계산
-  const currentWebtoons = webtoons.slice(
+  const currentWebtoons = results.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
@@ -80,10 +67,6 @@ export default function WebtoonsPage() {
     }
   };
 
-  if (error) {
-    return <styles.ErrorMessage>{error}</styles.ErrorMessage>; // 오류가 있을 때 출력
-  }
-
   // 클릭한 웹툰의 id로 이동
   const handleWebtoonClick = (id: number) => {
     router.push(`/WebtoonsPage/${id}`); // router를 사용하여 경로 이동
@@ -91,7 +74,7 @@ export default function WebtoonsPage() {
 
   return (
     <div>
-      {/* 웹툰 목록 섹션 */}
+      {/* 웹툰 목록 */}
       <styles.Section>
         <styles.WebtoonGrid>
           {loading ? (
@@ -99,7 +82,7 @@ export default function WebtoonsPage() {
           ) : currentWebtoons.length > 0 ? (
             currentWebtoons.map((webtoon) => (
               <styles.WebtoonCard
-                key={webtoon.title}
+                key={webtoon.id}
                 onClick={() => handleWebtoonClick(webtoon.id)}
               >
                 {/* 웹툰 프로필 이미지 */}
