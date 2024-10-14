@@ -35,7 +35,6 @@ export default function WebtoonsPage() {
 
   return (
     <styles.Container>
-      <SearchBar onSearch={handleSearch} /> {/* 검색 컴포넌트 추가 */}
       {/* 검색 결과가 있을 때 SearchResults 컴포넌트 표시 */}
       {searchResults.length > 0 ? (
         <SearchResults results={searchResults} />
@@ -68,6 +67,7 @@ export default function WebtoonsPage() {
           {activePage === "all" && <WebtoonsAll />}
         </>
       )}
+      <SearchBar onSearch={handleSearch} /> {/* 검색 컴포넌트 추가 */}
     </styles.Container>
   );
 }

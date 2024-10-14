@@ -32,18 +32,21 @@ export const Button = styled.button<{ isActive: boolean }>`
 export const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export const Dropdown = styled.select`
   padding: 10px;
   margin-right: 10px;
   border-radius: 5px;
+  width: 10%;
   border: 1px solid #ccc;
 `;
 
 export const SearchInput = styled.input`
   padding: 10px;
+  width: 80%;
   border-radius: 5px;
   border: 1px solid #ccc;
   margin-right: 10px;
