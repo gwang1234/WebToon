@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.webtoonepics.community.dto.ProvideDto;
 import org.example.webtoonepics.community.dto.base.DefaultRes;
 import org.example.webtoonepics.community.exception.ResponseMessage;
@@ -16,8 +17,13 @@ import org.example.webtoonepics.webtoon.dto.WebtoonResponse;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.service.LikewebtoonService;
 import org.example.webtoonepics.webtoon.service.WebtoonService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,17 +31,28 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class WebtoonController {
 
     private final CommunityService communityService;
     private final WebtoonService webtoonService;
     private final LikewebtoonService likewebtoonService;
 
-    @Operation(summary = "웹툰조회", description = "등록된 모든 웹툰 조회(NAVER, KAKAO)")
+    @Operation(summary = "목록, 검색별 웹툰조회 ?searchKeyword=&searchType=title&page=0", description = "등록된 모든 웹툰 조회(NAVER, KAKAO)")
     @GetMapping("/webtoons")
-    public ResponseEntity<List<WebtoonResponse>> findAllWebtoons() {
-        List<WebtoonResponse> webtoonList = webtoonService.findAll().stream().map(WebtoonResponse::new).toList();
-        return new ResponseEntity<>(webtoonList, HttpStatus.OK);
+    public ResponseEntity<?> findAllWebtoons(@RequestParam(value = "searchKeyword", required = false, defaultValue = "")String searchKeyword,
+                                                                 @RequestParam(value = "searchType", defaultValue = "title")String searchType,
+                                                                 @RequestParam(value = "page", defaultValue = "0")int page)
+    {
+        try {
+            PageRequest pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id"));
+            Page<WebtoonResponse> list = webtoonService.getList(searchKeyword, searchType, pageRequest);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SERCH_WRONG + e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, "서버 오류: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "특정 웹툰조회", description = "id값으로 웹툰 조회")
@@ -71,7 +88,7 @@ public class WebtoonController {
     }
 
     @Operation(summary = "웹툰 좋아요 - 사용자 중심 조회", description = "마이페이지 좋아요")
-    @GetMapping("/webtoons/like-user")
+    @PostMapping("/webtoons/like-user")
     public ResponseEntity<?> getLikesUser(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                           @RequestBody(required = false) ProvideDto writeDto)
     {
@@ -135,4 +152,34 @@ public class WebtoonController {
         }
 
     }
+
+//    @Scheduled(cron = "0 0 0 1, 15 * *") // 매주 1, 15일에 자동 업데이트
+//    public void updateWebtoons() {
+//        updateNaver();
+//        updateKakao();
+//    }
+//
+//    @Async
+//    public void updateNaver() {
+//        try {
+//            log.info("네이버 웹툰 업데이트 시작");
+//            webtoonService.updateWebtoons("네이버웹툰");
+//            log.info("네이버 웹툰 업데이트 완료");
+//        } catch (Exception e) {
+//            // 오류 처리
+//            log.error("네이버 웹툰 업데이트 중 오류 발생", e);
+//        }
+//    }
+//
+//    @Async
+//    public void updateKakao() {
+//        try {
+//            log.info("카카오 웹툰 업데이트 시작");
+//            webtoonService.updateWebtoons("카카오웹툰");
+//            log.info("카카오 웹툰 업데이트 완료");
+//        } catch (Exception e) {
+//            // 오류 처리
+//            log.error("카카오 웹툰 업데이트 중 오류 발생", e);
+//        }
+//    }
 }

@@ -6,11 +6,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.webtoonepics.community.dto.CommunityListDto;
+import org.example.webtoonepics.community.entity.Community;
 import org.example.webtoonepics.webtoon.dto.WebtoonRequest;
 import org.example.webtoonepics.webtoon.dto.WebtoonRequest.ItemList;
+import org.example.webtoonepics.webtoon.dto.WebtoonResponse;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -98,12 +103,15 @@ public class WebtoonService {
 
         // 기존 웹툰의 제목을 Map으로 변환함
         Map<String, Webtoon> existingWebtoonMap = existingWebtoons.stream()
-                .collect(Collectors.toMap(Webtoon::getTitle, w -> w));
+                .collect(Collectors.toMap(
+                        w -> w.getTitle() + "-" + w.getImageUrl(),  // 제목과 제공자를 결합하여 키로 사용
+                        w -> w
+                ));
 
         // 웹툰을 반복하면서 새 웹툰과 업데이트할 웹툰을 구분
         for (ItemList webtoonItems : allWebtoons) {
             Webtoon newWebtoon = webtoonItems.toEntity();
-            Webtoon existingWebtoon = existingWebtoonMap.get(newWebtoon.getTitle());
+            Webtoon existingWebtoon = existingWebtoonMap.get(newWebtoon.getTitle()+"-"+newWebtoon.getImageUrl());
 
             if (existingWebtoon != null) {
                 existingWebtoon.updateWith(newWebtoon);
@@ -139,5 +147,17 @@ public class WebtoonService {
                 .retrieve()
                 .bodyToMono(WebtoonRequest.class)
                 .block();
+    }
+
+    public Page<WebtoonResponse> getList(String searchKeyword, String searchType, PageRequest pageRequest) {
+        Page<Webtoon> webtoons = null;
+        if (searchType.equals("title")) {
+            webtoons = webtoonRepository.findByTitleContaining(searchKeyword, pageRequest);
+        } else if (searchType.equals("description")) {
+            webtoons = webtoonRepository.findByDescriptionContaining(searchKeyword, pageRequest);
+        } else if (searchType.equals("author")) {
+            webtoons = webtoonRepository.findByAuthorContaining(searchKeyword, pageRequest);
+        }
+        return webtoons == null ? Page.empty() : webtoons.map(WebtoonResponse::new);
     }
 }
