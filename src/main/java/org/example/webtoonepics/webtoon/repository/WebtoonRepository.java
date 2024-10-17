@@ -24,6 +24,10 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long> {
             "from Webtoon w order by w.views desc")
     List<MainWebtoonDto> findTop10Views(Pageable pageable);
 
+    @Query("select new org.example.webtoonepics.main.dto.MainWebtoonDto(w.id, w.title, w.imageUrl) " +
+            "from Webtoon w order by w.views desc")
+    Page<MainWebtoonDto> findViews(Pageable pageable);
+
     @Modifying(clearAutomatically = true)
     @Query("update Webtoon w set w.views = w.views+1 where w.id = :id")
     int updateView(@Param("id")Long id);

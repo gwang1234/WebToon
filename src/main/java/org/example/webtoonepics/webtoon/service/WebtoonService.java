@@ -103,12 +103,15 @@ public class WebtoonService {
 
         // 기존 웹툰의 제목을 Map으로 변환함
         Map<String, Webtoon> existingWebtoonMap = existingWebtoons.stream()
-                .collect(Collectors.toMap(Webtoon::getTitle, w -> w));
+                .collect(Collectors.toMap(
+                        w -> w.getTitle() + "-" + w.getImageUrl(),  // 제목과 제공자를 결합하여 키로 사용
+                        w -> w
+                ));
 
         // 웹툰을 반복하면서 새 웹툰과 업데이트할 웹툰을 구분
         for (ItemList webtoonItems : allWebtoons) {
             Webtoon newWebtoon = webtoonItems.toEntity();
-            Webtoon existingWebtoon = existingWebtoonMap.get(newWebtoon.getTitle());
+            Webtoon existingWebtoon = existingWebtoonMap.get(newWebtoon.getTitle()+"-"+newWebtoon.getImageUrl());
 
             if (existingWebtoon != null) {
                 existingWebtoon.updateWith(newWebtoon);

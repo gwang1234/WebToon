@@ -51,7 +51,6 @@ public class Webtoon extends Basetime {
     private List<Review> reviews;
 
     @Builder
-
     public Webtoon(String title, String provider, String author, String genre, String imageUrl, String description) {
         this.title = title;
         this.provider = provider;

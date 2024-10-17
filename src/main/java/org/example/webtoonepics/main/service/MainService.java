@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.main.dto.MainWebtoonDto;
 import org.example.webtoonepics.webtoon.repository.LikewebtoonRepository;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,13 +29,13 @@ public class MainService {
         return webtoonRepository.findTop10Views(topTen);
     }
 
-    public List<MainWebtoonDto> AllLikes(int page) {
+    public Page<MainWebtoonDto> AllLikes(int page) {
         PageRequest pageRequest = PageRequest.of(page, 25);
-        return likewebtoonRepository.findTop10(pageRequest);
+        return likewebtoonRepository.findTop(pageRequest);
     }
 
-    public List<MainWebtoonDto> AllViews(int page) {
+    public Page<MainWebtoonDto> AllViews(int page) {
         PageRequest pageRequest = PageRequest.of(page, 25);
-        return webtoonRepository.findTop10Views(pageRequest);
+        return webtoonRepository.findViews(pageRequest);
     }
 }
