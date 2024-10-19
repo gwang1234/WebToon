@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 
+import java.io.Serializable;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebtoonResponse {
+public class WebtoonResponse implements Serializable {
 
     private Long id;
     private String title;
