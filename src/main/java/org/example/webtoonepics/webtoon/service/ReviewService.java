@@ -3,19 +3,16 @@ package org.example.webtoonepics.webtoon.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.webtoonepics.community.entity.C_comment;
-import org.example.webtoonepics.community.entity.Community;
-import org.example.webtoonepics.community.exception.ResponseMessage;
 import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
 import org.example.webtoonepics.user.entity.User;
 import org.example.webtoonepics.user.repository.UserRepository;
 import org.example.webtoonepics.user.service.CustomOAuth2User;
 import org.example.webtoonepics.webtoon.dto.ReviewRequest;
+import org.example.webtoonepics.webtoon.dto.ReviewResponse;
 import org.example.webtoonepics.webtoon.entity.Review;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.repository.ReviewRepository;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
-import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +33,11 @@ public class ReviewService {
     private final WebtoonRepository webtoonRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+
+    public Page<ReviewResponse> getUserList(String email, PageRequest pageRequest) {
+        Page<Review> reviews = reviewRepository.findByUser(email, pageRequest);
+        return reviews.map(ReviewResponse::new);
+    }
 
     // 리뷰 저장
     public Boolean save(ReviewRequest reviewRequest, String email) {

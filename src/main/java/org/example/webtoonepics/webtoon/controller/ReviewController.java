@@ -2,17 +2,21 @@ package org.example.webtoonepics.webtoon.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.dto.ProvideDto;
-import org.example.webtoonepics.community.dto.base.DefaultRes;
-import org.example.webtoonepics.community.entity.Community;
-import org.example.webtoonepics.community.exception.ResponseMessage;
-import org.example.webtoonepics.community.exception.StatusCode;
+import org.example.webtoonepics.community.service.CommunityService;
+import org.example.webtoonepics.public_method.dto.base.DefaultRes;
+import org.example.webtoonepics.public_method.exception.ResponseMessage;
+import org.example.webtoonepics.public_method.exception.StatusCode;
 import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
+import org.example.webtoonepics.public_method.service.PublicService;
 import org.example.webtoonepics.webtoon.dto.ReviewRequest;
 import org.example.webtoonepics.webtoon.dto.ReviewResponse;
 import org.example.webtoonepics.webtoon.entity.Review;
 import org.example.webtoonepics.webtoon.service.ReviewService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,6 +39,7 @@ import java.util.Objects;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final PublicService publicService;
 
     @Operation(summary = "리뷰 조회 (20개 씩)", description = "id값과 pageSize를 입력하여 조회")
     @GetMapping("/reviews/{webtoonId}")
@@ -58,12 +63,7 @@ public class ReviewController {
         }
         try {
             // 사용자 이메일 가져오기
-            String email;
-            if (userDetails != null) {
-                email = userDetails.getUsername();
-            } else {
-                email = reviewService.findByProviderId(reviewRequest.getProvider_id());
-            }
+            String email = publicService.getUserEmail(userDetails, reviewRequest.getProvider_id());
 
             Boolean target = reviewService.save(reviewRequest, email);
             if (!target) {
@@ -91,12 +91,7 @@ public class ReviewController {
         }
         try {
             // 사용자 이메일 가져오기
-            String email;
-            if (userDetails != null) {
-                email = userDetails.getUsername();
-            } else {
-                email = reviewService.findByProviderId(reviewRequest.getProvider_id());
-            }
+            String email = publicService.getUserEmail(userDetails, reviewRequest.getProvider_id());
 
             String email1 = reviewService.getEmail(id);
             if (email == null || !Objects.equals(email1, email)) {
@@ -134,12 +129,7 @@ public class ReviewController {
         }
         try {
             // 사용자 이메일 가져오기
-            String email;
-            if (userDetails != null) {
-                email = userDetails.getUsername();
-            } else {
-                email = reviewService.findByProviderId(provideDto.getProvider_id());
-            }
+            String email = publicService.getUserEmail(userDetails, provideDto.getProvider_id());
 
             Review review = reviewService.getReviewId(id);
             if (review == null) {
@@ -152,6 +142,34 @@ public class ReviewController {
             reviewService.deleteReview(review);
 
             return new ResponseEntity<>(DefaultRes.res(StatusCode.OK, ResponseMessage.SUCCESS), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SERCH_WRONG + e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, "서버 오류: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 사용자 리뷰
+    @Operation(summary = "사용자가 쓴 리뷰 조회 (20개 씩)", description = "id값과 pageSize를 입력하여 조회")
+    @GetMapping("/reviews/user")
+    public ResponseEntity<?> UserReviews(@RequestParam(name = "page", defaultValue = "0") int page,
+                               @AuthenticationPrincipal CustomUserDetails userDetails,
+                               @RequestBody(required = false) ProvideDto provideDto)
+    {
+        if (userDetails == null && (provideDto.getProvider_id() == null || provideDto.getProvider_id().isEmpty())) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.NO_AUTH), HttpStatus.UNAUTHORIZED);
+        }
+        if (userDetails != null && (provideDto.getProvider_id() != null && !provideDto.getProvider_id().isEmpty())) {
+            SecurityContextHolder.clearContext();
+            userDetails = null;
+        }
+
+        try {
+            String email = publicService.getUserEmail(userDetails, provideDto.getProvider_id());
+
+            PageRequest pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id"));
+            Page<ReviewResponse> list = reviewService.getUserList(email, pageRequest);
+            return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SERCH_WRONG + e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

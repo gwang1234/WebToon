@@ -1,8 +1,8 @@
 package org.example.webtoonepics.main.exception;
 
 import jakarta.persistence.NoResultException;
-import org.example.webtoonepics.community.dto.base.DefaultRes;
-import org.example.webtoonepics.community.exception.StatusCode;
+import org.example.webtoonepics.public_method.dto.base.DefaultRes;
+import org.example.webtoonepics.public_method.exception.StatusCode;
 import org.example.webtoonepics.main.controller.MainController;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;

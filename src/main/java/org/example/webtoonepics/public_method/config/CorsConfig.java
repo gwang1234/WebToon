@@ -1,4 +1,4 @@
-package org.example.webtoonepics.config;
+package org.example.webtoonepics.public_method.config;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package org.example.webtoonepics.community.exception;
+package org.example.webtoonepics.public_method.exception;
 
 public class ResponseMessage {
 

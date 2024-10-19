@@ -1,7 +1,7 @@
 package org.example.webtoonepics.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.webtoonepics.community.exception.ResponseMessage;
+import org.example.webtoonepics.public_method.exception.ResponseMessage;
 import org.example.webtoonepics.user.dto.UserDeleteDto;
 import org.example.webtoonepics.user.dto.UserRequest;
 import org.example.webtoonepics.user.entity.User;

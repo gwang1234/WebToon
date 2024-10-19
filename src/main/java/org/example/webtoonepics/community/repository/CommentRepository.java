@@ -1,5 +1,6 @@
 package org.example.webtoonepics.community.repository;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.entity.C_comment;
 import org.example.webtoonepics.community.entity.Community;
@@ -16,5 +17,8 @@ public interface CommentRepository extends JpaRepository<C_comment, Long> {
     Page<C_commentDto> findWithCommunityId(Long id, Pageable pageable);
 
     List<C_comment> findByCommunity(Community community);
+
+    @Query("select c from C_comment c join c.user u where u.email = :email")
+    Page<C_comment> findByUser(@Param("email")String email, Pageable pageable);
 
 }
