@@ -1,4 +1,4 @@
-package org.example.webtoonepics.config;
+package org.example.webtoonepics.public_method.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

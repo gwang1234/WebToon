@@ -10,11 +10,16 @@ public class ReviewResponse {
     private short star;
     private Long userId;
     private String content;
+    private Long webtoon_id;
+    private String webtoon_title;
 
     public ReviewResponse(Review review) {
         this.id = review.getId();
         this.star = review.getStar();
         this.userId = review.getUserInfo().getId();
         this.content = review.getContent();
+        this.webtoon_id = review.getWebtoonInfo().getId();
+        this.webtoon_title = review.getWebtoonInfo().getTitle();
     }
+
 }

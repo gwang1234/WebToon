@@ -3,6 +3,7 @@ package org.example.webtoonepics.community.repository;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.example.webtoonepics.community.dto.CommunityDetailDto;
 import org.example.webtoonepics.community.entity.Community;
+import org.example.webtoonepics.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -46,6 +47,9 @@ public interface CommunityRepository extends JpaRepository<Community, Long>, Com
     @Modifying(clearAutomatically = true)
     @Query("update Community m set m.view = m.view + 1 where m.id = :id")
     void viewUpdate(@Param("id") Long id);
+
+    @Query("select c from Community c join c.user u where u.email = :email")
+    Page<Community> findByUser(@Param("email")String email,Pageable pageable);
 
 
 }

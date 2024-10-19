@@ -158,5 +158,10 @@ public class CommunityService {
         User user = userRepository.findByProviderId(providerId).orElse(null);
         return user.getEmail();
     }
+
+    public Page<CommunityListDto> getUserList(String email, PageRequest pageRequest) {
+        Page<Community> byUser = communityRepository.findByUser(email, pageRequest);
+        return byUser.map(CommunityListDto::new);
+    }
 }
 

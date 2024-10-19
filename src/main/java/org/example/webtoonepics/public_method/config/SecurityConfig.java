@@ -1,4 +1,4 @@
-package org.example.webtoonepics.config;
+package org.example.webtoonepics.public_method.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.webtoonepics.jwt_login.jwt.JWTFilter;

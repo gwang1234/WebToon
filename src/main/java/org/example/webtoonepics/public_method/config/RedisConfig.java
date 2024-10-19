@@ -1,4 +1,4 @@
-package org.example.webtoonepics.config;
+package org.example.webtoonepics.public_method.config;
 
 
 import org.springframework.beans.factory.annotation.Value;

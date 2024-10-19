@@ -3,9 +3,10 @@ package org.example.webtoonepics.community.service;
 import lombok.RequiredArgsConstructor;
 import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
+import org.example.webtoonepics.community.dto.CommunityListDto;
 import org.example.webtoonepics.community.entity.C_comment;
 import org.example.webtoonepics.community.entity.Community;
-import org.example.webtoonepics.community.exception.ResponseMessage;
+import org.example.webtoonepics.public_method.exception.ResponseMessage;
 import org.example.webtoonepics.community.repository.CommentRepository;
 import org.example.webtoonepics.community.repository.CommunityRepository;
 import org.example.webtoonepics.user.entity.User;
@@ -69,5 +70,10 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "사용자 정보가 일치하지 않습니다.");
         }
         c_commentRepository.delete(comment);
+    }
+
+    public Page<C_commentDto> getUserList(String email, PageRequest pageRequest) {
+        Page<C_comment> byUser = c_commentRepository.findByUser(email, pageRequest);
+        return byUser.map(C_commentDto::new);
     }
 }

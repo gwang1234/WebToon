@@ -4,12 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.example.webtoonepics.community.dto.C_commentDto;
 import org.example.webtoonepics.community.dto.C_commentWriteDto;
 import org.example.webtoonepics.community.dto.ProvideDto;
-import org.example.webtoonepics.community.dto.base.DefaultRes;
-import org.example.webtoonepics.community.exception.ResponseMessage;
-import org.example.webtoonepics.community.exception.StatusCode;
+import org.example.webtoonepics.public_method.dto.base.DefaultRes;
+import org.example.webtoonepics.public_method.exception.ResponseMessage;
+import org.example.webtoonepics.public_method.exception.StatusCode;
 import org.example.webtoonepics.community.service.CommentService;
 import org.example.webtoonepics.community.service.CommunityService;
 import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
+import org.example.webtoonepics.public_method.service.PublicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,9 @@ public class CommunityCommentController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    PublicService publicService;
+
     // 댓글 쓰기
     @Operation(summary = "커뮤니티 댓글 작성", description = "header로 로그인 정보를 받아와서 해당 게시판 댓글 등록")
     @PostMapping("/write/{CommunityId}")
@@ -47,12 +51,8 @@ public class CommunityCommentController {
             }
 
             // 사용자 이메일 가져오기
-            String userEmail;
-            if (userDetails != null) {
-                userEmail = userDetails.getUsername();
-            } else {
-                userEmail = communityService.findByProviderId(writeDto.getProvider_id());
-            }
+            String userEmail = publicService.getUserEmail(userDetails, writeDto.getProvider_id());
+
             commentService.writeComment(writeDto, userEmail, CommunityId);
             return ResponseEntity.status(HttpStatus.CREATED).body("ok");
         } catch (IllegalArgumentException e) {
@@ -97,12 +97,7 @@ public class CommunityCommentController {
             }
 
             // 사용자 이메일 가져오기
-            String userEmail;
-            if (userDetails != null) {
-                userEmail = userDetails.getUsername();
-            } else {
-                userEmail = communityService.findByProviderId(writeDto.getProvider_id());
-            }
+            String userEmail = publicService.getUserEmail(userDetails, writeDto.getProvider_id());
 
             commentService.updateComment(id, writeDto, userEmail);
             return new ResponseEntity<>(DefaultRes.res(StatusCode.OK, ResponseMessage.SUCCESS), HttpStatus.OK);
@@ -131,14 +126,38 @@ public class CommunityCommentController {
             }
 
             // 사용자 이메일 가져오기
-            String userEmail;
-            if (userDetails != null) {
-                userEmail = userDetails.getUsername();
-            } else {
-                userEmail = communityService.findByProviderId(writeDto.getProvider_id());
-            }
+            String userEmail = publicService.getUserEmail(userDetails, writeDto.getProvider_id());
+
             commentService.deleteComment(id, userEmail);
             return new ResponseEntity<>(DefaultRes.res(StatusCode.OK, ResponseMessage.SUCCESS), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SERCH_WRONG + e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, "서버 오류: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 사용자 댓글 조회
+    @Operation(summary = "커뮤니티 댓글 사용자 중심 조회")
+    @GetMapping("/user/comment")
+    public ResponseEntity<?> UserComment(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                @RequestBody(required = false) ProvideDto provideDto,
+                                                @RequestParam(value = "page", defaultValue = "0")int page)
+    {
+        if (userDetails == null && (provideDto.getProvider_id() == null || provideDto.getProvider_id().isEmpty())) {
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.NO_AUTH), HttpStatus.UNAUTHORIZED);
+        }
+        if (userDetails != null && (provideDto.getProvider_id() != null && !provideDto.getProvider_id().isEmpty())) {
+            SecurityContextHolder.clearContext();
+            userDetails = null;
+        }
+
+        try {
+            String email = publicService.getUserEmail(userDetails, provideDto.getProvider_id());
+
+            PageRequest pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id"));
+            Page<C_commentDto> list = commentService.getUserList(email, pageRequest);
+            return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SERCH_WRONG + e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

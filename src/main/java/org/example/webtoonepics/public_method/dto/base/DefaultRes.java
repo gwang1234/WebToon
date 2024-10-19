@@ -1,4 +1,4 @@
-package org.example.webtoonepics.community.dto.base;
+package org.example.webtoonepics.public_method.dto.base;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
