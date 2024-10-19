@@ -14,6 +14,7 @@ import org.example.webtoonepics.webtoon.dto.WebtoonResponse;
 import org.example.webtoonepics.webtoon.entity.Webtoon;
 import org.example.webtoonepics.webtoon.repository.WebtoonRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -159,5 +160,10 @@ public class WebtoonService {
             webtoons = webtoonRepository.findByAuthorContaining(searchKeyword, pageRequest);
         }
         return webtoons == null ? Page.empty() : webtoons.map(WebtoonResponse::new);
+    }
+
+    public Page<WebtoonResponse> getGenreList(String genre, PageRequest pageRequest) {
+        Page<Webtoon> webtoons = webtoonRepository.findByGenre(genre, pageRequest);
+        return webtoons.map(WebtoonResponse::new);
     }
 }
