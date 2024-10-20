@@ -74,6 +74,12 @@ const JoinForm: React.FC = () => {
 
   // 회원가입 처리
   const onSubmit = async () => {
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,16}$/; // 영문, 숫자 포함 6~8자리 정규식
+
+    if (!passwordRegex.test(pw)) {
+      alert("비밀번호는 영어와 숫자를 포함하여 6~16자리로 설정해야 합니다.");
+      return;
+    }
     if (pw !== confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
