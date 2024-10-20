@@ -37,11 +37,18 @@ type community = {
   content: string;
 };
 
+type C_community = {
+  id: number;
+  title: string;
+  content: string;
+};
+
 const Main: React.FC = () => {
   const [mypage, setMypage] = useState<Mypage | null>(null);
   const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
   const [comments, setComments] = useState<Comment[]>([]); // 댓글 상태
-  const [communites, setCommunites] = useState<community[]>([]); // 댓글 상태
+  const [communites, setCommunites] = useState<community[]>([]); // 커뮤 상태
+  const [c_comments, setC_comments] = useState<C_community[]>([]); // 커뮤댓글 상태
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("");
@@ -64,7 +71,7 @@ const Main: React.FC = () => {
 
         console.log(token);
 
-        const [userRes, webtoonRes, commentRes, communityRes] =
+        const [userRes, webtoonRes, commentRes, communityRes, C_commentRes] =
           await Promise.all([
             axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/users`,
@@ -107,6 +114,17 @@ const Main: React.FC = () => {
                 },
               }
             ),
+            axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/c-comment/user/comment`,
+              {
+                provider_id: providerId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            ),
           ]);
 
         setMypage(userRes.data);
@@ -114,6 +132,7 @@ const Main: React.FC = () => {
         setWebtoons(webtoonRes.data);
         setComments(commentRes.data.content || []);
         setCommunites(communityRes.data.content || []);
+        setC_comments(C_commentRes.data.content || []);
       } catch (err) {
         setError("데이터를 불러오는 중 오류가 발생했습니다.");
       } finally {
@@ -281,6 +300,33 @@ const Main: React.FC = () => {
                     <styles.CommentMiddle />
                     <styles.CommentContent>
                       {community.content}
+                    </styles.CommentContent>
+                  </styles.CommentItem>
+                ))}
+              </styles.CommentList>
+            ) : (
+              <p>커뮤니티가 없습니다.</p>
+            )}
+
+            <styles.Webtoon>내가 작성한 커뮤니티 댓글</styles.Webtoon>
+
+            {c_comments.length > 0 ? (
+              <styles.CommentList>
+                {/* <styles.CommentLists>
+                  <styles.CommentWebtoonTitle>제목</styles.CommentWebtoonTitle>
+                  <styles.CommentMiddle />
+                  <styles.CommentContent>내용</styles.CommentContent>
+                </styles.CommentLists> */}
+
+                {c_comments.map((C_community) => (
+                  <styles.CommentItem key={C_community.id}>
+                    {/* 웹툰 제목 추가 */}
+                    <styles.CommentWebtoonTitle>
+                      {C_community.title}
+                    </styles.CommentWebtoonTitle>
+                    <styles.CommentMiddle />
+                    <styles.CommentContent>
+                      {C_community.content}
                     </styles.CommentContent>
                   </styles.CommentItem>
                 ))}

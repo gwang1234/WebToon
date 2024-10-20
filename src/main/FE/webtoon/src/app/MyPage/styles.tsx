@@ -15,7 +15,7 @@ const Mypagebox = styled.div`
   flex-direction: column;
   background: #a9dfbf50;
   width: 40vw;
-  height: 150vh;
+  height: 180vh;
   border-radius: 10%;
 `;
 

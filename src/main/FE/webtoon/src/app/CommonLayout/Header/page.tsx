@@ -16,11 +16,11 @@ const HeaderComponent: React.FC = () => {
     const storedUserName = sessionStorage.getItem("userName");
 
     if (storedUserName) {
-      setName(storedUserName);
+      setName(storedUserName); // 사용자 이름 설정
     } else {
-      setName(null);
+      setName(null); // 로그인 상태가 아닐 때
     }
-    setIsLoading(false);
+    setIsLoading(false); // 로딩 상태 해제
   };
 
   // 세션 업데이트를 주기적으로 확인
@@ -30,7 +30,7 @@ const HeaderComponent: React.FC = () => {
 
     const intervalId = setInterval(() => {
       console.log("세션 상태 체크 중...");
-      fetchUserData(); // 일정 시간마다 세션 정보 업데이트
+      fetchUserData(); // 1초마다 세션 정보 업데이트
     }, 1000); // 1초마다 세션 확인
 
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 타이머 제거
