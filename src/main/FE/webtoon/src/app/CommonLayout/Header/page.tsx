@@ -23,22 +23,17 @@ const HeaderComponent: React.FC = () => {
     setIsLoading(false);
   };
 
-  // 세션 업데이트 감지
+  // 세션 업데이트를 주기적으로 확인
   useEffect(() => {
     fetchUserData(); // 페이지 로드 시 세션 확인
-    console.log("커스텀 감지");
+    console.log("타이머 기반 감지");
 
-    const handleSessionUpdate = () => {
-      console.log("sessionUpdated 이벤트 감지됨");
-      fetchUserData();
-    };
+    const intervalId = setInterval(() => {
+      console.log("세션 상태 체크 중...");
+      fetchUserData(); // 일정 시간마다 세션 정보 업데이트
+    }, 1000); // 1초마다 세션 확인
 
-    window.addEventListener("sessionUpdated", handleSessionUpdate);
-
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener("sessionUpdated", handleSessionUpdate);
-    };
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 타이머 제거
   }, []);
 
   // 로그아웃 처리
@@ -49,12 +44,24 @@ const HeaderComponent: React.FC = () => {
     sessionStorage.removeItem("userName");
     setName(null); // 로그아웃 후 바로 상태를 업데이트
     router.push("/login");
-    window.dispatchEvent(new Event("sessionUpdated")); // 로그아웃 후에도 이벤트 발생
   };
 
   if (isLoading) {
     return null; // 로딩 중일 때 아무것도 렌더링하지 않음
   }
+
+  // MyPage 클릭 시 처리
+  const handleMyPageClick = () => {
+    const token = sessionStorage.getItem("token");
+    const providerId = sessionStorage.getItem("provider_id");
+
+    if (!token && !providerId) {
+      alert("로그인이 필요합니다! 로그인 페이지로 이동합니다.");
+      router.push("/login");
+    } else {
+      router.push("/MyPage");
+    }
+  };
 
   return (
     <Header.Container>
@@ -82,10 +89,11 @@ const HeaderComponent: React.FC = () => {
       </Header.Headers>
 
       <Header.NavBar>
-        <Header.NavItem href="/#">공지사항</Header.NavItem>
+        <Header.NavItem href="/">홈</Header.NavItem>
         <Header.NavItem href="/WebtoonsPage">웹툰 리뷰</Header.NavItem>
         <Header.NavItem href="/Community">커뮤니티</Header.NavItem>
-        <Header.NavItem href="/MyPage">마이페이지</Header.NavItem>
+        <Header.NavItem href="/VastCommunity">배스트 커뮤니티</Header.NavItem>
+        <Header.NavItem onClick={handleMyPageClick}>마이페이지</Header.NavItem>
       </Header.NavBar>
 
       <Header.NavBarMenu

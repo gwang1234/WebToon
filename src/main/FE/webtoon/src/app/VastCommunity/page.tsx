@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // useRouter 가져오기
 import CommunityList from "./components/CommunityList";
 import Pagination from "./components/Pagination";
 import LoadingMessage from "./components/LoadingMessage";
@@ -27,7 +26,6 @@ export default function CommunityPage() {
   const [page, setPage] = useState<number>(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState<number>(0); // 총 페이지 수
   const itemsPerPage = 20; // 페이지당 표시할 커뮤니티 항목 수
-  const router = useRouter(); // useRouter 가져오기
 
   // API 호출을 통해 커뮤니티 목록 가져오기
   useEffect(() => {
@@ -35,7 +33,7 @@ export default function CommunityPage() {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/community?page=${
+          `${process.env.NEXT_PUBLIC_API_URL}/best-community?page=${
             page - 1
           }&size=${itemsPerPage}`
         );
@@ -84,25 +82,9 @@ export default function CommunityPage() {
     return <ErrorMessage message={error} />;
   }
 
-  // 글쓰기 버튼 클릭 핸들러
-  const writeButton = () => {
-    const token = sessionStorage.getItem("token");
-    const providerId = sessionStorage.getItem("provider_id");
-
-    if (!token && !providerId) {
-      alert("로그인이 필요합니다!");
-      router.push("/login");
-      return;
-    } else {
-      router.push("/Community/CommunityWritePage"); // 글쓰기 페이지로 이동
-    }
-  };
-
   return (
     <styles.Container>
-      <styles.WriteButtonContainer>
-        <styles.WriteButton onClick={writeButton}>글쓰기</styles.WriteButton>
-      </styles.WriteButtonContainer>
+      <styles.WriteButtonContainer></styles.WriteButtonContainer>
       {/* 검색 결과가 있을 경우 SearchResults 표시, 없을 경우 기본 목록 표시 */}
       {searchResults.length > 0 ? (
         // {/* 검색 결과 표시 */}

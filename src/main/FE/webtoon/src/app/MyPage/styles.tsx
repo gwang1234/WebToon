@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Slider from "react-slick";
 
 const Container = styled.div`
-  width: 100vw;
+  width: 99vw;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -15,9 +15,8 @@ const Mypagebox = styled.div`
   flex-direction: column;
   background: #a9dfbf50;
   width: 40vw;
-  height: 75vh;
+  height: 150vh;
   border-radius: 10%;
-  margin-top: 2vh;
 `;
 
 const Title = styled.div`
@@ -79,6 +78,7 @@ const EmailText = styled.p`
   font-size: 25px;
   margin-top: 3%;
   margin-left: 15%;
+  pointer-events: none;
 `;
 
 const EmailInput = styled.input`
@@ -134,6 +134,79 @@ const Slid = styled(Slider)`
   }
 `;
 
+// 전체 댓글 리스트를 감싸는 컨테이너 스타일
+const CommentList = styled.div`
+  margin-top: 2%;
+  padding: 1%;
+  border-radius: 8px;
+  max-width: 80%;
+  margin-left: 10%;
+  border: 1px solid #000;
+  background-color: white;
+`;
+
+const CommentLists = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 0fr 8fr; /* 웹툰 제목, 구분선, 댓글 내용 */
+  gap: 5%; /* 열 간격 */
+  align-items: center; /* 수직 정렬 */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  background-color: #ddd;
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+// 각 댓글 항목의 스타일
+const CommentItem = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 0fr 8fr; /* 웹툰 제목, 구분선, 댓글 내용 */
+  gap: 5%; /* 열 간격 */
+  align-items: center; /* 수직 정렬 */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+// 댓글 작성자 이름 스타일
+const CommentUserName = styled.div`
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+`;
+
+// 댓글 내용 스타일
+const CommentContent = styled.div`
+  color: #555;
+  font-size: 20px;
+  margin-bottom: 10px;
+  white-space: nowrap; /* 텍스트를 한 줄로 강제 */
+  overflow: hidden; /* 넘친 텍스트를 숨김 */
+  text-overflow: ellipsis; /* 넘친 텍스트에 줄임표(...) 적용 */
+`;
+
+// 웹툰 제목 스타일
+const CommentWebtoonTitle = styled.div`
+  font-size: 15px;
+  color: #333;
+  font-style: italic;
+  white-space: nowrap; /* 텍스트를 한 줄로 강제 */
+  overflow: hidden; /* 넘친 텍스트를 숨김 */
+  text-overflow: ellipsis; /* 넘친 텍스트에 줄임표(...) 적용 */
+`;
+
+// 구분선 스타일
+const CommentMiddle = styled.div`
+  width: 1px;
+  height: 100%; /* 댓글 항목 높이에 맞춰 */
+  background-color: #555; /* 구분선 색상 */
+`;
+
 export {
   Container,
   Title,
@@ -152,4 +225,11 @@ export {
   Webtoon,
   SlideshowContainer,
   Slid,
+  CommentList,
+  CommentItem,
+  CommentUserName,
+  CommentContent,
+  CommentWebtoonTitle,
+  CommentMiddle,
+  CommentLists,
 };

@@ -4,7 +4,7 @@ import * as styles from "../styles/CommentListStyled"; // 스타일 파일 가�
 
 interface Comment {
   id: number;
-  username: string; // 댓글 작성자 정보
+  userName: string; // 댓글 작성자 정보
   content: string;
   provider_id: string | null; // provider_id 추가
   email: string | null; // 이메일 추가
@@ -23,8 +23,6 @@ export default function CommentList({ communityId }: CommentListProps) {
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 댓글 ID
   const [editedContent, setEditedContent] = useState<string>(""); // 수정 내용
 
-  const loggedInUserName = sessionStorage.getItem("userName") || "";
-
   useEffect(() => {
     const fetchComments = async () => {
       setLoading(true);
@@ -38,13 +36,8 @@ export default function CommentList({ communityId }: CommentListProps) {
         if (newComments.length === 0) {
           setHasMore(false); // 더 이상 가져올 댓글이 없는 경우
         } else {
+          // 기존 댓글 배열에 새로운 댓글 추가
           setComments((prev) => [...prev, ...newComments]);
-
-          // 각 댓글에서 userName 값을 추출하여 배열에 저장
-          const userNames = newComments.map(
-            (comment: Comment) => comment.username
-          );
-          console.log("추출한 userNames:", userNames); // 추출한 userName 배열 출력
         }
       } catch (error) {
         setError("댓글을 불러오는 중 오류가 발생했습니다.");
@@ -141,7 +134,7 @@ export default function CommentList({ communityId }: CommentListProps) {
       {comments.length === 0 && !loading && <p>댓글이 없습니다.</p>}
       {comments.map((comment) => (
         <styles.CommentItem key={comment.id}>
-          <styles.CommentUser>{comment.username}</styles.CommentUser>
+          <styles.CommentUser>{comment.userName}</styles.CommentUser>
           {editingCommentId === comment.id ? (
             <div>
               <input
@@ -157,18 +150,11 @@ export default function CommentList({ communityId }: CommentListProps) {
           ) : (
             <>
               <styles.CommentContent>{comment.content}</styles.CommentContent>
-
-              {/* 로그인한 사용자와 댓글 작성자가 같을 때만 수정 및 삭제 버튼을 보여줌 */}
-              {loggedInUserName === comment.username ? (
-                <>
-                  <button onClick={() => handleEditClick(comment)}>수정</button>
-                  <button onClick={() => handleDeleteComment(comment.id)}>
-                    삭제
-                  </button>
-                </>
-              ) : (
-                <></> // 버튼 숨기기
-              )}
+              <button onClick={() => handleEditClick(comment)}>수정</button>
+              <button onClick={() => handleDeleteComment(comment.id)}>
+                삭제
+              </button>{" "}
+              {/* 삭제 버튼 추가 */}
             </>
           )}
         </styles.CommentItem>

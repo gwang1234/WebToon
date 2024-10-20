@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import * as styles from "../styles/WebtoonDetailPropsStyles"; // styled-components 스타일 임포트
+import { useRouter } from "next/navigation";
 
 // Webtoon 타입 정의
 type Webtoon = {
@@ -25,6 +26,7 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
   const [likeCount, setLikeCount] = useState<number>(0); // 좋아요 수 상태 추가
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter(); // useRouter 사용
 
   // 특정 웹툰 플랫폼으로 이동하는 함수
   const goToProvider = () => {
@@ -40,7 +42,7 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
     if (url) {
       window.open(url, "_blank"); // 새 창으로 열기
     } else {
-      alert("지원되지 않는 플랫폼입니다.");
+      alert("지원되지 않는 플랫폼입니다."); // router를 사용하여 경로 이동
     }
   };
 
@@ -68,8 +70,9 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
       const token = sessionStorage.getItem("token"); // 세션에 저장된 토큰 가져오기
       const providerId = sessionStorage.getItem("provider_id") || ""; // 세션에 저장된 provider_id 가져오기
 
-      if (!token) {
-        alert("로그인이 필요합니다."); // 토큰이 없으면 로그인 필요
+      if (!token && !providerId) {
+        alert("로그인이 필요합니다.");
+        router.push(`/login`);
         return;
       }
 
@@ -83,8 +86,6 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
           },
         }
       );
-
-      alert("좋아요가 반영되었습니다.");
 
       // 좋아요 수 다시 가져오기
       fetchLikeCount(webtoon.id);

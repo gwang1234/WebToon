@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios"; // axios 임포트
-import * as styles from "../../styles/updatePage";
 
 const UpdateCommunityPost = () => {
   const router = useRouter();
@@ -117,51 +116,34 @@ const UpdateCommunityPost = () => {
     return <p>{error}</p>; // 에러 메시지 표시
   }
 
-  // 입력 시 높이 자동 조절 함수
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = "auto"; // 높이를 자동으로 초기화
-    e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 맞춰 높이 조절
-    setContent(e.target.value);
-  };
-
-  // 입력 시 높이 자동 조절 함수
-  const handleNameChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = "auto"; // 높이를 자동으로 초기화
-    e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 맞춰 높이 조절
-    setTitle(e.target.value);
-  };
-
   return (
-    <styles.FormContainer>
+    <div>
       <h1>커뮤니티 글 수정</h1>
       <form onSubmit={(e) => e.preventDefault()}>
-        <styles.FormTitleSection>
-          <styles.TitleInput
+        <div>
+          <label htmlFor="title">제목</label>
+          <input
             id="title"
+            type="text"
             value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              handleNameChange(e);
-            }}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="제목을 입력하세요"
           />
-        </styles.FormTitleSection>
-        <styles.ContentSection>
-          <styles.ContentInput
+        </div>
+        <div>
+          <label htmlFor="content">내용</label>
+          <textarea
             id="content"
             value={content}
-            onChange={(e) => {
-              setContent(e.target.value);
-              handleInputChange(e);
-            }}
+            onChange={(e) => setContent(e.target.value)}
             placeholder="내용을 입력하세요"
           />
-        </styles.ContentSection>
-        <styles.SubmitButton type="submit" onClick={handleUpdate}>
+        </div>
+        <button type="button" onClick={handleUpdate}>
           수정하기
-        </styles.SubmitButton>
+        </button>
       </form>
-    </styles.FormContainer>
+    </div>
   );
 };
 

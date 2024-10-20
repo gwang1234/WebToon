@@ -8,7 +8,7 @@ import CommunityContent from "./components/CommunityContent";
 import LikeButton from "./components/LikeButton";
 import CommentForm from "./components/CommentForm";
 import CommentList from "./components/CommentList";
-import CommunityDeleteButton from "./components/CommunityDeleteButton"; // 삭제 버튼 컴포넌트
+import CommunityDeleteButton from "./components/CommunityDeleteButton"; // 삭제 버튼 컴포넌트;
 import Link from "next/link";
 
 interface CommunityDetail {
@@ -35,7 +35,6 @@ export default function CommunityDetailPage({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [reloadComments, setReloadComments] = useState<boolean>(false); // 댓글 목록 갱신 상태
-  const [sessionUserName, setSessionUserName] = useState<string | null>(null); // 세션의 userName
 
   const { id } = params;
 
@@ -54,10 +53,6 @@ export default function CommunityDetailPage({
         setLoading(false);
       }
     };
-
-    // 세션에서 userName 가져오기
-    const storedUserName = sessionStorage.getItem("userName");
-    setSessionUserName(storedUserName);
 
     fetchCommunityDetail();
   }, [id]);
@@ -84,16 +79,11 @@ export default function CommunityDetailPage({
           />
           <CommunityContent content={community.content} />
           <LikeButton id={id} likeCount={community.likes} setError={setError} />
+          <Link href={`/Community/${id}/update`}>
+            <p>수정하기</p>
+          </Link>
 
-          {/* 수정하기 링크와 삭제 버튼은 현재 로그인한 userName과 작성자 userName이 동일할 때만 렌더링 */}
-          {sessionUserName === community.userName && (
-            <>
-              <Link href={`/Community/${id}/update`}>
-                <p>수정하기</p>
-              </Link>
-              <CommunityDeleteButton id={id} />
-            </>
-          )}
+          <CommunityDeleteButton id={id} />
 
           {/* 댓글 작성 폼 추가 */}
           <CommentForm

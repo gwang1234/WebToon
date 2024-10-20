@@ -2,11 +2,12 @@
 
 import Head from "next/head";
 import Image from "next/image";
-import * as styles from "./styles"; // styled-components 스타일 임포트
+import * as styles from "./styles";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 // Webtoon 타입 정의
 type Webtoon = {
@@ -22,102 +23,146 @@ type Mypage = {
   password?: string;
 };
 
+// Comment 타입 정의
+type Comment = {
+  id: number;
+  userName: string;
+  content: string;
+  webtoon_title: string; // 웹툰 제목 추가
+};
+
+type community = {
+  id: number;
+  title: string;
+  content: string;
+};
+
 const Main: React.FC = () => {
-  const [mypage, setMypage] = useState<Mypage | null>(null); // 사용자 정보 저장 상태를 단일 객체로 설정
-  const [webtoons, setWebtoons] = useState<Webtoon[]>([]); // 사용자 저장 그림 상태를 배열로 설정
-  const [loading, setLoading] = useState<boolean>(false); // 로딩 상태 저장
-  const [error, setError] = useState<string | null>(null); // 에러 상태 저장
-  const [userName, setUserName] = useState<string>(""); // 닉네임 상태
-  const [password, setPassword] = useState<string>(""); // 비밀번호 상태
+  const [mypage, setMypage] = useState<Mypage | null>(null);
+  const [webtoons, setWebtoons] = useState<Webtoon[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]); // 댓글 상태
+  const [communites, setCommunites] = useState<community[]>([]); // 댓글 상태
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [isTokenPresent, setIsTokenPresent] = useState<boolean>(false);
+  const [isProviderIdPresent, setIsProviderIdPresent] =
+    useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchMypageData = async () => {
-      setLoading(true); // 로딩 시작
+    const fetchData = async () => {
+      setLoading(true);
       try {
         const token = sessionStorage.getItem("token");
         const providerId = sessionStorage.getItem("provider_id") || null;
         const email = sessionStorage.getItem("email") || null;
 
-        // 사용자 정보 가져오기
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/users`,
-          {
-            provider_id: providerId,
-            email: email,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        setIsTokenPresent(!!token);
+        setIsProviderIdPresent(!!providerId);
 
-        setMypage(response.data); // 사용자 정보를 상태로 설정
-        setUserName(response.data.userName); // 닉네임 상태 설정
-      } catch (error) {
-        setError("회원 정보를 불러오는 중 오류가 발생했습니다.");
+        console.log(token);
+
+        const [userRes, webtoonRes, commentRes, communityRes] =
+          await Promise.all([
+            axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/users`,
+              {
+                provider_id: providerId,
+                email: email,
+              },
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            ),
+            axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/webtoons/like-user`,
+              {
+                provider_id: providerId,
+              },
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            ),
+            axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/reviews/user`,
+              {
+                provider_id: providerId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            ),
+            axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/community/user`,
+              {
+                provider_id: providerId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            ),
+          ]);
+
+        setMypage(userRes.data);
+        setUserName(userRes.data.userName);
+        setWebtoons(webtoonRes.data);
+        setComments(commentRes.data.content || []);
+        setCommunites(communityRes.data.content || []);
+      } catch (err) {
+        setError("데이터를 불러오는 중 오류가 발생했습니다.");
       } finally {
-        setLoading(false); // 로딩 상태 해제
-      }
-
-      try {
-        const token = sessionStorage.getItem("token");
-        const providerId = sessionStorage.getItem("provider_id") || null;
-
-        // POST 요청을 사용하여 관심 웹툰 가져오기
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/webtoons/like-user`,
-          {
-            provider_id: providerId, // 필요에 따라 추가되는 데이터
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // 토큰을 헤더에 포함
-            },
-          }
-        );
-
-        setWebtoons(response.data); // 사용자 관심 웹툰 정보를 배열로 설정
-      } catch (error) {
-        setError("관심 웹툰 정보를 불러오는 중 오류가 발생했습니다.");
-      } finally {
-        setLoading(false); // 로딩 상태 해제
+        setLoading(false);
       }
     };
 
-    fetchMypageData(); // API 호출
+    fetchData();
   }, []);
 
   const handleCorrection = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
+    if (password !== "" || isProviderIdPresent) {
+      try {
+        const token = sessionStorage.getItem("token");
 
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/users`,
-        {
-          userName: userName,
-          password: password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_API_URL}/users`,
+          {
+            userName: userName,
+            password: isTokenPresent ? password : undefined,
           },
-        }
-      );
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-      alert("회원 정보가 수정되었습니다.");
-    } catch (error) {
-      alert("회원 정보 수정 중 오류가 발생했습니다.");
+        alert(
+          isTokenPresent
+            ? "회원 정보가 수정되었습니다."
+            : "닉네임이 수정되었습니다."
+        );
+        if (isTokenPresent) {
+          sessionStorage.clear();
+          router.push("/login");
+        }
+      } catch {
+        alert("회원 정보 수정 중 오류가 발생했습니다.");
+      }
+    } else {
+      alert("비밀번호를 입력해 주세요");
     }
   };
 
-  // 웹툰의 개수에 따라 slidesToShow를 동적으로 설정
   const sliderSettings = {
-    dots: true, // 하단 점 네비게이션 추가
-    infinite: true, // 무한 슬라이드
-    speed: 500, // 슬라이드 전환 속도
-    slidesToShow: Math.min(webtoons.length, 3), // 보여줄 슬라이드 개수를 웹툰 개수로 제한
-    slidesToScroll: 3, // 한 번에 넘길 슬라이드 수
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: Math.min(webtoons.length, 3),
+    slidesToScroll: 3,
   };
 
   return (
@@ -127,8 +172,8 @@ const Main: React.FC = () => {
       </Head>
 
       <styles.Container>
-        {loading && <p>로딩 중...</p>} {/* 로딩 중일 때 표시 */}
-        {error && <p>{error}</p>} {/* 에러 발생 시 표시 */}
+        {loading && <p>로딩 중...</p>}
+        {error && <p>{error}</p>}
         {!loading && !error && mypage && (
           <styles.Mypagebox>
             <styles.Title>마이페이지</styles.Title>
@@ -140,25 +185,35 @@ const Main: React.FC = () => {
                   onChange={(e) => setUserName(e.target.value)}
                 />
               </styles.Name>
-              <styles.Id>
-                <styles.IdText>비밀번호</styles.IdText>
-                <styles.IdInput
-                  type="password"
-                  placeholder="******"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </styles.Id>
+
+              {isTokenPresent && (
+                <styles.Id>
+                  <styles.IdText>비밀번호</styles.IdText>
+                  <styles.IdInput
+                    type="password"
+                    placeholder="******"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </styles.Id>
+              )}
+
+              {!isTokenPresent && isProviderIdPresent && (
+                <p>소셜 로그인 사용자는 닉네임만 수정할 수 있습니다.</p>
+              )}
             </styles.NameAndId>
+
             <styles.Email>
               <styles.EmailText>이메일</styles.EmailText>
-              <styles.EmailInput value={mypage?.email || ""} readOnly />
+              <styles.EmailInput value={mypage.email || ""} readOnly />
             </styles.Email>
+
             <styles.CorrectionButton onClick={handleCorrection}>
               수정하기
             </styles.CorrectionButton>
+
             <styles.Webtoon>관심 작품</styles.Webtoon>
-            {/* Slider, 웹툰이 있을 경우에만 렌더링 */}
+
             {webtoons.length > 0 ? (
               <styles.SlideshowContainer>
                 <styles.Slid {...sliderSettings}>
@@ -169,15 +224,69 @@ const Main: React.FC = () => {
                         alt={webtoon.title}
                         width={800}
                         height={300}
-                        style={{ width: "auto", height: "20vh" }} // 비율 유지를 위한 CSS 추가
-                        priority // LCP 이미지에 priority 속성 추가
+                        style={{ width: "auto", height: "20vh" }}
+                        priority
                       />
                     </div>
                   ))}
                 </styles.Slid>
               </styles.SlideshowContainer>
             ) : (
-              <p>관심 작품이 없습니다.</p> // 웹툰이 없을 때 표시할 메시지
+              <p>관심 작품이 없습니다.</p>
+            )}
+
+            <styles.Webtoon>내가 작성한 웹툰 댓글</styles.Webtoon>
+
+            {comments.length > 0 ? (
+              <styles.CommentList>
+                {/* <styles.CommentLists>
+                  <styles.CommentWebtoonTitle>제목</styles.CommentWebtoonTitle>
+                  <styles.CommentMiddle />
+                  <styles.CommentContent>내용</styles.CommentContent>
+                </styles.CommentLists> */}
+
+                {comments.map((comment) => (
+                  <styles.CommentItem key={comment.id}>
+                    {/* 웹툰 제목 추가 */}
+                    <styles.CommentWebtoonTitle>
+                      {comment.webtoon_title}
+                    </styles.CommentWebtoonTitle>
+                    <styles.CommentMiddle />
+                    <styles.CommentContent>
+                      {comment.content}
+                    </styles.CommentContent>
+                  </styles.CommentItem>
+                ))}
+              </styles.CommentList>
+            ) : (
+              <p>댓글이 없습니다.</p>
+            )}
+
+            <styles.Webtoon>내가 작성한 커뮤니티</styles.Webtoon>
+
+            {communites.length > 0 ? (
+              <styles.CommentList>
+                {/* <styles.CommentLists>
+                  <styles.CommentWebtoonTitle>제목</styles.CommentWebtoonTitle>
+                  <styles.CommentMiddle />
+                  <styles.CommentContent>내용</styles.CommentContent>
+                </styles.CommentLists> */}
+
+                {communites.map((community) => (
+                  <styles.CommentItem key={community.id}>
+                    {/* 웹툰 제목 추가 */}
+                    <styles.CommentWebtoonTitle>
+                      {community.title}
+                    </styles.CommentWebtoonTitle>
+                    <styles.CommentMiddle />
+                    <styles.CommentContent>
+                      {community.content}
+                    </styles.CommentContent>
+                  </styles.CommentItem>
+                ))}
+              </styles.CommentList>
+            ) : (
+              <p>커뮤니티가 없습니다.</p>
             )}
           </styles.Mypagebox>
         )}

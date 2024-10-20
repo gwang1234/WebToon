@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./CommonLayout/Header/page";
+// 클라이언트 컴포넌트 임포트
+import ClientLayout from "./ClientLayout";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -9,25 +10,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="ko">
       <head>{/* 여기에 메타태그나 스크립트를 넣을 수 있습니다 */}</head>
       <body
         style={{ margin: 0, padding: 0, height: "100vh", overflow: "hidden" }}
       >
-        <Header />
-        <main
-          style={{
-            marginTop: "25vh", // Header 높이를 반영
-            height: "calc(100vh - 25vh)", // Header 높이를 제외한 남은 공간
-            overflowY: "auto", // 스크롤바는 여기에만 적용
-          }}
-        >
-          {children}
-        </main>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

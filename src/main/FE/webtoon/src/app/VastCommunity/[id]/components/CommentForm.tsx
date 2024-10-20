@@ -25,7 +25,6 @@ export default function CommentForm({
     e.preventDefault();
     try {
       const token = sessionStorage.getItem("token");
-      const userName = sessionStorage.getItem("userName");
 
       if (!token) {
         setError("로그인 후 댓글을 작성할 수 있습니다.");
@@ -34,7 +33,7 @@ export default function CommentForm({
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/c-comment/write/${communityId}`,
-        { content: comment, userName: userName }, // 댓글 내용 전송
+        { content: comment }, // 댓글 내용 전송
         {
           headers: {
             Authorization: `Bearer ${token}`,

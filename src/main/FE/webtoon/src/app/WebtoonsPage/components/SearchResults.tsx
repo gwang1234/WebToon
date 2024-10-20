@@ -94,6 +94,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
                   priority
                   unoptimized
                 />
+                <p>{webtoon.title}</p>
               </styles.WebtoonCard>
             ))
           ) : (
