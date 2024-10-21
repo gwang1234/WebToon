@@ -55,3 +55,23 @@ export const SuccessMessage = styled.p`
   font-size: 14px;
   margin-top: 10px;
 `;
+
+export const StarContainer = styled.div`
+  display: flex;
+  margin: 1%;
+`;
+
+export const StarIcon = styled.div`
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  cursor: pointer;
+
+  &.like-on {
+    background-image: url("/like-on.png"); // 활성화된 별 이미지 경로
+  }
+
+  &.like-off {
+    background-image: url("/like-off.png"); // 비활성화된 별 이미지 경로
+  }
+`;

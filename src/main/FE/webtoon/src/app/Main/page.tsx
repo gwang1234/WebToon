@@ -109,10 +109,11 @@ const Main: React.FC = () => {
                   <Image
                     src={webtoon.imageurl}
                     alt={webtoon.title}
-                    width={100}
-                    height={150}
+                    width={180}
+                    height={230}
                     priority
                   />
+                  <p>{webtoon.title}</p>
                 </styles.WebtoonCard>
               ))}
             </Slider>
@@ -133,10 +134,11 @@ const Main: React.FC = () => {
                   <Image
                     src={webtoon.imageurl}
                     alt={webtoon.title}
-                    width={100}
-                    height={150}
+                    width={180}
+                    height={230}
                     priority
                   />
+                  <p>{webtoon.title}</p>
                 </styles.WebtoonCard>
               ))}
             </Slider>

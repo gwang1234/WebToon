@@ -8,7 +8,9 @@ import {
   SubmitButton,
   ErrorMessage,
   SuccessMessage,
-} from "../styles/componentsStyled";
+  StarContainer,
+  StarIcon, // 별 아이콘 스타일 추가
+} from "../styles/componentsStyled"; // 스타일 파일에 별 아이콘 관련 스타일을 추가해야 함
 
 interface CommentFormProps {
   webtoonId: string;
@@ -23,6 +25,12 @@ export default function CommentForm({
   const [star, setStar] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+
+  // 별 클릭 시 별점 반영 함수
+  const handleStarClick = (rating: number) => {
+    setStar(rating); // 클릭한 별의 값으로 별점 설정
+    setError(null); // 오류 메시지 초기화
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,21 +83,16 @@ export default function CommentForm({
           placeholder="댓글을 입력하세요"
           required
         />
-        <div>
-          <label>별점: </label>
-          <select
-            value={star}
-            onChange={(e) => setStar(Number(e.target.value))}
-            required
-          >
-            <option value="0">별점을 선택하세요</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </div>
+        <StarContainer>
+          {/* 별점 클릭을 위한 별 아이콘들 */}
+          {[1, 2, 3, 4, 5].map((rating) => (
+            <StarIcon
+              key={rating}
+              onClick={() => handleStarClick(rating)} // 클릭 시 별점 설정
+              className={star >= rating ? "like-on" : "like-off"} // 별점에 따라 클래스 변경
+            />
+          ))}
+        </StarContainer>
         <SubmitButton type="submit">댓글 작성하기</SubmitButton>
       </form>
       {error && <ErrorMessage>{error}</ErrorMessage>}

@@ -48,12 +48,15 @@ const Slider = styled.div`
 
 const WebtoonCard = styled.div`
   margin-right: 1vw;
-  width: 7vw;
-  height: 20vh;
+  height: 25vh;
   p {
     text-align: center;
     font-size: 2vh;
     margin-top: 0.5vh;
+    overflow: hidden; /* 내용 넘침을 숨김 */
+    text-overflow: ellipsis; /* 텍스트가 넘칠 때 ...로 표시 */
+    white-space: nowrap; /* 텍스트가 한 줄로 표시 */
+    max-width: 100%; /* 최대 너비 */
   }
 `;
 
@@ -65,7 +68,7 @@ const NextArrow = styled.div`
   height: 30px;
   border-radius: 50%;
   position: absolute;
-  right: 10px;
+  right: -5%;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
@@ -81,6 +84,12 @@ const NextArrow = styled.div`
   &::before {
     content: "→";
     font-size: 18px;
+    width: 100%; /* 부모 요소의 전체 너비를 사용 */
+    height: 100%; /* 부모 요소의 전체 높이를 사용 */
+    display: flex; /* flex를 사용해 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    text-align: center;
   }
 `;
 
@@ -93,7 +102,7 @@ const PrevArrow = styled.div`
   height: 30px;
   border-radius: 50%;
   position: absolute;
-  left: 10px;
+  left: -7%;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
@@ -109,6 +118,12 @@ const PrevArrow = styled.div`
   &::before {
     content: "←";
     font-size: 18px;
+    width: 100%; /* 부모 요소의 전체 너비를 사용 */
+    height: 100%; /* 부모 요소의 전체 높이를 사용 */
+    display: flex; /* flex를 사용해 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    text-align: center;
   }
 `;
 

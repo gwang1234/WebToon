@@ -1,5 +1,7 @@
-// components/TokenManager.tsx
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import { useEffect } from "react";
+import axios from "axios";
 
 interface TokenManagerProps {
   token: string;
@@ -11,31 +13,24 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
   refreshToken,
 }) => {
   useEffect(() => {
-    // 세션 스토리지에 토큰과 리프레시 토큰을 저장
-    console.log("TokenManager 실행됨: ", { token, refreshToken });
+    // console.log("TokenManager 실행됨: ", { token, refreshToken });
 
     sessionStorage.setItem("token", token);
     sessionStorage.setItem("refreshToken", refreshToken || "");
 
-    // JWT에서 사용자 정보(이메일, provider_id)를 추출하고 세션에 저장
     const decodedToken = decodeJwt(token);
-    console.log("JWT에서 추출한 사용자 정보:", decodedToken);
+    // console.log("JWT에서 추출한 사용자 정보:", decodedToken);
 
-    sessionStorage.setItem("username", decodedToken.user || ""); // 예시로 username을 저장
     sessionStorage.setItem("email", decodedToken.email || ""); // email 저장
     sessionStorage.setItem("provider_id", decodedToken.provider_id || ""); // provider_id 저장
 
-    // 세션 정보가 저장되었음을 알리기 위해 커스텀 이벤트 발생
-    const event = new Event("sessionUpdated");
-    window.dispatchEvent(event);
+    fetchUserName();
 
-    // 저장된 값들 확인용 콘솔 출력
-    console.log("저장된 username:", sessionStorage.getItem("username"));
-    console.log("저장된 email:", sessionStorage.getItem("email"));
-    console.log("저장된 provider_id:", sessionStorage.getItem("provider_id"));
+    const event = new Event("sessionUpdated");
+    // console.log("sessionUpdated 이벤트 발생됨");
+    window.dispatchEvent(event); // 이벤트 발생
   }, [token, refreshToken]);
 
-  // JWT 디코딩 함수 (토큰에서 페이로드 추출)
   const decodeJwt = (token: string) => {
     try {
       const base64Url = token.split(".")[1];
@@ -49,11 +44,47 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
           .join("")
       );
 
-      console.log("디코딩된 JWT 페이로드:", jsonPayload); // 디코딩된 페이로드 출력
-      return JSON.parse(jsonPayload); // 페이로드를 파싱하여 반환
+      // console.log("디코딩된 JWT 페이로드:", jsonPayload);
+      return JSON.parse(jsonPayload);
     } catch (error) {
       console.error("JWT 디코딩 중 오류 발생:", error);
       return {}; // 디코딩 실패 시 빈 객체 반환
+    }
+  };
+
+  // 사용자 이름을 가져오는 API 호출 함수 (POST 요청, JSON 전송)
+  const fetchUserName = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const email = sessionStorage.getItem("email") || "";
+      const providerId = sessionStorage.getItem("provider_id") || null;
+
+      // console.log("사용 중인 provider_id:", providerId);
+      // console.log("사용 중인 email:", email);
+      // console.log("사용 중인 token:", token);
+
+      // JSON 형식으로 데이터 전송
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/users`,
+        {
+          provider_id: providerId,
+          email: email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { userName } = response.data;
+      // console.log("서버에서 받아온 userName:", userName);
+
+      sessionStorage.setItem("userName", userName || ""); // userName을 세션에 저장
+      // console.log("저장된 userName:", sessionStorage.getItem("userName")); // 저장 확인
+    } catch (error) {
+      console.error("userName을 가져오는 중 오류 발생:", error);
     }
   };
 

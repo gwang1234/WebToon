@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import * as styles from "../styles/WebtoonDetailPropsStyles"; // styled-components 스타일 임포트
+import { useRouter } from "next/navigation";
 
 // Webtoon 타입 정의
 type Webtoon = {
@@ -25,6 +26,7 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
   const [likeCount, setLikeCount] = useState<number>(0); // 좋아요 수 상태 추가
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter(); // useRouter 사용
 
   // 특정 웹툰 플랫폼으로 이동하는 함수
   const goToProvider = () => {
@@ -40,7 +42,7 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
     if (url) {
       window.open(url, "_blank"); // 새 창으로 열기
     } else {
-      alert("지원되지 않는 플랫폼입니다.");
+      alert("지원되지 않는 플랫폼입니다."); // router를 사용하여 경로 이동
     }
   };
 
@@ -48,10 +50,12 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
   const fetchLikeCount = async (webtoonId: number) => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoonId}/like`
+        `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoonId}/like-webtoon`
       );
 
-      setLikeCount(response.data.likeCount); // 서버에서 반환된 좋아요 수로 상태 업데이트
+      // 서버에서 반환된 좋아요 수를 상태로 업데이트
+      setLikeCount(response.data.likeWebtoonCount);
+      // console.log("좋아요 수:", response.data.likeWebtoonCount); // 좋아요 수 콘솔 출력
     } catch (error) {
       console.error("좋아요 수 가져오기 실패:", error);
       alert("좋아요 수를 가져오는 중 오류가 발생했습니다.");
@@ -66,8 +70,9 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
       const token = sessionStorage.getItem("token"); // 세션에 저장된 토큰 가져오기
       const providerId = sessionStorage.getItem("provider_id") || ""; // 세션에 저장된 provider_id 가져오기
 
-      if (!token) {
-        alert("로그인이 필요합니다."); // 토큰이 없으면 로그인 필요
+      if (!token && !providerId) {
+        alert("로그인이 필요합니다.");
+        router.push(`/login`);
         return;
       }
 
@@ -81,8 +86,6 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
           },
         }
       );
-
-      alert("좋아요가 반영되었습니다.");
 
       // 좋아요 수 다시 가져오기
       fetchLikeCount(webtoon.id);
@@ -102,7 +105,7 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
   };
 
   useEffect(() => {
-    console.log("id 값:", id); // id 값이 무엇인지 확인
+    // console.log("id 값:", id); // id 값이 무엇인지 확인
     if (id) {
       const webtoonId = Array.isArray(id) ? id[0] : id; // id가 배열이면 첫 번째 값을 사용
       const fetchWebtoonDetail = async () => {

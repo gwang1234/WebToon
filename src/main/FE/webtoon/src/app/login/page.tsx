@@ -39,8 +39,8 @@ const Home: React.FC = () => {
         setToken(token);
         setRefreshToken(refreshToken);
 
-        console.log("로그인 성공, JWT 토큰:", token);
-        console.log("리프레시 토큰:", refreshToken);
+        // console.log("로그인 성공, JWT 토큰:", token);
+        // console.log("리프레시 토큰:", refreshToken);
 
         router.push("/"); // 로그인 성공 시 리다이렉트
       }
