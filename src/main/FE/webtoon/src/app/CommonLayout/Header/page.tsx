@@ -26,10 +26,10 @@ const HeaderComponent: React.FC = () => {
   // 세션 업데이트를 주기적으로 확인
   useEffect(() => {
     fetchUserData(); // 페이지 로드 시 세션 확인
-    console.log("타이머 기반 감지");
+    // console.log("타이머 기반 감지");
 
     const intervalId = setInterval(() => {
-      console.log("세션 상태 체크 중...");
+      // console.log("세션 상태 체크 중...");
       fetchUserData(); // 1초마다 세션 정보 업데이트
     }, 1000); // 1초마다 세션 확인
 

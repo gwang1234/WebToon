@@ -11,13 +11,13 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
   refreshToken,
 }) => {
   useEffect(() => {
-    console.log("TokenManager 실행됨: ", { token, refreshToken });
+    // console.log("TokenManager 실행됨: ", { token, refreshToken });
 
     sessionStorage.setItem("token", token);
     sessionStorage.setItem("refreshToken", refreshToken || "");
 
     const decodedToken = decodeJwt(token);
-    console.log("JWT에서 추출한 사용자 정보:", decodedToken);
+    // console.log("JWT에서 추출한 사용자 정보:", decodedToken);
 
     sessionStorage.setItem("email", decodedToken.email || ""); // email 저장
     sessionStorage.setItem("provider_id", decodedToken.provider_id || ""); // provider_id 저장
@@ -25,7 +25,7 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
     fetchUserName();
 
     const event = new Event("sessionUpdated");
-    console.log("sessionUpdated 이벤트 발생됨");
+    // console.log("sessionUpdated 이벤트 발생됨");
     window.dispatchEvent(event); // 이벤트 발생
   }, [token, refreshToken]);
 
@@ -42,7 +42,7 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
           .join("")
       );
 
-      console.log("디코딩된 JWT 페이로드:", jsonPayload);
+      // console.log("디코딩된 JWT 페이로드:", jsonPayload);
       return JSON.parse(jsonPayload);
     } catch (error) {
       console.error("JWT 디코딩 중 오류 발생:", error);
@@ -57,9 +57,9 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
       const email = sessionStorage.getItem("email") || "";
       const providerId = sessionStorage.getItem("provider_id") || null;
 
-      console.log("사용 중인 provider_id:", providerId);
-      console.log("사용 중인 email:", email);
-      console.log("사용 중인 token:", token);
+      // console.log("사용 중인 provider_id:", providerId);
+      // console.log("사용 중인 email:", email);
+      // console.log("사용 중인 token:", token);
 
       // JSON 형식으로 데이터 전송
       const response = await axios.post(
@@ -77,10 +77,10 @@ export const TokenManager: React.FC<TokenManagerProps> = ({
       );
 
       const { userName } = response.data;
-      console.log("서버에서 받아온 userName:", userName);
+      // console.log("서버에서 받아온 userName:", userName);
 
       sessionStorage.setItem("userName", userName || ""); // userName을 세션에 저장
-      console.log("저장된 userName:", sessionStorage.getItem("userName")); // 저장 확인
+      // console.log("저장된 userName:", sessionStorage.getItem("userName")); // 저장 확인
     } catch (error) {
       console.error("userName을 가져오는 중 오류 발생:", error);
     }

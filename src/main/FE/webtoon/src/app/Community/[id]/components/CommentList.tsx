@@ -33,7 +33,7 @@ export default function CommentList({ communityId }: CommentListProps) {
           `${process.env.NEXT_PUBLIC_API_URL}/c-comment/${communityId}?page=${page}`
         );
         const newComments = response.data.content;
-        console.log("새로 불러온 댓글:", newComments); // 불러온 댓글 로그
+        // console.log("새로 불러온 댓글:", newComments); // 불러온 댓글 로그
 
         if (newComments.length === 0) {
           setHasMore(false); // 더 이상 가져올 댓글이 없는 경우
@@ -44,11 +44,11 @@ export default function CommentList({ communityId }: CommentListProps) {
           const userNames = newComments.map(
             (comment: Comment) => comment.username
           );
-          console.log("추출한 userNames:", userNames); // 추출한 userName 배열 출력
+          // console.log("추출한 userNames:", userNames); // 추출한 userName 배열 출력
         }
       } catch (error) {
         setError("댓글을 불러오는 중 오류가 발생했습니다.");
-        console.error(error);
+        // console.error(error);
       } finally {
         setLoading(false);
       }
@@ -58,18 +58,18 @@ export default function CommentList({ communityId }: CommentListProps) {
   }, [communityId, page]);
 
   const loadMoreComments = () => {
-    console.log("다음 페이지 로드 요청:", page + 1); // 다음 페이지 로드 요청 로그
+    // console.log("다음 페이지 로드 요청:", page + 1); // 다음 페이지 로드 요청 로그
     setPage((prev) => prev + 1); // 다음 페이지로 넘어가기
   };
 
   const handleEditClick = (comment: Comment) => {
     setEditingCommentId(comment.id);
     setEditedContent(comment.content);
-    console.log("수정하려는 댓글:", comment); // 수정하려는 댓글 로그
+    // console.log("수정하려는 댓글:", comment); // 수정하려는 댓글 로그
   };
 
   const handleUpdateComment = async (id: number) => {
-    console.log("댓글 수정 요청:", { id, content: editedContent }); // 수정 요청 로그
+    // console.log("댓글 수정 요청:", { id, content: editedContent }); // 수정 요청 로그
     try {
       const token = sessionStorage.getItem("token"); // 세션 스토리지에서 토큰 가져오기
       const commentToUpdate = comments.find((comment) => comment.id === id);
@@ -99,18 +99,18 @@ export default function CommentList({ communityId }: CommentListProps) {
             comment.id === id ? { ...comment, content: editedContent } : comment
           )
         );
-        console.log("댓글 수정 성공:", { id, content: editedContent }); // 수정 성공 로그
+        // console.log("댓글 수정 성공:", { id, content: editedContent }); // 수정 성공 로그
         setEditingCommentId(null); // 수정 상태 초기화
       }
     } catch (error) {
       setError("댓글 수정 중 오류가 발생했습니다.");
-      console.error(error);
+      // console.error(error);
     }
   };
 
   // 댓글 삭제 함수
   const handleDeleteComment = async (id: number) => {
-    console.log("댓글 삭제 요청:", { id }); // 삭제 요청 로그
+    // console.log("댓글 삭제 요청:", { id }); // 삭제 요청 로그
     try {
       const token = sessionStorage.getItem("token"); // 세션 스토리지에서 토큰 가져오기
       const providerId = sessionStorage.getItem("provider_id") || ""; // provider_id가 없으면 빈 문자열로 설정
@@ -129,10 +129,10 @@ export default function CommentList({ communityId }: CommentListProps) {
 
       // 댓글 삭제 후 댓글 목록을 다시 가져오거나 상태 업데이트
       setComments((prev) => prev.filter((comment) => comment.id !== id));
-      console.log("댓글 삭제 성공:", { id }); // 삭제 성공 로그
+      // console.log("댓글 삭제 성공:", { id }); // 삭제 성공 로그
     } catch (error) {
       setError("댓글 삭제 중 오류가 발생했습니다.");
-      console.error(error);
+      // console.error(error);
     }
   };
 

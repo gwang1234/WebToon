@@ -55,7 +55,7 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
 
       // 서버에서 반환된 좋아요 수를 상태로 업데이트
       setLikeCount(response.data.likeWebtoonCount);
-      console.log("좋아요 수:", response.data.likeWebtoonCount); // 좋아요 수 콘솔 출력
+      // console.log("좋아요 수:", response.data.likeWebtoonCount); // 좋아요 수 콘솔 출력
     } catch (error) {
       console.error("좋아요 수 가져오기 실패:", error);
       alert("좋아요 수를 가져오는 중 오류가 발생했습니다.");
@@ -105,7 +105,7 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
   };
 
   useEffect(() => {
-    console.log("id 값:", id); // id 값이 무엇인지 확인
+    // console.log("id 값:", id); // id 값이 무엇인지 확인
     if (id) {
       const webtoonId = Array.isArray(id) ? id[0] : id; // id가 배열이면 첫 번째 값을 사용
       const fetchWebtoonDetail = async () => {

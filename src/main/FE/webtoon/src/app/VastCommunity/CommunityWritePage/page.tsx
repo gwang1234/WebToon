@@ -33,9 +33,9 @@ export default function CommunityWritePage() {
     }
 
     // 세션 정보를 콘솔에 출력
-    console.log("세션에 저장된 provider_id:", storedProviderId);
-    console.log("세션에 저장된 email:", storedEmail);
-    console.log("세션에 저장된 토큰:", token); // 토큰 확인
+    // console.log("세션에 저장된 provider_id:", storedProviderId);
+    // console.log("세션에 저장된 email:", storedEmail);
+    // console.log("세션에 저장된 토큰:", token); // 토큰 확인
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,7 +59,7 @@ export default function CommunityWritePage() {
       );
 
       if (response.status === 201) {
-        console.log("글 작성 성공");
+        // console.log("글 작성 성공");
         setPostId(response.data.id); // 생성된 게시글의 ID 저장
         setSuccess(true); // 성공 시 success 상태 업데이트
       }
@@ -94,7 +94,7 @@ export default function CommunityWritePage() {
       );
 
       if (response.status === 200) {
-        console.log("글 삭제 성공");
+        // console.log("글 삭제 성공");
         router.push("/Community"); // 삭제 성공 후 커뮤니티 목록 페이지로 이동
       }
     } catch (error) {

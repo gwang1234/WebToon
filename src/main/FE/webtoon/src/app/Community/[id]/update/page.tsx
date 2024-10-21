@@ -18,7 +18,7 @@ const UpdateCommunityPost = () => {
   useEffect(() => {
     const numericId = Number(id); // id를 number로 변환
     if (numericId) {
-      console.log("가져온 ID:", numericId); // 가져온 id 콘솔에 출력
+      // console.log("가져온 ID:", numericId); // 가져온 id 콘솔에 출력
     }
 
     const fetchPost = async () => {
@@ -27,7 +27,7 @@ const UpdateCommunityPost = () => {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_API_URL}/community/detail/${numericId}`
           );
-          console.log("게시글 데이터:", response.data); // 가져온 게시글 데이터 콘솔에 출력
+          // console.log("게시글 데이터:", response.data); // 가져온 게시글 데이터 콘솔에 출력
           setTitle(response.data.title || "");
           setContent(response.data.content || "");
         } catch (error) {
@@ -54,8 +54,8 @@ const UpdateCommunityPost = () => {
     const numericId = Number(id); // id를 number로 변환
 
     // 세션 값 확인
-    console.log("provider_id:", provider_id);
-    console.log("token:", token);
+    // console.log("provider_id:", provider_id);
+    // console.log("token:", token);
 
     if (!token) {
       alert("인증 토큰이 없습니다. 다시 로그인해 주세요.");
@@ -63,11 +63,11 @@ const UpdateCommunityPost = () => {
     }
 
     // 전송하는 데이터 확인
-    console.log("업데이트 데이터:", {
-      title: title.trim(),
-      content: content.trim(),
-      provider_id,
-    });
+    // console.log("업데이트 데이터:", {
+    //   title: title.trim(),
+    //   content: content.trim(),
+    //   provider_id,
+    // });
 
     try {
       const response = await axios.patch(
@@ -86,7 +86,7 @@ const UpdateCommunityPost = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        console.log("수정 성공 응답 데이터:", response.data); // 수정 성공 데이터 출력
+        // console.log("수정 성공 응답 데이터:", response.data); // 수정 성공 데이터 출력
         alert("수정이 완료되었습니다!");
         router.push(`/Community/${numericId}`); // 수정 후 해당 게시글로 리다이렉트
       } else {

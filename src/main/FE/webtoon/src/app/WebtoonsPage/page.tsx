@@ -31,9 +31,9 @@ export default function WebtoonsPage() {
 
       const results = response.data.content;
 
-      console.log(
-        `${process.env.NEXT_PUBLIC_API_URL}/webtoons?searchKeyword=${searchKeyword}&searchType=${searchType}&page=0`
-      );
+      // console.log(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/webtoons?searchKeyword=${searchKeyword}&searchType=${searchType}&page=0`
+      // );
 
       if (results.length === 0) {
         alert("검색 결과가 없습니다."); // 검색 결과가 없을 때 알림

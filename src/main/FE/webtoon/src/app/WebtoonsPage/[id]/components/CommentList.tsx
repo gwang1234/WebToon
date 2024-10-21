@@ -24,18 +24,18 @@ export default function CommentList({ webtoonId, refresh }: CommentListProps) {
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const fetchComments = async () => {
-    console.log("Fetching comments..."); // 추가된 로그
+    // console.log("Fetching comments..."); // 추가된 로그
     setLoading(true);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/reviews/${webtoonId}?page=${page}`
       );
       const newComments = response.data.content;
-      console.log("Fetched comments:", newComments); // 추가된 로그
+      // console.log("Fetched comments:", newComments); // 추가된 로그
 
       if (newComments.length === 0) {
         setHasMore(false);
-        console.log("No more comments to load."); // 추가된 로그
+        // console.log("No more comments to load."); // 추가된 로그
       } else {
         setComments((prev) => [...prev, ...newComments]);
       }
@@ -44,7 +44,7 @@ export default function CommentList({ webtoonId, refresh }: CommentListProps) {
       console.error("Error fetching comments:", error); // 추가된 로그
     } finally {
       setLoading(false);
-      console.log("Loading state set to false."); // 추가된 로그
+      // console.log("Loading state set to false."); // 추가된 로그
     }
   };
 
@@ -53,7 +53,7 @@ export default function CommentList({ webtoonId, refresh }: CommentListProps) {
   }, [webtoonId, page, refresh]); // refresh 값이 바뀌면 댓글을 다시 불러옴
 
   const loadMoreComments = () => {
-    console.log("Loading more comments..."); // 추가된 로그
+    // console.log("Loading more comments..."); // 추가된 로그
     setPage((prev) => prev + 1);
   };
 

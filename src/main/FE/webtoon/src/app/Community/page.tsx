@@ -40,7 +40,7 @@ export default function CommunityPage() {
           }&size=${itemsPerPage}`
         );
 
-        console.log("API 응답 데이터: ", response.data);
+        // console.log("API 응답 데이터: ", response.data);
 
         // 응답에서 content 배열과 totalPages 설정
         setCommunities(response.data.content);

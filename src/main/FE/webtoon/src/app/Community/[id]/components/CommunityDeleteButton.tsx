@@ -24,9 +24,9 @@ export default function CommunityDeleteButton({
       // provider_id가 null이면 빈 문자열로 설정
       provider_id = provider_id || "";
 
-      console.log("Deleting community with id:", id);
-      console.log("User token:", token);
-      console.log("Provider ID:", provider_id);
+      // console.log("Deleting community with id:", id);
+      // console.log("User token:", token);
+      // console.log("Provider ID:", provider_id);
 
       // 커뮤니티 게시글 삭제 API 호출
       const response = await axios.request({
@@ -41,7 +41,7 @@ export default function CommunityDeleteButton({
       if (response.status >= 200 && response.status < 300) {
         setSuccess(true); // 삭제 성공 상태 설정
         setError(null); // 에러 초기화
-        console.log("삭제 성공!");
+        // console.log("삭제 성공!");
       } else {
         console.error("삭제 실패:", response);
         setError("삭제에 실패했습니다.");

@@ -69,7 +69,7 @@ const Main: React.FC = () => {
         setIsTokenPresent(!!token);
         setIsProviderIdPresent(!!providerId);
 
-        console.log(token);
+        // console.log(token);
 
         const [userRes, webtoonRes, commentRes, communityRes, C_commentRes] =
           await Promise.all([

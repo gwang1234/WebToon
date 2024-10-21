@@ -38,7 +38,7 @@ export default function LikeButton({
         }
       );
 
-      console.log("추천 요청 성공 응답 데이터:", response.data);
+      // console.log("추천 요청 성공 응답 데이터:", response.data);
       setLikeCount(likeCount + 1);
     } catch (error) {
       if (axios.isAxiosError(error)) {
