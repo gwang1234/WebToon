@@ -34,7 +34,7 @@ export default function CommunityDetailPage({
   const [community, setCommunity] = useState<CommunityDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [reloadComments, setReloadComments] = useState<boolean>(false); // 댓글 목록 갱신 상태
+  const [reloadComments, setReloadComments] = useState<number>(0); // 댓글 목록 갱신 상태
   const [sessionUserName, setSessionUserName] = useState<string | null>(null); // 세션의 userName
 
   const { id } = params;
@@ -83,7 +83,14 @@ export default function CommunityDetailPage({
             likeCount={community.likes}
           />
           <CommunityContent content={community.content} />
-          <LikeButton id={id} likeCount={community.likes} setError={setError} />
+          <LikeButton
+            id={id}
+            likeCount={community.likes}
+            setError={setError}
+            setLikeCount={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
 
           {/* 수정하기 링크와 삭제 버튼은 현재 로그인한 userName과 작성자 userName이 동일할 때만 렌더링 */}
           {sessionUserName === community.userName && (
@@ -98,7 +105,7 @@ export default function CommunityDetailPage({
           {/* 댓글 작성 폼 추가 */}
           <CommentForm
             communityId={id}
-            onCommentSubmit={() => setReloadComments(!reloadComments)}
+            onCommentSubmit={() => setReloadComments(reloadComments + 1)}
           />
 
           {/* 댓글 목록 */}

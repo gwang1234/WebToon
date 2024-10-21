@@ -1,5 +1,8 @@
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // useRouter 훅 가져오기
 
 interface CommunityDeleteButtonProps {
   id: string; // 커뮤니티 ID
@@ -10,6 +13,7 @@ export default function CommunityDeleteButton({
 }: CommunityDeleteButtonProps) {
   const [error, setError] = useState<string | null>(null); // 에러 상태
   const [success, setSuccess] = useState<boolean>(false); // 성공 여부 상태
+  const router = useRouter(); // useRouter 훅 사용
 
   const handleDelete = async () => {
     try {
@@ -42,6 +46,7 @@ export default function CommunityDeleteButton({
         setSuccess(true); // 삭제 성공 상태 설정
         setError(null); // 에러 초기화
         // console.log("삭제 성공!");
+        router.push("/Community");
       } else {
         console.error("삭제 실패:", response);
         setError("삭제에 실패했습니다.");

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import * as styles from "../styles/CommentListStyled"; // 스타일 파일 가져오기
@@ -50,7 +52,8 @@ export default function CommentList({ webtoonId, refresh }: CommentListProps) {
 
   useEffect(() => {
     fetchComments();
-  }, [webtoonId, page, refresh]); // refresh 값이 바뀌면 댓글을 다시 불러옴
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webtoonId, page, refresh]);
 
   const loadMoreComments = () => {
     // console.log("Loading more comments..."); // 추가된 로그

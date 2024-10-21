@@ -1,3 +1,5 @@
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import { useState } from "react";
 import Image from "next/image";
 import axios from "axios";
@@ -28,7 +30,7 @@ export default function LikeButton({
       }
 
       setLoading(true);
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/community/like-set/${id}`,
         {},
         {

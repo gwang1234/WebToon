@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // useRouter import
 import Image from "next/image"; // Next.js Image 컴포넌트 import

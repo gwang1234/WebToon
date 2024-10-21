@@ -22,7 +22,6 @@ export default function CommunityWritePage() {
   useEffect(() => {
     const storedProviderId = sessionStorage.getItem("provider_id");
     const storedEmail = sessionStorage.getItem("email");
-    const token = sessionStorage.getItem("token"); // 토큰 가져오기
 
     if (storedProviderId) {
       setProviderId(storedProviderId);

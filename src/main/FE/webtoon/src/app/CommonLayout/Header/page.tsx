@@ -1,4 +1,4 @@
-"use client";
+"use client"; // 클라이언트 컴포넌트로 설정
 
 import { useState, useEffect } from "react";
 import Header from "../styles/header";
@@ -8,32 +8,16 @@ import { useRouter } from "next/navigation";
 const HeaderComponent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   // 세션에서 사용자 정보 가져오기 함수
   const fetchUserData = () => {
     const storedUserName = sessionStorage.getItem("userName");
-
-    if (storedUserName) {
-      setName(storedUserName); // 사용자 이름 설정
-    } else {
-      setName(null); // 로그인 상태가 아닐 때
-    }
-    setIsLoading(false); // 로딩 상태 해제
+    setName(storedUserName || null);
   };
 
-  // 세션 업데이트를 주기적으로 확인
   useEffect(() => {
     fetchUserData(); // 페이지 로드 시 세션 확인
-    // console.log("타이머 기반 감지");
-
-    const intervalId = setInterval(() => {
-      // console.log("세션 상태 체크 중...");
-      fetchUserData(); // 1초마다 세션 정보 업데이트
-    }, 1000); // 1초마다 세션 확인
-
-    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 타이머 제거
   }, []);
 
   // 로그아웃 처리
@@ -45,10 +29,6 @@ const HeaderComponent: React.FC = () => {
     setName(null); // 로그아웃 후 바로 상태를 업데이트
     router.push("/login");
   };
-
-  if (isLoading) {
-    return null; // 로딩 중일 때 아무것도 렌더링하지 않음
-  }
 
   // MyPage 클릭 시 처리
   const handleMyPageClick = () => {
@@ -71,7 +51,6 @@ const HeaderComponent: React.FC = () => {
           <Header.Logo href="/">
             <Image src="/logo.svg" alt="Logo" width={61} height={70} priority />
           </Header.Logo>
-
           {name ? (
             <Header.NavLinks>
               <span>{name}님 환영합니다!</span>

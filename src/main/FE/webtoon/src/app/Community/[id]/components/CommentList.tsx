@@ -1,3 +1,5 @@
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import * as styles from "../styles/CommentListStyled"; // 스타일 파일 가져오기
@@ -39,11 +41,6 @@ export default function CommentList({ communityId }: CommentListProps) {
           setHasMore(false); // 더 이상 가져올 댓글이 없는 경우
         } else {
           setComments((prev) => [...prev, ...newComments]);
-
-          // 각 댓글에서 userName 값을 추출하여 배열에 저장
-          const userNames = newComments.map(
-            (comment: Comment) => comment.username
-          );
           // console.log("추출한 userNames:", userNames); // 추출한 userName 배열 출력
         }
       } catch (error) {

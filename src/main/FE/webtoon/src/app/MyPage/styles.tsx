@@ -15,8 +15,10 @@ const Mypagebox = styled.div`
   flex-direction: column;
   background: #a9dfbf50;
   width: 40vw;
-  height: 180vh;
-  border-radius: 10%;
+  height: 100%;
+  border-radius: 60px;
+  border: 1px solid #000;
+  padding-bottom: 5%;
 `;
 
 const Title = styled.div`

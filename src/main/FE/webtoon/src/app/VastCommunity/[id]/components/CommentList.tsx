@@ -1,3 +1,5 @@
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import * as styles from "../styles/CommentListStyled"; // 스타일 파일 가져오기
