@@ -9,9 +9,12 @@ import org.example.webtoonepics.community.service.CommunityService;
 import org.example.webtoonepics.jwt_login.dto.CustomUserDetails;
 import org.example.webtoonepics.public_method.service.PublicService;
 import org.example.webtoonepics.user.dto.UserDeleteDto;
+import org.example.webtoonepics.user.dto.UserPwdDto;
 import org.example.webtoonepics.user.dto.UserRequest;
 import org.example.webtoonepics.user.entity.User;
+import org.example.webtoonepics.user.service.EmailService;
 import org.example.webtoonepics.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +34,9 @@ public class UserController {
     private final CommunityService communityService;
     private final UserService userService;
     private final PublicService publicService;
+
+    @Autowired
+    EmailService emailService;
 
     @Operation(summary = "회원 수정", description = "회원 정보 수정")
     @PutMapping("/users")
@@ -97,5 +103,16 @@ public class UserController {
 
         User user = userService.readUser(userRequest);
         return ResponseEntity.ok().body(user);
+    }
+
+    @Operation(summary = "새 비밀번호 생성")
+    @PostMapping("/user/new-pwd")
+    public ResponseEntity<String> newPwd(@RequestBody UserPwdDto userPwdDto) {
+        String newPwd = userService.updatePassword(userPwdDto);
+
+        // 이메일로 새 비밀번호 전송
+        emailService.sendNewPasswordEmail(userPwdDto.getEmail(), newPwd);
+
+        return ResponseEntity.ok("새 비밀번호 전송 성공");
     }
 }
