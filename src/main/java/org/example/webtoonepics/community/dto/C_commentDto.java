@@ -16,12 +16,15 @@ public class C_commentDto {
     private String content;
     private String created_at;
     private Long community_id;
+    private String title;
 
-    public C_commentDto(Long id, String username, String content, LocalDateTime created_at) {
+    public C_commentDto(Long id, String username, String content, LocalDateTime created_at, Long community_id, String title) {
         this.id = id;
         this.username = username;
         this.content = content;
         this.created_at = created_at.format(DateTimeFormatter.ofPattern("MM.dd HH:mm:ss"));
+        this.community_id = community_id;
+        this.title = title;
     }
 
     public C_commentDto(C_comment comment) {
@@ -29,6 +32,7 @@ public class C_commentDto {
         this.content = comment.getContent();
         this.created_at = comment.getCreated_at().format(DateTimeFormatter.ofPattern("MM.dd HH:mm:ss"));
         this.community_id = comment.getCommunity().getId();
+        this.title = comment.getCommunity().getTitle();
     }
 
 }

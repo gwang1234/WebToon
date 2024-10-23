@@ -139,7 +139,7 @@ public class CommunityCommentController {
 
     // 사용자 댓글 조회
     @Operation(summary = "커뮤니티 댓글 사용자 중심 조회")
-    @GetMapping("/user/comment")
+    @PostMapping("/user/comment")
     public ResponseEntity<?> UserComment(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                 @RequestBody(required = false) ProvideDto provideDto,
                                                 @RequestParam(value = "page", defaultValue = "0")int page)

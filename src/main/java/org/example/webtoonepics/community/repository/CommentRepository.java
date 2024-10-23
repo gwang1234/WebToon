@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<C_comment, Long> {
 
-    @Query("select new org.example.webtoonepics.community.dto.C_commentDto(c.id, c.user.userName, c.content, c.created_at) from C_comment c inner join c.community u where u.id = :id")
+    @Query("select new org.example.webtoonepics.community.dto.C_commentDto(c.id, c.user.userName, c.content, c.created_at, u.id, u.title) from C_comment c inner join c.community u where u.id = :id")
     Page<C_commentDto> findWithCommunityId(Long id, Pageable pageable);
 
     List<C_comment> findByCommunity(Community community);

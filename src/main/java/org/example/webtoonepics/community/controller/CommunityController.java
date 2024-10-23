@@ -233,7 +233,7 @@ public class CommunityController {
     }
 
     @Operation(summary = "사용자가 쓴 게시판 조회")
-    @GetMapping("/user")
+    @PostMapping("/user")
     public ResponseEntity<?> UserCommu(@AuthenticationPrincipal CustomUserDetails userDetails,
                                        @RequestBody(required = false) ProvideDto provideDto,
                                        @RequestParam(value = "page", defaultValue = "0")int page)

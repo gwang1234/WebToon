@@ -151,7 +151,7 @@ public class ReviewController {
 
     // 사용자 리뷰
     @Operation(summary = "사용자가 쓴 리뷰 조회 (20개 씩)", description = "id값과 pageSize를 입력하여 조회")
-    @GetMapping("/reviews/user")
+    @PostMapping("/reviews/user")
     public ResponseEntity<?> UserReviews(@RequestParam(name = "page", defaultValue = "0") int page,
                                @AuthenticationPrincipal CustomUserDetails userDetails,
                                @RequestBody(required = false) ProvideDto provideDto)
