@@ -40,13 +40,20 @@ export const WebtoonCard = styled.div`
     width: 100%;
     height: auto;
   }
+
+  p {
+    overflow: hidden; /* 내용 넘침을 숨김 */
+    text-overflow: ellipsis; /* 텍스트가 넘칠 때 ...로 표시 */
+    white-space: nowrap; /* 텍스트가 한 줄로 표시 */
+    max-width: 100%; /* 최대 너비 */
+  }
 `;
 
 // 페이지네이션 컨테이너
 export const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1%;
+  margin-top: 15%;
 `;
 
 // 페이지네이션 버튼 스타일
@@ -82,4 +89,30 @@ export const ErrorMessage = styled.p`
   text-align: center;
   font-size: 120%;
   color: red;
+`;
+
+export const GenreButtonContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(11, 1fr); /* 11개의 열을 균등하게 배치 */
+  justify-items: center; /* 버튼들을 가운데 정렬 */
+  gap: 1vh; /* 가로 세로 간격을 동일하게 설정 (px 단위로 고정) */
+  width: 60%;
+  margin-top: 3%;
+  margin-bottom: 1%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+`;
+
+// 장르 선택 버튼 스타일
+export const GenreButton = styled.button<{ isActive?: boolean }>`
+  background-color: ${({ isActive }) => (isActive ? "#007bff" : "#f0f0f0")};
+  color: ${({ isActive }) => (isActive ? "#fff" : "#333")};
+  padding: 4% 30%;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: ${({ isActive }) => (isActive ? "#0056b3" : "#ddd")};
+  }
 `;

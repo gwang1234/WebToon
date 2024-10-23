@@ -1,4 +1,4 @@
-"use client";
+"use client"; // 클라이언트 컴포넌트로 설정
 
 import { useState, useEffect } from "react";
 import Header from "../styles/header";
@@ -7,38 +7,17 @@ import { useRouter } from "next/navigation";
 
 const HeaderComponent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [email, setEmail] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [name, setName] = useState<string | null>(null);
   const router = useRouter();
 
   // 세션에서 사용자 정보 가져오기 함수
   const fetchUserData = () => {
-    const storedEmail = sessionStorage.getItem("email");
-
-    if (storedEmail) {
-      setEmail(storedEmail);
-    } else {
-      setEmail(null);
-    }
-    setIsLoading(false);
+    const storedUserName = sessionStorage.getItem("userName");
+    setName(storedUserName || null);
   };
 
-  // 첫 렌더링 시 세션 정보 가져오기
   useEffect(() => {
-    fetchUserData(); // 처음 페이지 로드 시 정보 가져오기
-
-    // 세션이 업데이트되면 세션 정보를 다시 가져오기
-    const handleSessionUpdate = () => {
-      fetchUserData();
-    };
-
-    // 커스텀 이벤트 리스너 등록
-    window.addEventListener("sessionUpdated", handleSessionUpdate);
-
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener("sessionUpdated", handleSessionUpdate);
-    };
+    fetchUserData(); // 페이지 로드 시 세션 확인
   }, []);
 
   // 로그아웃 처리
@@ -46,13 +25,23 @@ const HeaderComponent: React.FC = () => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("refreshToken");
     sessionStorage.removeItem("email");
+    sessionStorage.removeItem("userName");
+    setName(null); // 로그아웃 후 바로 상태를 업데이트
     router.push("/login");
-    fetchUserData(); // 로그아웃 후 세션 정보 갱신
   };
 
-  if (isLoading) {
-    return null; // 로딩 중일 때 아무것도 렌더링하지 않음
-  }
+  // MyPage 클릭 시 처리
+  const handleMyPageClick = () => {
+    const token = sessionStorage.getItem("token");
+    const providerId = sessionStorage.getItem("provider_id");
+
+    if (!token && !providerId) {
+      alert("로그인이 필요합니다! 로그인 페이지로 이동합니다.");
+      router.push("/login");
+    } else {
+      router.push("/MyPage");
+    }
+  };
 
   return (
     <Header.Container>
@@ -62,10 +51,9 @@ const HeaderComponent: React.FC = () => {
           <Header.Logo href="/">
             <Image src="/logo.svg" alt="Logo" width={61} height={70} priority />
           </Header.Logo>
-
-          {email ? (
+          {name ? (
             <Header.NavLinks>
-              <span>{email}님 환영합니다!</span>
+              <span>{name}님 환영합니다!</span>
               <Header.NavLink as="button" onClick={handleLogout}>
                 로그아웃
               </Header.NavLink>
@@ -80,10 +68,11 @@ const HeaderComponent: React.FC = () => {
       </Header.Headers>
 
       <Header.NavBar>
-        <Header.NavItem href="/#">공지사항</Header.NavItem>
+        <Header.NavItem href="/">홈</Header.NavItem>
         <Header.NavItem href="/WebtoonsPage">웹툰 리뷰</Header.NavItem>
         <Header.NavItem href="/Community">커뮤니티</Header.NavItem>
-        <Header.NavItem href="/MyPage">마이페이지</Header.NavItem>
+        <Header.NavItem href="/VastCommunity">배스트 커뮤니티</Header.NavItem>
+        <Header.NavItem onClick={handleMyPageClick}>마이페이지</Header.NavItem>
       </Header.NavBar>
 
       <Header.NavBarMenu

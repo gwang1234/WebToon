@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios"; // axios 임포트
+import * as styles from "../../styles/updatePage";
 
 const UpdateCommunityPost = () => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const UpdateCommunityPost = () => {
   useEffect(() => {
     const numericId = Number(id); // id를 number로 변환
     if (numericId) {
-      console.log("가져온 ID:", numericId); // 가져온 id 콘솔에 출력
+      // console.log("가져온 ID:", numericId); // 가져온 id 콘솔에 출력
     }
 
     const fetchPost = async () => {
@@ -26,7 +27,7 @@ const UpdateCommunityPost = () => {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_API_URL}/community/detail/${numericId}`
           );
-          console.log("게시글 데이터:", response.data); // 가져온 게시글 데이터 콘솔에 출력
+          // console.log("게시글 데이터:", response.data); // 가져온 게시글 데이터 콘솔에 출력
           setTitle(response.data.title || "");
           setContent(response.data.content || "");
         } catch (error) {
@@ -53,8 +54,8 @@ const UpdateCommunityPost = () => {
     const numericId = Number(id); // id를 number로 변환
 
     // 세션 값 확인
-    console.log("provider_id:", provider_id);
-    console.log("token:", token);
+    // console.log("provider_id:", provider_id);
+    // console.log("token:", token);
 
     if (!token) {
       alert("인증 토큰이 없습니다. 다시 로그인해 주세요.");
@@ -62,11 +63,11 @@ const UpdateCommunityPost = () => {
     }
 
     // 전송하는 데이터 확인
-    console.log("업데이트 데이터:", {
-      title: title.trim(),
-      content: content.trim(),
-      provider_id,
-    });
+    // console.log("업데이트 데이터:", {
+    //   title: title.trim(),
+    //   content: content.trim(),
+    //   provider_id,
+    // });
 
     try {
       const response = await axios.patch(
@@ -85,7 +86,7 @@ const UpdateCommunityPost = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        console.log("수정 성공 응답 데이터:", response.data); // 수정 성공 데이터 출력
+        // console.log("수정 성공 응답 데이터:", response.data); // 수정 성공 데이터 출력
         alert("수정이 완료되었습니다!");
         router.push(`/Community/${numericId}`); // 수정 후 해당 게시글로 리다이렉트
       } else {
@@ -116,34 +117,51 @@ const UpdateCommunityPost = () => {
     return <p>{error}</p>; // 에러 메시지 표시
   }
 
+  // 입력 시 높이 자동 조절 함수
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    e.target.style.height = "auto"; // 높이를 자동으로 초기화
+    e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 맞춰 높이 조절
+    setContent(e.target.value);
+  };
+
+  // 입력 시 높이 자동 조절 함수
+  const handleNameChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    e.target.style.height = "auto"; // 높이를 자동으로 초기화
+    e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 맞춰 높이 조절
+    setTitle(e.target.value);
+  };
+
   return (
-    <div>
+    <styles.FormContainer>
       <h1>커뮤니티 글 수정</h1>
       <form onSubmit={(e) => e.preventDefault()}>
-        <div>
-          <label htmlFor="title">제목</label>
-          <input
+        <styles.FormTitleSection>
+          <styles.TitleInput
             id="title"
-            type="text"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              handleNameChange(e);
+            }}
             placeholder="제목을 입력하세요"
           />
-        </div>
-        <div>
-          <label htmlFor="content">내용</label>
-          <textarea
+        </styles.FormTitleSection>
+        <styles.ContentSection>
+          <styles.ContentInput
             id="content"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              setContent(e.target.value);
+              handleInputChange(e);
+            }}
             placeholder="내용을 입력하세요"
           />
-        </div>
-        <button type="button" onClick={handleUpdate}>
+        </styles.ContentSection>
+        <styles.SubmitButton type="submit" onClick={handleUpdate}>
           수정하기
-        </button>
+        </styles.SubmitButton>
       </form>
-    </div>
+    </styles.FormContainer>
   );
 };
 
