@@ -42,7 +42,10 @@ public class UserService {
     @Transactional
     public void updateUser(String email, UserRequest userRequest) {
         User user = userRepository.findByEmailAndProviderId(email, userRequest.getProvider_id()).orElseThrow(() -> new IllegalArgumentException("User not found. ====>" + email));
-        String encode = bCryptPasswordEncoder.encode(userRequest.getPassword());
+        String encode = null;
+        if (userRequest.getProvider_id() == null) {
+            encode = bCryptPasswordEncoder.encode(userRequest.getPassword());
+        }
         user.update(encode, userRequest.getUserName());
         userRepository.save(user);
     }

@@ -51,6 +51,7 @@ public class UserController {
             userDetails = null;
         }
         try {
+            System.out.println("fffffffffffffff");
             // 사용자 이메일 가져오기
             String useremail = publicService.getUserEmail(userDetails, userRequest.getProvider_id());
 
