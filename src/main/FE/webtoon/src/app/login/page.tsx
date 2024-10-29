@@ -23,7 +23,6 @@ const Home: React.FC = () => {
   };
 
   // 로그인 요청 처리 및 성공 시 토큰 저장
-  // Home 컴포넌트
   const onSubmit = async () => {
     try {
       const response = await axios.post(
@@ -34,13 +33,10 @@ const Home: React.FC = () => {
 
       if (response.status === 200) {
         const token = response.headers["authorization"]?.split(" ")[1];
-        const refreshToken = response.headers["refresh-token"] || ""; // refreshToken 없을 경우 빈 문자열 처리
+        const refreshToken = response.headers["refresh-token"] || "";
 
         setToken(token);
         setRefreshToken(refreshToken);
-
-        // console.log("로그인 성공, JWT 토큰:", token);
-        // console.log("리프레시 토큰:", refreshToken);
 
         router.push("/"); // 로그인 성공 시 리다이렉트
       }
@@ -96,7 +92,7 @@ const Home: React.FC = () => {
 
           <styles.JoinOrForget>
             <styles.Join href="/join">회원가입</styles.Join>
-            <styles.Forget href="#">앗, 비밀번호를 잊어버렸어요!</styles.Forget>
+            <styles.Forget href="/findpwd">앗, 비밀번호를 잊어버렸어요!</styles.Forget>
           </styles.JoinOrForget>
 
           <styles.Or>또는</styles.Or>

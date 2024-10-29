@@ -5,7 +5,7 @@ export const CommentContainer = styled.div`
   margin-top: 10%;
   padding: 1%;
   width: 60%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   margin-left: 50%;
   border-top: 1px solid #ccc;
 `;
@@ -61,17 +61,36 @@ export const StarContainer = styled.div`
   margin: 1%;
 `;
 
-export const StarIcon = styled.div`
+interface StarIconProps {
+  isFilled: boolean;
+  isHalfFilled: boolean;
+}
+
+export const StarIcon = styled.div<StarIconProps>`
   width: 24px;
   height: 24px;
-  background-size: contain;
   cursor: pointer;
+  background-image: url("/like-off.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
 
-  &.like-on {
-    background-image: url("/like-on.png"); // 활성화된 별 이미지 경로
-  }
-
-  &.like-off {
-    background-image: url("/like-off.png"); // 비활성화된 별 이미지 경로
+  /* 왼쪽 절반 채우기 */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/like-on.png"); /* 채워진 별 이미지 */
+    background-size: contain;
+    background-repeat: no-repeat;
+    clip-path: ${({ isHalfFilled, isFilled }) =>
+      isHalfFilled
+        ? "inset(0 50% 0 0)"
+        : isFilled
+        ? "inset(0)"
+        : "inset(0 100% 0 0)"};
   }
 `;

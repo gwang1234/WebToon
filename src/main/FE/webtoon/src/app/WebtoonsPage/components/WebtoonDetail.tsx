@@ -68,22 +68,22 @@ const Main: React.FC<WebtoonDetailProps> = ({ id }) => {
 
     try {
       const token = sessionStorage.getItem("token"); // 세션에 저장된 토큰 가져오기
-      const providerId = sessionStorage.getItem("provider_id") || ""; // 세션에 저장된 provider_id 가져오기
+      const provider_id = sessionStorage.getItem("provider_id") || ""; // 세션에 저장된 provider_id 가져오기
 
-      if (!token && !providerId) {
+      if (!token && !provider_id) {
         alert("로그인이 필요합니다.");
         router.push(`/login`);
         return;
       }
 
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/webtoons/${webtoon.id}/like`,
-        { like: 1, provider_id: providerId }, // provider_id를 요청 바디에 포함
+        { like: 1, provider_id: provider_id }, // provider_id를 요청 바디에 포함
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // JWT 토큰을 헤더에 추가
-            "Content-Type": "application/json", // Content-Type 헤더 추가
-          },
+          headers,
         }
       );
 

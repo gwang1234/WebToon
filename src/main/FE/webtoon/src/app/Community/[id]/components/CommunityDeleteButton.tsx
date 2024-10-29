@@ -32,13 +32,14 @@ export default function CommunityDeleteButton({
       // console.log("User token:", token);
       // console.log("Provider ID:", provider_id);
 
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       // 커뮤니티 게시글 삭제 API 호출
       const response = await axios.request({
         method: "delete",
         url: `${process.env.NEXT_PUBLIC_API_URL}/community/delete/${id}`,
-        headers: {
-          Authorization: `Bearer ${token}`, // 토큰을 헤더에 포함하여 전송
-        },
+        headers,
         data: { provider_id }, // provider_id를 빈 문자열로 전송
       });
 

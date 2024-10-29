@@ -4,27 +4,69 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Head from "next/head";
 import Image from "next/image";
-import Slider from "react-slick"; // react-slick의 Slider 컴포넌트 사용
+import Slider from "react-slick";
 import styles from "./styles";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // useRouter import
+import { useRouter } from "next/navigation";
 
 // Webtoon 타입 정의
 type Webtoon = {
   id: number;
   title: string;
-  imageurl: string; // imageurl 필드를 정의
+  imageurl: string;
 };
 
 const Main: React.FC = () => {
   const [topLikeWebtoons, setTopLikeWebtoons] = useState<Webtoon[]>([]);
   const [topViewWebtoons, setTopViewWebtoons] = useState<Webtoon[]>([]);
-  const [loadingLike, setLoadingLike] = useState(true); // 추천 웹툰 로딩 상태
-  const [loadingView, setLoadingView] = useState(true); // 조회수 웹툰 로딩 상태
-  const router = useRouter(); // useRouter 사용
+  const [loadingLike, setLoadingLike] = useState(true);
+  const [loadingView, setLoadingView] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    // OAuth 로그인 시 provider_id 세션에 저장
+    const searchParams = window.location.search;
+    const providerId = new URLSearchParams(searchParams).get("username");
+    const email = new URLSearchParams(searchParams).get("email");
+
+    if (providerId) {
+      sessionStorage.setItem("provider_id", providerId);
+      console.log(
+        "Provider ID (username) stored in sessionStorage:",
+        providerId
+      );
+    }
+
+    if (email) {
+      sessionStorage.setItem("email", email);
+      console.log("Email stored in sessionStorage:", email);
+    }
+
+    // 사용자 이름 가져오기
+    const fetchUserName = async () => {
+      try {
+        const providerId = sessionStorage.getItem("provider_id");
+
+        if (!providerId) {
+          return;
+        }
+
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/users`,
+          { provider_id: providerId, email: email },
+          {
+            headers: {},
+          }
+        );
+
+        const { userName } = response.data;
+        sessionStorage.setItem("userName", userName || "");
+      } catch (error) {
+        console.error("userName을 가져오는 중 오류 발생:", error);
+      }
+    };
+
     // Like API를 통해 웹툰 목록 가져오기
     const fetchWebtoonsLike = async () => {
       try {
@@ -38,7 +80,7 @@ const Main: React.FC = () => {
           error
         );
       } finally {
-        setLoadingLike(false); // 데이터 로드 완료 후 로딩 상태 변경
+        setLoadingLike(false);
       }
     };
 
@@ -55,10 +97,11 @@ const Main: React.FC = () => {
           error
         );
       } finally {
-        setLoadingView(false); // 데이터 로드 완료 후 로딩 상태 변경
+        setLoadingView(false);
       }
     };
 
+    fetchUserName();
     fetchWebtoonsLike();
     fetchWebtoonsView();
   }, []);
@@ -75,7 +118,7 @@ const Main: React.FC = () => {
 
   // 클릭한 웹툰의 id로 이동
   const handleWebtoonClick = (id: number) => {
-    router.push(`/WebtoonsPage/${id}`); // router를 사용하여 경로 이동
+    router.push(`/WebtoonsPage/${id}`);
   };
 
   return (
@@ -98,7 +141,7 @@ const Main: React.FC = () => {
         <styles.Top10Section>
           <h2>추천 웹툰</h2>
           {loadingLike ? (
-            <p>추천 웹툰 데이터를 불러오는 중입니다...</p> // 로딩 중 표시
+            <p>추천 웹툰 데이터를 불러오는 중입니다...</p>
           ) : (
             <Slider {...sliderSettings}>
               {topLikeWebtoons.map((webtoon) => (
@@ -123,7 +166,7 @@ const Main: React.FC = () => {
         <styles.Top10Section>
           <h2>조회수 많은 웹툰</h2>
           {loadingView ? (
-            <p>조회수 많은 웹툰 데이터를 불러오는 중입니다...</p> // 로딩 중 표시
+            <p>조회수 많은 웹툰 데이터를 불러오는 중입니다...</p>
           ) : (
             <Slider {...sliderSettings}>
               {topViewWebtoons.map((webtoon) => (

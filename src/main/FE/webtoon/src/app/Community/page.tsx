@@ -28,6 +28,7 @@ export default function CommunityPage() {
   const [totalPages, setTotalPages] = useState<number>(0); // 총 페이지 수
   const itemsPerPage = 20; // 페이지당 표시할 커뮤니티 항목 수
   const router = useRouter(); // useRouter 가져오기
+  const [isSearchSubmitted, setIsSearchSubmitted] = useState(false);
 
   // API 호출을 통해 커뮤니티 목록 가져오기
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function CommunityPage() {
 
   // 검색 핸들러
   const handleSearch = async (searchType: string, searchKeyword: string) => {
+    setIsSearchSubmitted(true);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/community?searchKeyword=${searchKeyword}&searchType=${searchType}&page=0`
@@ -97,6 +99,7 @@ export default function CommunityPage() {
       router.push("/Community/CommunityWritePage"); // 글쓰기 페이지로 이동
     }
   };
+  
 
   return (
     <styles.Container>
@@ -109,6 +112,7 @@ export default function CommunityPage() {
         <CommunityList communities={searchResults} />
       ) : (
         <>
+          {isSearchSubmitted && searchResults && alert('검색 결과가 없습니다.')}
           <CommunityList communities={communities} /> {/* 기본 커뮤니티 목록 */}
           <Pagination
             totalPages={totalPages}

@@ -23,20 +23,23 @@ export default function LikeButton({
   const handleLikeClick = async () => {
     try {
       const token = sessionStorage.getItem("token");
+      const providerId = sessionStorage.getItem("provider_id");
 
-      if (!token) {
+      if (!token && !providerId) {
         setError("로그인 후 이용해주세요.");
         return;
       }
 
       setLoading(true);
+
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/community/like-set/${id}`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         }
       );
 

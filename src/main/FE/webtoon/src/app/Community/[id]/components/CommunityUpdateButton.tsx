@@ -22,11 +22,15 @@ export default function CommunityUpdateButton({
   const handleUpdate = async () => {
     try {
       const token = sessionStorage.getItem("token"); // 세션에서 토큰 가져오기
+      const provider_id = sessionStorage.getItem("provider_id");
 
-      if (!token) {
+      if (!token && !provider_id) {
         setError("로그인이 필요합니다.");
         return;
       }
+
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
       // 커뮤니티 게시글 수정 API 호출
       const response = await axios.patch(
@@ -34,11 +38,10 @@ export default function CommunityUpdateButton({
         {
           title: newTitle,
           content: newContent,
+          provider_id: provider_id,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰을 헤더에 포함
-          },
+          headers,
         }
       );
 

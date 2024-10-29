@@ -69,10 +69,10 @@ export default function CommentList({ communityId }: CommentListProps) {
     // console.log("댓글 수정 요청:", { id, content: editedContent }); // 수정 요청 로그
     try {
       const token = sessionStorage.getItem("token"); // 세션 스토리지에서 토큰 가져오기
-      const commentToUpdate = comments.find((comment) => comment.id === id);
+      const provider_id = sessionStorage.getItem("provider_id");
 
-      // provider_id가 없으면 빈 문자열로 설정
-      const providerId = commentToUpdate?.provider_id || "";
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
       // 서버로 수정된 댓글 정보 전송
       const response = await axios.put(
@@ -80,12 +80,10 @@ export default function CommentList({ communityId }: CommentListProps) {
         {
           id: id, // 댓글 ID
           content: editedContent, // 수정된 댓글 내용
-          provider_id: providerId, // provider_id
+          provider_id: provider_id, // provider_id
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰을 헤더에 추가
-          },
+          headers,
         }
       );
 
@@ -112,12 +110,13 @@ export default function CommentList({ communityId }: CommentListProps) {
       const token = sessionStorage.getItem("token"); // 세션 스토리지에서 토큰 가져오기
       const providerId = sessionStorage.getItem("provider_id") || ""; // provider_id가 없으면 빈 문자열로 설정
 
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/c-comment/delete/${id}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰을 헤더에 추가
-          },
+          headers,
           data: {
             provider_id: providerId, // provider_id 추가
           },

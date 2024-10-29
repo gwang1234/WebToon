@@ -63,66 +63,63 @@ const Main: React.FC = () => {
       setLoading(true);
       try {
         const token = sessionStorage.getItem("token");
-        const providerId = sessionStorage.getItem("provider_id") || null;
+        const provider_id = sessionStorage.getItem("provider_id") || null;
         const email = sessionStorage.getItem("email") || null;
 
         setIsTokenPresent(!!token);
-        setIsProviderIdPresent(!!providerId);
+        setIsProviderIdPresent(!!provider_id);
 
         // console.log(token);
+
+        // token이 있을 경우 Authorization 헤더 추가
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
         const [userRes, webtoonRes, commentRes, communityRes, C_commentRes] =
           await Promise.all([
             axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/users`,
               {
-                provider_id: providerId,
+                provider_id: provider_id,
                 email: email,
               },
               {
-                headers: { Authorization: `Bearer ${token}` },
+                headers,
               }
             ),
             axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/webtoons/like-user`,
               {
-                provider_id: providerId,
+                provider_id: provider_id,
               },
               {
-                headers: { Authorization: `Bearer ${token}` },
+                headers,
               }
             ),
             axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/reviews/user`,
               {
-                provider_id: providerId,
+                provider_id: provider_id,
               },
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                headers,
               }
             ),
             axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/community/user`,
               {
-                provider_id: providerId,
+                provider_id: provider_id,
               },
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                headers,
               }
             ),
             axios.post(
               `${process.env.NEXT_PUBLIC_API_URL}/c-comment/user/comment`,
               {
-                provider_id: providerId,
+                provider_id: provider_id,
               },
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                headers,
               }
             ),
           ]);
@@ -147,15 +144,20 @@ const Main: React.FC = () => {
     if (password !== "" || isProviderIdPresent) {
       try {
         const token = sessionStorage.getItem("token");
+        const provider_id = sessionStorage.getItem("provider_id");
+
+        // token이 있을 경우 Authorization 헤더 추가 ${process.env.NEXT_PUBLIC_API_URL}
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
         await axios.put(
           `${process.env.NEXT_PUBLIC_API_URL}/users`,
           {
             userName: userName,
-            password: isTokenPresent ? password : undefined,
+            password: isTokenPresent ? password : null,
+            provider_id: provider_id,
           },
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers,
           }
         );
 

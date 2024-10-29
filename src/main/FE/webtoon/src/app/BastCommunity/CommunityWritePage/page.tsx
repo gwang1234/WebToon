@@ -42,6 +42,10 @@ export default function CommunityWritePage() {
 
     try {
       const token = sessionStorage.getItem("token");
+      const providerId = sessionStorage.getItem("provider_id");
+
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/community/write`,
@@ -49,11 +53,10 @@ export default function CommunityWritePage() {
           id: null, // id는 보통 null로 전송
           title, // 제목
           content, // 내용
+          providerId,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰 포함
-          },
+          headers,
         }
       );
 
