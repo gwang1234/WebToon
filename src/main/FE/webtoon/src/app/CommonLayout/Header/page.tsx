@@ -12,8 +12,11 @@ const HeaderComponent: React.FC = () => {
 
   // 세션에서 사용자 정보 가져오기 함수
   const fetchUserData = () => {
-    const storedUserName = sessionStorage.getItem("userName");
-    setName(storedUserName || null);
+    // 브라우저 환경에서만 sessionStorage에 접근
+    if (typeof window !== "undefined") {
+      const storedUserName = sessionStorage.getItem("userName");
+      setName(storedUserName || null);
+    }
   };
 
   useEffect(() => {
@@ -31,25 +34,25 @@ const HeaderComponent: React.FC = () => {
 
   // 로그아웃 처리
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("refreshToken");
-    sessionStorage.removeItem("email");
-    sessionStorage.removeItem("userName");
-    sessionStorage.removeItem("provider_id");
-    setName(null); // 로그아웃 후 바로 상태를 업데이트
+    if (typeof window !== "undefined") {
+      sessionStorage.clear();
+      setName(null);
+    }
     router.push("/login");
   };
 
   // MyPage 클릭 시 처리
   const handleMyPageClick = () => {
-    const token = sessionStorage.getItem("token");
-    const providerId = sessionStorage.getItem("provider_id");
+    if (typeof window !== "undefined") {
+      const token = sessionStorage.getItem("token");
+      const providerId = sessionStorage.getItem("provider_id");
 
-    if (!token && !providerId) {
-      alert("로그인이 필요합니다! 로그인 페이지로 이동합니다.");
-      router.push("/login");
-    } else {
-      router.push("/MyPage");
+      if (!token && !providerId) {
+        alert("로그인이 필요합니다! 로그인 페이지로 이동합니다.");
+        router.push("/login");
+      } else {
+        router.push("/MyPage");
+      }
     }
   };
 

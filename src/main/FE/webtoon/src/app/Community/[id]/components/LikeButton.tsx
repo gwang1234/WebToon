@@ -7,18 +7,13 @@ import * as styles from "../../styles/detailStyles";
 
 interface LikeButtonProps {
   id: string;
-  updateLikeCount: (newLikeCount: number) => void;
   setError: (error: string | null) => void;
+  onLike: () => void; // 상위 컴포넌트에 상태를 전달하는 콜백 함수
 }
 
-export default function LikeButton({
-  id,
-  updateLikeCount,
-  setError,
-}: LikeButtonProps) {
+export default function LikeButton({ id, setError, onLike }: LikeButtonProps) {
   const [loading, setLoading] = useState(false);
 
-  // LikeButton 컴포넌트 내에서 좋아요 버튼 클릭 시 서버로 요청하고 새 좋아요 수를 업데이트하는 부분
   const handleLikeClick = async () => {
     try {
       const token = sessionStorage.getItem("token");
@@ -31,22 +26,16 @@ export default function LikeButton({
 
       setLoading(true);
 
-      // token이 있을 경우 Authorization 헤더 추가
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-      // 서버로 추천 요청을 보내고 응답을 받음
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/community/like-set/${id}`, // 커뮤니티 게시물 ID
+        `${process.env.NEXT_PUBLIC_API_URL}/community/like-set/${id}`,
         { provider_id: provider_id },
-        {
-          headers,
-        }
+        { headers }
       );
 
-      // 서버로부터 성공적으로 요청이 처리되었다면 좋아요 수를 업데이트
       if (response.data.statusCode === 200) {
-        updateLikeCount(response.data.likes); // 서버에서 반환된 좋아요 수로 업데이트
-        console.log("추천 요청 성공:", response.data.responseMessage);
+        onLike(); // 상위 컴포넌트에 상태 전달
       } else {
         setError("추천에 실패했습니다.");
       }
@@ -72,7 +61,7 @@ export default function LikeButton({
   return (
     <styles.Good onClick={handleLikeClick}>
       <Image src="/good.svg" alt={"good"} fill />
-      {loading && <span>로딩 중...</span>}
+      {loading}
     </styles.Good>
   );
 }

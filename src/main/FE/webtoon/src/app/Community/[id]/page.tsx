@@ -76,9 +76,21 @@ export default function CommunityDetailPage({
     fetchLikeCount(); // 좋아요 수 가져오기
   }, [id]);
 
-  // 좋아요 수를 업데이트하는 함수
-  const updateLikeCount = (newLikeCount: number) => {
-    setLikeCount(newLikeCount); // 서버에서 받아온 새로운 좋아요 수로 상태 업데이트
+  // 좋아요 버튼이 눌렸을 때 호출되는 함수
+  const handleLike = () => {
+    const fetchLikeCount = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/community/like-get/${id}`
+        );
+        setLikeCount(response.data); // 좋아요 수를 상태에 저장
+      } catch (error) {
+        console.error("좋아요 수 가져오는 중 오류 발생:", error);
+        setError("좋아요 수를 불러오는 중 오류가 발생했습니다.");
+      }
+    };
+
+    fetchLikeCount();
   };
 
   if (loading) {
@@ -102,11 +114,7 @@ export default function CommunityDetailPage({
             likeCount={likeCount} // 서버에서 가져온 좋아요 수
           />
           <CommunityContent content={community.content} />
-          <LikeButton
-            id={id}
-            setError={setError}
-            updateLikeCount={updateLikeCount} // 좋아요 수 업데이트 함수
-          />
+          <LikeButton id={id} setError={setError} onLike={handleLike} />
           {/* 좋아요 수를 명확하게 보여주기 위한 부분 추가 */}
           <p>좋아요 수: {likeCount}</p>
 
