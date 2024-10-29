@@ -29,6 +29,7 @@ const Title = styled.div`
 
 const NameAndId = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 const Name = styled.div`
@@ -39,7 +40,7 @@ const Name = styled.div`
 const NameText = styled.p`
   font-size: 25px;
   margin-top: 3%;
-  margin-left: 25%;
+  margin-left: 15%;
 `;
 
 const NameInput = styled.input`
@@ -47,7 +48,7 @@ const NameInput = styled.input`
   font-size: 30px;
   width: 80%;
   border-radius: 30px;
-  margin-left: 20%;
+  margin-left: 10%;
   margin-top: 3%;
 `;
 

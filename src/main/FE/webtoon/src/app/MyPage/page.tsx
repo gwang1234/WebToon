@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { UserNameFetcher } from "../components/UserNameFetcher";
 
 // Webtoon 타입 정의
 type Webtoon = {
@@ -53,10 +53,11 @@ const Main: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isTokenPresent, setIsTokenPresent] = useState<boolean>(false);
   const [isProviderIdPresent, setIsProviderIdPresent] =
     useState<boolean>(false);
-  const router = useRouter();
+  const [fetchUserName, setFetchUserName] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -141,14 +142,21 @@ const Main: React.FC = () => {
   }, []);
 
   const handleCorrection = async () => {
-    if (password !== "" || isProviderIdPresent) {
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,16}$/; // 영문, 숫자 포함 6~16자리 정규식
+
+    // 입력된 비밀번호를 검증하는 함수
+    const isPasswordValid = () => passwordRegex.test(password);
+
+    // 비밀번호와 확인 비밀번호가 일치하는지 검증하는 함수
+    const isPasswordConfirmed = () => password === confirmPassword;
+
+    // 회원 정보를 업데이트하는 함수
+    const updateUserInfo = async () => {
+      const token = sessionStorage.getItem("token");
+      const provider_id = sessionStorage.getItem("provider_id");
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       try {
-        const token = sessionStorage.getItem("token");
-        const provider_id = sessionStorage.getItem("provider_id");
-
-        // token이 있을 경우 Authorization 헤더 추가 ${process.env.NEXT_PUBLIC_API_URL}
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
         await axios.put(
           `${process.env.NEXT_PUBLIC_API_URL}/users`,
           {
@@ -156,23 +164,30 @@ const Main: React.FC = () => {
             password: isTokenPresent ? password : null,
             provider_id: provider_id,
           },
-          {
-            headers,
-          }
+          { headers }
         );
 
-        alert(
-          isTokenPresent
-            ? "회원 정보가 수정되었습니다."
-            : "닉네임이 수정되었습니다."
-        );
-        if (isTokenPresent) {
-          sessionStorage.clear();
-          router.push("/login");
-        }
+        alert("회원 정보가 수정되었습니다.");
+
+        setFetchUserName(true); // UserNameFetcher 호출
       } catch {
         alert("회원 정보 수정 중 오류가 발생했습니다.");
       }
+    };
+
+    // 조건에 따른 사용자 피드백 제공 및 업데이트 실행
+    if (password !== "" || isProviderIdPresent) {
+      if (!isPasswordValid()) {
+        alert("비밀번호는 영어와 숫자를 포함하여 6~16자리로 설정해야 합니다.");
+        return;
+      }
+
+      if (!isPasswordConfirmed()) {
+        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다");
+        return;
+      }
+
+      await updateUserInfo();
     } else {
       alert("비밀번호를 입력해 주세요");
     }
@@ -208,15 +223,26 @@ const Main: React.FC = () => {
               </styles.Name>
 
               {isTokenPresent && (
-                <styles.Id>
-                  <styles.IdText>비밀번호</styles.IdText>
-                  <styles.IdInput
-                    type="password"
-                    placeholder="******"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </styles.Id>
+                <>
+                  <styles.Id>
+                    <styles.IdText>비밀번호</styles.IdText>
+                    <styles.IdInput
+                      type="password"
+                      placeholder="******"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </styles.Id>
+                  <styles.Id>
+                    <styles.IdText>비밀번호 확인</styles.IdText>
+                    <styles.IdInput
+                      type="password"
+                      placeholder="******"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                  </styles.Id>
+                </>
               )}
 
               {!isTokenPresent && isProviderIdPresent && (
@@ -335,6 +361,17 @@ const Main: React.FC = () => {
               </styles.CommentList>
             ) : (
               <p>커뮤니티가 없습니다.</p>
+            )}
+            {/* UserNameFetcher 컴포넌트 */}
+            {fetchUserName && (
+              <UserNameFetcher
+                onFetchSuccess={(fetchedUserName) => {
+                  sessionStorage.setItem("userName", fetchedUserName || "");
+                  setUserName(fetchedUserName);
+                  setFetchUserName(false); // Fetch 완료 후 상태 초기화
+                  window.location.reload(); // 페이지 새로고침
+                }}
+              />
             )}
           </styles.Mypagebox>
         )}
