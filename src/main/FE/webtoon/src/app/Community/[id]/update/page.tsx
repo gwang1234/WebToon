@@ -57,7 +57,7 @@ const UpdateCommunityPost = () => {
     // console.log("provider_id:", provider_id);
     // console.log("token:", token);
 
-    if (!token) {
+    if (!token && !provider_id) {
       alert("인증 토큰이 없습니다. 다시 로그인해 주세요.");
       return;
     }
@@ -70,6 +70,9 @@ const UpdateCommunityPost = () => {
     // });
 
     try {
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/community/update/${numericId}`,
         {
@@ -79,9 +82,7 @@ const UpdateCommunityPost = () => {
           provider_id: provider_id, // 개별 필드로 전달
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰 확인
-          },
+          headers,
         }
       );
 

@@ -21,35 +21,63 @@ export default function WebtoonsPage() {
     "like" | "view" | "all" | "search" | "category"
   >("all");
   const [searchResults, setSearchResults] = useState<Webtoon[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1); // 총 페이지 수 상태
+  const [page, setPage] = useState<number>(0); // 현재 페이지 상태
+  const [searchKeyword, setSearchKeyword] = useState<string>(""); // 검색어 상태
+  const [searchType, setSearchType] = useState<string>(""); // 검색 타입 상태
 
   // 검색 요청 함수
   const handleSearch = async (searchType: string, searchKeyword: string) => {
+    setSearchKeyword(searchKeyword);
+    setSearchType(searchType);
+    setPage(0); // 새로운 검색 시 페이지 번호를 0으로 초기화
+    fetchWebtoons(0, searchType, searchKeyword); // 첫 페이지로 요청
+  };
+
+  // 웹툰 데이터 가져오기 함수
+  const fetchWebtoons = async (
+    page: number,
+    searchType: string,
+    searchKeyword: string
+  ) => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/webtoons?searchKeyword=${searchKeyword}&searchType=${searchType}&page=0`
+        `${process.env.NEXT_PUBLIC_API_URL}/webtoons?searchKeyword=${searchKeyword}&searchType=${searchType}&page=${page}`
       );
-
       const results = response.data.content;
 
-      // console.log(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/webtoons?searchKeyword=${searchKeyword}&searchType=${searchType}&page=0`
-      // );
-
       if (results.length === 0) {
-        alert("검색 결과가 없습니다."); // 검색 결과가 없을 때 알림
+        alert("검색 결과가 없습니다.");
       } else {
-        setSearchResults(results); // 검색 결과가 있을 때만 업데이트
+        setSearchResults(results);
+        setActivePage("search"); // 검색 결과 페이지로 전환
+      }
+
+      // 총 페이지 수 설정
+      if (response.data.totalPages) {
+        setTotalPages(response.data.totalPages); // 총 페이지 수를 상태로 설정
       }
     } catch (error) {
       console.error("검색 중 오류 발생:", error);
     }
   };
 
+  // 페이지 변경 핸들러
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage); // 페이지 상태 업데이트
+    fetchWebtoons(newPage, searchType, searchKeyword); // 페이지 변경 시 다시 요청
+  };
+
   return (
     <styles.Container>
-      {/* 검색 결과가 있을 때 SearchResults 컴포넌트 표시 */}
+      {/* 검색 결과가 있을 때 SearchResults 컴포넌트로 현재 페이지와 총 페이지 수 전달 */}
       {searchResults.length > 0 ? (
-        <SearchResults results={searchResults} />
+        <SearchResults
+          results={searchResults}
+          totalPages={totalPages}
+          currentPage={page} // 현재 페이지 상태 전달
+          onPageChange={handlePageChange} // 페이지 변경 핸들러 전달
+        />
       ) : (
         <>
           <styles.ButtonContainer>

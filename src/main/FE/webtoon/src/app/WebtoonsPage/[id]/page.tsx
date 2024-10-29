@@ -14,18 +14,18 @@ interface WebtoonPageProps {
 
 const WebtoonPage = ({ params }: WebtoonPageProps) => {
   const { id } = params;
-  const [refreshComments, setRefreshComments] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
-  // 댓글 목록을 다시 불러오는 트리거
   const handleCommentSubmit = () => {
-    setRefreshComments((prev) => !prev);
+    console.log("댓글 작성 완료, refresh 상태 변경됨");
+    setRefresh((prev) => !prev);
   };
 
   return (
     <styles.Container>
       <WebtoonDetail id={id} />
       <CommentForm webtoonId={id} onCommentSubmit={handleCommentSubmit} />
-      <CommentList webtoonId={id} refresh={refreshComments} />
+      <CommentList webtoonId={id} refresh={refresh} />
     </styles.Container>
   );
 };

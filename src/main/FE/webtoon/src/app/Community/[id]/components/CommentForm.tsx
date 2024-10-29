@@ -28,19 +28,21 @@ export default function CommentForm({
     try {
       const token = sessionStorage.getItem("token");
       const userName = sessionStorage.getItem("userName");
+      const provider_id = sessionStorage.getItem("provider_id");
 
-      if (!token) {
+      if (!token && !provider_id) {
         setError("로그인 후 댓글을 작성할 수 있습니다.");
         return;
       }
 
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/c-comment/write/${communityId}`,
-        { content: comment, userName: userName }, // 댓글 내용 전송
+        { content: comment, userName: userName, provider_id: provider_id }, // 댓글 내용 전송
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         }
       );
 

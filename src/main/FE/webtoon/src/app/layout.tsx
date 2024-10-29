@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import type { Metadata } from "next";
 import "./globals.css";
 // 클라이언트 컴포넌트 임포트
@@ -15,7 +16,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <head>{/* 여기에 메타태그나 스크립트를 넣을 수 있습니다 */}</head>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"
+        ></link>
+      </head>
       <body
         style={{ margin: 0, padding: 0, height: "100vh", overflow: "hidden" }}
       >

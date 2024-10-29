@@ -17,7 +17,16 @@ const HeaderComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUserData(); // 페이지 로드 시 세션 확인
+    // 페이지 로드 시 세션 확인
+    fetchUserData();
+
+    // 주기적으로 세션 확인 (1초마다)
+    const intervalId = setInterval(() => {
+      fetchUserData();
+    }, 1000); // 1000ms = 1초
+
+    // 컴포넌트 언마운트 시 인터벌 해제
+    return () => clearInterval(intervalId);
   }, []);
 
   // 로그아웃 처리
@@ -26,6 +35,7 @@ const HeaderComponent: React.FC = () => {
     sessionStorage.removeItem("refreshToken");
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("provider_id");
     setName(null); // 로그아웃 후 바로 상태를 업데이트
     router.push("/login");
   };
@@ -71,7 +81,7 @@ const HeaderComponent: React.FC = () => {
         <Header.NavItem href="/">홈</Header.NavItem>
         <Header.NavItem href="/WebtoonsPage">웹툰 리뷰</Header.NavItem>
         <Header.NavItem href="/Community">커뮤니티</Header.NavItem>
-        <Header.NavItem href="/VastCommunity">배스트 커뮤니티</Header.NavItem>
+        <Header.NavItem href="/BastCommunity">베스트 커뮤니티</Header.NavItem>
         <Header.NavItem onClick={handleMyPageClick}>마이페이지</Header.NavItem>
       </Header.NavBar>
 

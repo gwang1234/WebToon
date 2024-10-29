@@ -27,18 +27,22 @@ export default function CommentForm({
   const [success, setSuccess] = useState<boolean>(false);
 
   // 별 클릭 시 별점 반영 함수
-  const handleStarClick = (rating: number) => {
-    setStar(rating); // 클릭한 별의 값으로 별점 설정
+  const handleStarClick = (rating: number, event: React.MouseEvent) => {
+    const { clientX, currentTarget } = event;
+    const targetRect = currentTarget.getBoundingClientRect();
+    const isHalf = clientX < targetRect.left + targetRect.width / 2;
+
+    setStar(isHalf ? rating - 0.5 : rating); // 왼쪽 클릭 시 0.5, 오른쪽 클릭 시 1
     setError(null); // 오류 메시지 초기화
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const token = sessionStorage.getItem("token");
-      const providerId = sessionStorage.getItem("provider_id") || "";
+      const token = sessionStorage.getItem("token") || null;
+      const provider_id = sessionStorage.getItem("provider_id") || "";
 
-      if (!token) {
+      if (!token && !provider_id) {
         setError("로그인 후 댓글을 작성할 수 있습니다.");
         return;
       }
@@ -48,19 +52,21 @@ export default function CommentForm({
         return;
       }
 
+      // API 요청
+      const requestBody = {
+        content: comment,
+        webtoonId: webtoonId,
+        provider_id: provider_id,
+        star: star,
+      };
+
+      // token이 있을 경우 Authorization 헤더 추가
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/reviews`,
-        {
-          content: comment,
-          webtoonId: webtoonId,
-          provider_id: providerId,
-          star: star,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        requestBody,
+        { headers }
       );
 
       if (response.status === 201) {
@@ -84,12 +90,12 @@ export default function CommentForm({
           required
         />
         <StarContainer>
-          {/* 별점 클릭을 위한 별 아이콘들 */}
           {[1, 2, 3, 4, 5].map((rating) => (
             <StarIcon
-              key={rating}
-              onClick={() => handleStarClick(rating)} // 클릭 시 별점 설정
-              className={star >= rating ? "like-on" : "like-off"} // 별점에 따라 클래스 변경
+              key={`star-${rating}`}
+              onClick={(e) => handleStarClick(rating, e)} // 반별 클릭을 처리
+              isFilled={star >= rating}
+              isHalfFilled={star >= rating - 0.5 && star < rating}
             />
           ))}
         </StarContainer>

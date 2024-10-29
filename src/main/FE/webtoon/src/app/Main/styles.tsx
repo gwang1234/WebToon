@@ -49,6 +49,7 @@ const Slider = styled.div`
 const WebtoonCard = styled.div`
   margin-right: 1vw;
   height: 25vh;
+  cursor: pointer;
   p {
     text-align: center;
     font-size: 2vh;
