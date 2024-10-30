@@ -5,5 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
 
-    public String savePhoto(MultipartFile multipartFile, Long memberId) throws IOException, java.io.IOException;
+    String savePhoto(MultipartFile multipartFile, Long memberId) throws IOException, java.io.IOException;
+
+    String getFileUrl(String filename);
+
 }

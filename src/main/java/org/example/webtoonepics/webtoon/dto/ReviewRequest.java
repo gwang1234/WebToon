@@ -15,7 +15,7 @@ public class ReviewRequest {
     private Long webtoonId;
     private Long userInfo;
     private String content;
-    private short star;
+    private Double star;
     private String provider_id;
 
     public Review toEntity(Webtoon webtoon, User user) {

@@ -7,7 +7,7 @@ import org.example.webtoonepics.webtoon.entity.Review;
 public class ReviewResponse {
 
     private Long id;
-    private short star;
+    private Double star;
     private String userName;
     private String content;
     private Long webtoon_id;

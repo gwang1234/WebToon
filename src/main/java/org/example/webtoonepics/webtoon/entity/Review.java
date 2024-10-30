@@ -34,7 +34,7 @@ public class Review {
     @Min(1)
     @Max(5)
     @Column(nullable = false)
-    private short star;
+    private Double star;
 
     @ManyToOne
     @JoinColumn(name = "user_info", nullable = false)
@@ -44,14 +44,14 @@ public class Review {
     private String content;
 
     @Builder
-    public Review(Webtoon webtoonInfo, short star, User userInfo, String content) {
+    public Review(Webtoon webtoonInfo, Double star, User userInfo, String content) {
         this.webtoonInfo = webtoonInfo;
         this.star = star;
         this.userInfo = userInfo;
         this.content = content;
     }
 
-    public void update(short star, String content) {
+    public void update(Double star, String content) {
         this.star = star;
         this.content = content;
     }
