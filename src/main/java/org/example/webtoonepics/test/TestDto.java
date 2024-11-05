@@ -8,8 +8,5 @@ import lombok.Data;
 public class TestDto {
 
     private String title;
-
-//    @Lob
-//    @Column(columnDefinition = "LONGTEXT")
     private String content;
 }

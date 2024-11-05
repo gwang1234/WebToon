@@ -1,5 +1,6 @@
 package org.example.webtoonepics.community.controller;
 
+import io.jsonwebtoken.io.IOException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -7,6 +8,7 @@ import org.example.webtoonepics.community.dto.CommunityDetailDto;
 import org.example.webtoonepics.community.dto.CommunityListDto;
 import org.example.webtoonepics.community.dto.ProvideDto;
 import org.example.webtoonepics.community.dto.CommunityWriteDto;
+import org.example.webtoonepics.community.service.ImgService;
 import org.example.webtoonepics.public_method.dto.base.DefaultRes;
 import org.example.webtoonepics.community.entity.Community;
 import org.example.webtoonepics.public_method.exception.ResponseMessage;
@@ -24,7 +26,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartRequest;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -39,6 +44,9 @@ public class CommunityController {
 
     @Autowired
     public PublicService publicService;
+
+    @Autowired
+    ImgService imgService;
 
     // 커뮤니티 쓰기
     @Operation(summary = "커뮤니티 글쓰기", description = "header로 로그인 정보를 받아와서 게시판 작성")
@@ -70,6 +78,31 @@ public class CommunityController {
         }
     }
 
+    // 이미지 불러오기
+    @PostMapping("/api/image/upload")
+    @ResponseBody
+    private Map<String, Object> image(MultipartRequest request) {
+        Map<String, Object> responseData = new HashMap<>();
+
+        try {
+
+            String s3Url = imgService.imageUpload(request);
+
+            responseData.put("uploaded", true);
+            responseData.put("url", s3Url);
+
+            return responseData;
+
+        } catch (IOException e) {
+
+            responseData.put("uploaded", false);
+
+            return responseData;
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // 커뮤니티 목록
     @Operation(summary = "커뮤니티 목록", description = "?searchKeyword=&searchType=title&page=0 검색어, 콤보박스(글, 내용, 글+내용), 페이지 중심으로 게뮤니티 목록 가져오기")
     @GetMapping("")
@@ -90,7 +123,7 @@ public class CommunityController {
     }
 
     // 커뮤니티 상세보기
-    @Operation(summary = "커뮤니티 글 상세보기", description = "쿠키값 설정 조회수 중복 방지(10분)")
+    @Operation(summary = "커뮤니티 글 상세보기", description = "커뮤니티 상세보기")
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> detail(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response)
     {

@@ -1,4 +1,4 @@
-package org.example.webtoonepics.test;
+package org.example.webtoonepics.community.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -28,6 +28,9 @@ public class ImgService {
     private String bucket;
 
     private String localLocation = "C:\\springboot_img\\";
+//    private String localLocation = "/images/";
+
+
 
     public String imageUpload(MultipartRequest request) throws IOException, java.io.IOException {
 

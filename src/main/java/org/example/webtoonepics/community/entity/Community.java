@@ -25,6 +25,7 @@ public class Community extends Basetime {
     @Column(nullable = false)
     private String title;
 
+    @Lob
     @Column(nullable = false)
     private String content;
 

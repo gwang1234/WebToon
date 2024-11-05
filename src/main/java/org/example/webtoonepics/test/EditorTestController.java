@@ -1,7 +1,7 @@
 package org.example.webtoonepics.test;
 
 import io.jsonwebtoken.io.IOException;
-import org.example.webtoonepics.community.service.AwsFileService;
+import org.example.webtoonepics.community.service.ImgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +20,6 @@ public class EditorTestController {
     // editor test
     @Autowired
     private TestService testService;
-
-    @Autowired
-    private AwsFileService awsFileService;
 
     @Autowired
     private ImgService imageService;
@@ -40,7 +35,7 @@ public class EditorTestController {
         return "redirect:/list";
     }
 
-    @PostMapping("/image/upload")
+    @PostMapping("/api/image/upload")
     @ResponseBody
     private Map<String, Object>  image(MultipartRequest request) {
         Map<String, Object> responseData = new HashMap<>();
