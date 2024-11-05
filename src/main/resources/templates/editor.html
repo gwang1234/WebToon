@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CKEditor 사용 예제</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/translations/ko.js"></script>
+    <script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
+</head>
+<body>
+
+<form action="/save" method="POST">
+    <input name="title" type="text" placeholder="제목" /><br><br>
+    <textarea name="content" id="content"></textarea><br><br>
+    <input type="submit" value="등록">
+</form>
+
+<script>
+    ClassicEditor.create(document.querySelector('#content'), {
+        language: "ko",
+        ckfinder : {
+            uploadUrl: "/image/upload",
+            withCredentials: true
+        }
+    }).catch(error => {
+        console.error(error);
+    });
+</script>
+
+</body>
+</html>
